@@ -124,7 +124,7 @@ const generateTimetableReminders = async () => {
         const title = '📚 Today\'s Timetable Reminder';
         const message = `Good morning! Check your timetable for today (${dayName}). Have a productive day!`;
 
-        await Notification.create({
+        const notification = await Notification.create({
             title,
             message,
             category: 'Timetable',
@@ -136,6 +136,16 @@ const generateTimetableReminders = async () => {
             expiryDate: new Date(today.getTime() + 24 * 60 * 60 * 1000), // Expires in 24 hours
             createdBy: null,
         });
+
+        // Send push notification
+        const tokens = await DeviceToken.find({ isActive: true }).select('token');
+        const tokenStrings = tokens.map(t => t.token).filter(Boolean);
+        if (tokenStrings.length > 0) {
+            await sendPushNotification(tokenStrings, title, message, {
+                notificationId: notification._id.toString(),
+                category: 'Timetable',
+            });
+        }
 
         logger.info('Timetable reminder sent');
     } catch (error) {

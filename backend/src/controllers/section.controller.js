@@ -5,7 +5,7 @@ const { apiResponse } = require('../utils/constants');
 const logger = require('../utils/logger');
 
 // Create Section (supports Single or Bulk)
-const createSection = async (req, res) => {
+const createSection = async (req, res, next) => {
     try {
         const { name, academicYear, capacity, order, names } = req.body;
 
@@ -65,13 +65,12 @@ const createSection = async (req, res) => {
 
         return apiResponse(res, 201, true, 'Section created successfully', sec);
     } catch (error) {
-        logger.error('Create section error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
 // Get Sections
-const getSections = async (req, res) => {
+const getSections = async (req, res, next) => {
     try {
         const { academicYear, status } = req.query;
         const query = {};
@@ -85,13 +84,12 @@ const getSections = async (req, res) => {
 
         return apiResponse(res, 200, true, 'Sections retrieved', sections);
     } catch (error) {
-        logger.error('Get sections error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
 // Update Section
-const updateSection = async (req, res) => {
+const updateSection = async (req, res, next) => {
     try {
         const { name, academicYear, capacity, status, order } = req.body;
         const sectionId = req.params.id;
@@ -124,13 +122,12 @@ const updateSection = async (req, res) => {
 
         return apiResponse(res, 200, true, 'Section updated', updated);
     } catch (error) {
-        logger.error('Update section error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
 // Delete Section (single)
-const deleteSection = async (req, res) => {
+const deleteSection = async (req, res, next) => {
     try {
         const sectionId = req.params.id;
 
@@ -153,13 +150,12 @@ const deleteSection = async (req, res) => {
         await Section.findByIdAndDelete(sectionId);
         return apiResponse(res, 200, true, 'Section deleted successfully');
     } catch (error) {
-        logger.error('Delete section error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
 // Bulk Delete Sections
-const bulkDeleteSections = async (req, res) => {
+const bulkDeleteSections = async (req, res, next) => {
     try {
         const { ids } = req.body;
         if (!ids || !Array.isArray(ids) || ids.length === 0) {
@@ -190,8 +186,7 @@ const bulkDeleteSections = async (req, res) => {
 
         return apiResponse(res, 200, true, msg, { deleted, blocked });
     } catch (error) {
-        logger.error('Bulk delete sections error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 

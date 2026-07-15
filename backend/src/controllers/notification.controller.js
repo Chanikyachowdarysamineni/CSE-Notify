@@ -153,13 +153,16 @@ const createNotification = async (req, res) => {
             link, scheduleTime, expiryDate,
         } = req.body;
 
+        const parsedTargetYears = targetYears ? (typeof targetYears === 'string' ? JSON.parse(targetYears) : targetYears) : [];
+        const parsedTargetSections = targetSections ? (typeof targetSections === 'string' ? JSON.parse(targetSections) : targetSections) : [];
+
         const notificationData = {
             title,
             message,
             category,
             priority: priority || 'medium',
-            targetYears: targetYears || [],
-            targetSections: targetSections || [],
+            targetYears: parsedTargetYears,
+            targetSections: parsedTargetSections,
             link,
             expiryDate,
             createdBy: req.user.id,
@@ -223,6 +226,12 @@ const updateNotification = async (req, res) => {
         }
 
         const updateData = { ...req.body };
+        if (updateData.targetYears) {
+            updateData.targetYears = typeof updateData.targetYears === 'string' ? JSON.parse(updateData.targetYears) : updateData.targetYears;
+        }
+        if (updateData.targetSections) {
+            updateData.targetSections = typeof updateData.targetSections === 'string' ? JSON.parse(updateData.targetSections) : updateData.targetSections;
+        }
         if (req.file) {
             updateData.attachment = `/uploads/notifications/${req.file.filename}`;
             updateData.attachmentName = req.file.originalname;

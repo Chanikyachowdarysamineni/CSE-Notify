@@ -14,6 +14,6 @@ router.get('/', allRoles, paginationValidation, validate, ctrl.getEvents);
 router.get('/:id', allRoles, idValidation, validate, ctrl.getEventById);
 router.post('/', adminOrFaculty, uploadEvent.single('bannerImage'), eventValidation.create, validate, ctrl.createEvent);
 router.put('/:id', adminOrFaculty, uploadEvent.single('bannerImage'), idValidation, validate, ctrl.updateEvent);
-router.delete('/:id', adminOnly, idValidation, validate, ctrl.deleteEvent);
+router.delete('/:id', adminOrFaculty, idValidation, validate, ctrl.deleteEvent);
 
 module.exports = router;

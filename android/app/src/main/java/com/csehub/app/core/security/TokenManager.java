@@ -52,6 +52,14 @@ public class TokenManager {
         return prefs.getString(Constants.KEY_TOKEN, null);
     }
 
+    public void saveRefreshToken(String refreshToken) {
+        prefs.edit().putString(Constants.KEY_REFRESH_TOKEN, refreshToken).apply();
+    }
+
+    public String getRefreshToken() {
+        return prefs.getString(Constants.KEY_REFRESH_TOKEN, null);
+    }
+
     public boolean hasToken() {
         return getToken() != null && !getToken().isEmpty();
     }
@@ -60,13 +68,14 @@ public class TokenManager {
     // User Session
     // ============================================
 
-    public void saveUserSession(String userId, String email, String name, String role, String token) {
+    public void saveUserSession(String userId, String email, String name, String role, String token, String refreshToken) {
         prefs.edit()
                 .putString(Constants.KEY_USER_ID, userId)
                 .putString(Constants.KEY_USER_EMAIL, email)
                 .putString(Constants.KEY_USER_NAME, name)
                 .putString(Constants.KEY_USER_ROLE, role)
                 .putString(Constants.KEY_TOKEN, token)
+                .putString(Constants.KEY_REFRESH_TOKEN, refreshToken)
                 .putBoolean(Constants.KEY_IS_LOGGED_IN, true)
                 .apply();
     }

@@ -17,7 +17,7 @@ const path = require('path');
  * GET /api/timetable/daily
  * Get daily timetable
  */
-const getDailyTimetable = async (req, res) => {
+const getDailyTimetable = async (req, res, next) => {
     try {
         let { academicYear, section, day } = req.query;
 
@@ -63,8 +63,7 @@ const getDailyTimetable = async (req, res) => {
 
         return apiResponse(res, 200, true, 'Daily timetable retrieved', timetable);
     } catch (error) {
-        logger.error('Get daily timetable error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
@@ -72,7 +71,7 @@ const getDailyTimetable = async (req, res) => {
  * GET /api/timetable/weekly
  * Get weekly timetable
  */
-const getWeeklyTimetable = async (req, res) => {
+const getWeeklyTimetable = async (req, res, next) => {
     try {
         let { academicYear, section } = req.query;
 
@@ -124,8 +123,7 @@ const getWeeklyTimetable = async (req, res) => {
 
         return apiResponse(res, 200, true, 'Weekly timetable retrieved', grouped);
     } catch (error) {
-        logger.error('Get weekly timetable error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
@@ -133,7 +131,7 @@ const getWeeklyTimetable = async (req, res) => {
  * POST /api/timetable
  * Create timetable entry (Admin only)
  */
-const createTimetableEntry = async (req, res) => {
+const createTimetableEntry = async (req, res, next) => {
     try {
         const { academicYear, section, day, period } = req.body;
 
@@ -162,7 +160,7 @@ const createTimetableEntry = async (req, res) => {
  * PUT /api/timetable/:id
  * Update timetable entry (Admin only)
  */
-const updateTimetableEntry = async (req, res) => {
+const updateTimetableEntry = async (req, res, next) => {
     try {
         const entry = await Timetable.findByIdAndUpdate(
             req.params.id,
@@ -178,8 +176,7 @@ const updateTimetableEntry = async (req, res) => {
 
         return apiResponse(res, 200, true, 'Timetable entry updated', entry);
     } catch (error) {
-        logger.error('Update timetable error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
@@ -187,7 +184,7 @@ const updateTimetableEntry = async (req, res) => {
  * DELETE /api/timetable/:id
  * Delete timetable entry (Admin only)
  */
-const deleteTimetableEntry = async (req, res) => {
+const deleteTimetableEntry = async (req, res, next) => {
     try {
         const entry = await Timetable.findByIdAndDelete(req.params.id);
         if (!entry) {
@@ -198,8 +195,7 @@ const deleteTimetableEntry = async (req, res) => {
 
         return apiResponse(res, 200, true, 'Timetable entry deleted');
     } catch (error) {
-        logger.error('Delete timetable error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
@@ -208,7 +204,7 @@ const deleteTimetableEntry = async (req, res) => {
  * Import timetable from CSV (Admin only)
  * CSV format: yearName,session,sectionName,day,period,subject,subjectCode,facultyName,room,startTime,endTime,type
  */
-const importCSV = async (req, res) => {
+const importCSV = async (req, res, next) => {
     try {
         if (!req.file) {
             return apiResponse(res, 400, false, 'CSV file is required');
@@ -325,7 +321,7 @@ const importCSV = async (req, res) => {
  * GET /api/timetable/export-csv
  * Export timetable to CSV (Admin only)
  */
-const exportCSV = async (req, res) => {
+const exportCSV = async (req, res, next) => {
     try {
         const { academicYear, section } = req.query;
         let query = {};
@@ -363,8 +359,7 @@ const exportCSV = async (req, res) => {
         res.attachment(`timetable_${academicYear || 'all'}_${section || 'all'}.csv`);
         return res.send(csv);
     } catch (error) {
-        logger.error('Export CSV error:', error);
-        return apiResponse(res, 500, false, 'Server error during CSV export');
+        next(error);
     }
 };
 
@@ -372,7 +367,7 @@ const exportCSV = async (req, res) => {
  * POST /api/timetable/duplicate
  * Duplicate timetable from one Year/Section to another (Admin only)
  */
-const duplicateTimetable = async (req, res) => {
+const duplicateTimetable = async (req, res, next) => {
     try {
         const { sourceYear, sourceSection, targetYear, targetSection } = req.body;
 
@@ -412,8 +407,7 @@ const duplicateTimetable = async (req, res) => {
 
         return apiResponse(res, 200, true, `Timetable duplicated successfully. Copied ${targetEntries.length} entries.`);
     } catch (error) {
-        logger.error('Duplicate timetable error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
@@ -421,7 +415,7 @@ const duplicateTimetable = async (req, res) => {
  * DELETE /api/timetable/bulk
  * Delete all timetable entries for a year/section (Admin only)
  */
-const bulkDelete = async (req, res) => {
+const bulkDelete = async (req, res, next) => {
     try {
         const { academicYear, section } = req.query;
         if (!academicYear || !section) {
@@ -434,8 +428,7 @@ const bulkDelete = async (req, res) => {
 
         return apiResponse(res, 200, true, `${result.deletedCount} timetable entries deleted`);
     } catch (error) {
-        logger.error('Bulk delete timetable error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 

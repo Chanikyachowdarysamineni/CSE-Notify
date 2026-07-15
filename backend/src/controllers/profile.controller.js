@@ -13,7 +13,7 @@ const logger = require('../utils/logger');
 /**
  * GET /api/profile
  */
-const getProfile = async (req, res) => {
+const getProfile = async (req, res, next) => {
     try {
         const user = await User.findById(req.user.id);
         if (!user) {
@@ -46,8 +46,7 @@ const getProfile = async (req, res) => {
             profile,
         });
     } catch (error) {
-        logger.error('Get profile error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
@@ -55,7 +54,7 @@ const getProfile = async (req, res) => {
  * PUT /api/profile
  * Update profile (role-specific editable fields)
  */
-const updateProfile = async (req, res) => {
+const updateProfile = async (req, res, next) => {
     try {
         const user = await User.findById(req.user.id);
         if (!user) {
@@ -96,8 +95,7 @@ const updateProfile = async (req, res) => {
 
         return apiResponse(res, 200, true, 'Profile updated', updated);
     } catch (error) {
-        logger.error('Update profile error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
@@ -105,7 +103,7 @@ const updateProfile = async (req, res) => {
  * PUT /api/profile/photo
  * Update profile photo
  */
-const updateProfilePhoto = async (req, res) => {
+const updateProfilePhoto = async (req, res, next) => {
     try {
         if (!req.file) {
             return apiResponse(res, 400, false, 'Photo is required');
@@ -135,8 +133,7 @@ const updateProfilePhoto = async (req, res) => {
 
         return apiResponse(res, 200, true, 'Profile photo updated', { photo: photoPath });
     } catch (error) {
-        logger.error('Update profile photo error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 

@@ -10,7 +10,7 @@ const logger = require('../utils/logger');
 /**
  * GET /api/search/student?regNo=
  */
-const searchStudent = async (req, res) => {
+const searchStudent = async (req, res, next) => {
     try {
         const { regNo, name, academicYear, section } = req.query;
 
@@ -43,8 +43,7 @@ const searchStudent = async (req, res) => {
 
         return apiResponse(res, 200, true, `${students.length} student(s) found`, students);
     } catch (error) {
-        logger.error('Search student error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 

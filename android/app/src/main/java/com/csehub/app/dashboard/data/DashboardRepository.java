@@ -11,7 +11,6 @@ import com.csehub.app.core.database.entity.EventEntity;
 import com.csehub.app.core.database.entity.NotificationEntity;
 import com.csehub.app.core.database.entity.TimetableEntity;
 import com.csehub.app.core.network.ApiClient;
-import com.csehub.app.core.network.ApiClient;
 import com.csehub.app.core.network.models.AcademicYear;
 import com.csehub.app.core.network.models.ApiResponse;
 import com.csehub.app.core.network.models.DashboardData;
@@ -60,7 +59,7 @@ public class DashboardRepository {
 
             @Override
             public void onFailure(Call<ApiResponse<DashboardData>> call, Throwable t) {
-                data.setValue(AuthRepository.Resource.error("No internet connection. Loading offline..."));
+                data.setValue(AuthRepository.Resource.error(t != null ? t.getMessage() : "Unknown network error"));
             }
         });
 

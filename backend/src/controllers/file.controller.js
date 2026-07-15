@@ -13,7 +13,7 @@ const fs = require('fs');
 /**
  * GET /api/files
  */
-const getFiles = async (req, res) => {
+const getFiles = async (req, res, next) => {
     try {
         const { page = 1, limit = 20, category, type, search } = req.query;
         const skip = (page - 1) * limit;
@@ -59,15 +59,14 @@ const getFiles = async (req, res) => {
         return apiResponse(res, 200, true, 'Files retrieved', files,
             paginationMeta(page, limit, total));
     } catch (error) {
-        logger.error('Get files error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
 /**
  * POST /api/files/upload
  */
-const uploadFile = async (req, res) => {
+const uploadFile = async (req, res, next) => {
     try {
         if (!req.file) {
             return apiResponse(res, 400, false, 'File is required');
@@ -95,15 +94,14 @@ const uploadFile = async (req, res) => {
 
         return apiResponse(res, 201, true, 'File uploaded successfully', file);
     } catch (error) {
-        logger.error('Upload file error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
 /**
  * GET /api/files/download/:id
  */
-const downloadFile = async (req, res) => {
+const downloadFile = async (req, res, next) => {
     try {
         const file = await File.findById(req.params.id);
         if (!file) {
@@ -122,15 +120,14 @@ const downloadFile = async (req, res) => {
 
         res.download(filePath, file.originalName);
     } catch (error) {
-        logger.error('Download file error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
 /**
  * DELETE /api/files/:id
  */
-const deleteFile = async (req, res) => {
+const deleteFile = async (req, res, next) => {
     try {
         const file = await File.findById(req.params.id);
         if (!file) {
@@ -155,8 +152,7 @@ const deleteFile = async (req, res) => {
 
         return apiResponse(res, 200, true, 'File deleted');
     } catch (error) {
-        logger.error('Delete file error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 

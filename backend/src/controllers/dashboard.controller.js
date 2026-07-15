@@ -17,7 +17,7 @@ const logger = require('../utils/logger');
 /**
  * GET /api/dashboard
  */
-const getDashboard = async (req, res) => {
+const getDashboard = async (req, res, next) => {
     try {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -112,8 +112,7 @@ const getDashboard = async (req, res) => {
 
         return apiResponse(res, 200, true, 'Dashboard data retrieved', dashboard);
     } catch (error) {
-        logger.error('Get dashboard error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 

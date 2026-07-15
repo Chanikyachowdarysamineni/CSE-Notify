@@ -74,7 +74,8 @@ const eventSchema = new mongoose.Schema({
 // Indexes
 eventSchema.index({ date: -1 });
 eventSchema.index({ eventType: 1 });
-eventSchema.index({ targetYears: 1, targetSections: 1 });
+eventSchema.index({ targetYears: 1 });
+eventSchema.index({ targetSections: 1 });
 eventSchema.index({ title: 'text', description: 'text' });
 
 module.exports = mongoose.model('Event', eventSchema);

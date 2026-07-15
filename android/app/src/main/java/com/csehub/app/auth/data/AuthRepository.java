@@ -45,7 +45,8 @@ public class AuthRepository {
                             loginRes.getUser().getEmail(),
                             loginRes.getUser().getName(),
                             loginRes.getUser().getRole(),
-                            loginRes.getToken()
+                            loginRes.getToken(),
+                            loginRes.getRefreshToken()
                     );
                     data.setValue(Resource.success(loginRes));
                 } else {

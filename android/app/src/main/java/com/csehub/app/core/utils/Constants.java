@@ -24,8 +24,12 @@ public final class Constants {
     public static final String KEY_USER_ROLE = "user_role";
     public static final String KEY_IS_LOGGED_IN = "is_logged_in";
     public static final String KEY_FCM_TOKEN = "fcm_token";
+    public static final String KEY_REFRESH_TOKEN = "refresh_token";
     public static final String KEY_DARK_MODE = "dark_mode";
     public static final String KEY_PROFILE_PHOTO = "profile_photo";
+
+    // Broadcast Actions
+    public static final String ACTION_AUTH_ERROR = "com.csehub.app.ACTION_AUTH_ERROR";
 
     // Roles
     public static final String ROLE_ADMIN = "admin";
