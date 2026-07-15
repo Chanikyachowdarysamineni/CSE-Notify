@@ -11,10 +11,13 @@ import com.csehub.app.core.database.entity.EventEntity;
 import com.csehub.app.core.database.entity.NotificationEntity;
 import com.csehub.app.core.database.entity.TimetableEntity;
 import com.csehub.app.core.network.ApiClient;
+import com.csehub.app.core.network.ApiClient;
+import com.csehub.app.core.network.models.AcademicYear;
 import com.csehub.app.core.network.models.ApiResponse;
 import com.csehub.app.core.network.models.DashboardData;
 import com.csehub.app.core.network.models.Event;
 import com.csehub.app.core.network.models.Notification;
+import com.csehub.app.core.network.models.Section;
 import com.csehub.app.core.network.models.Timetable;
 
 import java.util.ArrayList;
@@ -117,8 +120,17 @@ public class DashboardRepository {
             for (Timetable t : dashboardData.getTodayTimetable()) {
                 TimetableEntity ent = new TimetableEntity();
                 ent.setId(t.getId());
-                ent.setYear(t.getYear());
-                ent.setSection(t.getSection());
+                AcademicYear ay = t.getAcademicYear();
+                if (ay != null) {
+                    ent.setAcademicYearId(ay.getId());
+                    ent.setAcademicYearName(ay.getName());
+                }
+
+                Section sec = t.getSection();
+                if (sec != null) {
+                    ent.setSectionId(sec.getId());
+                    ent.setSection(sec.getName());
+                }
                 ent.setDay(t.getDay());
                 ent.setPeriod(t.getPeriod());
                 ent.setSubject(t.getSubject());
