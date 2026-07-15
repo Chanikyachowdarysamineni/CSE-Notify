@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="http://schemas.android.com/tools">
+    <color name="background">#121212</color>
+    <color name="error">#CF6679</color>
+    <color name="error_container">#4E1C24</color>
+    <color name="glass_black_low">#33000000</color>
+    <color name="glass_white_low">#0DFFFFFF</color>
+    <color name="glass_white_medium">#1DFFFFFF</color>
+    <color name="on_background">#E3E3E3</color>
+    <color name="on_primary">#1A237E</color>
+    <color name="on_secondary">#004D40</color>
+    <color name="on_surface">#E3E3E3</color>
+    <color name="on_surface_variant">#AAAAAA</color>
+    <color name="primary">#C5CAE9</color>
+    <color name="primary_container">#283593</color>
+    <color name="priority_high">#FFB74D</color>
+    <color name="priority_low">#81C784</color>
+    <color name="priority_medium">#64B5F6</color>
+    <color name="priority_urgent">#E57373</color>
+    <color name="secondary">#80CBC4</color>
+    <color name="secondary_container">#00695C</color>
+    <color name="shimmer_base">#2A2A2A</color>
+    <color name="shimmer_highlight">#3A3A3A</color>
+    <color name="surface">#1E1E1E</color>
+    <color name="surface_variant">#2A2A2A</color>
+    <color name="tertiary">#FFE082</color>
+    <color name="tertiary_container">#EF6C00</color>
+    <style name="Theme.CSEHub" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorPrimaryContainer">@color/primary_container</item>
+        
+        
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorOnSecondary">@color/on_secondary</item>
+        <item name="colorSecondaryContainer">@color/secondary_container</item>
+        
+        
+        <item name="colorTertiary">@color/tertiary</item>
+        <item name="colorTertiaryContainer">@color/tertiary_container</item>
+        
+        
+        <item name="android:windowBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorSurfaceVariant">@color/surface_variant</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
+        
+        
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:windowLightStatusBar" ns1:targetApi="23">false</item>
+    </style>
+    <style name="Theme.CSEHub.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.CSEHub</item>
+    </style>
+</resources>

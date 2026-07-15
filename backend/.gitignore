@@ -1,0 +1,15 @@
+node_modules/
+.env
+logs/
+uploads/files/*
+uploads/gallery/*
+uploads/profiles/*
+uploads/events/*
+uploads/notifications/*
+!uploads/files/.gitkeep
+!uploads/gallery/.gitkeep
+!uploads/profiles/.gitkeep
+!uploads/events/.gitkeep
+!uploads/notifications/.gitkeep
+.DS_Store
+package-lock.json

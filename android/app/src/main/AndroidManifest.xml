@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+    <application
+        android:name=".CSEHubApp"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_logo"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/ic_logo"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.CSEHub"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="31">
+
+        <!-- Splash Screen -->
+        <activity
+            android:name=".auth.ui.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.CSEHub.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- App Shortcuts -->
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity>
+
+        <!-- Auth Activities -->
+        <activity android:name=".auth.ui.LoginActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".auth.ui.ForgotPasswordActivity" />
+        <activity android:name=".auth.ui.ChangePasswordActivity" />
+
+        <!-- Main Activity (Dashboard + Navigation) -->
+        <activity
+            android:name=".dashboard.ui.MainActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTop" />
+
+        <!-- Feature Activities -->
+        <activity android:name=".notification.ui.CreateNotificationActivity" />
+        <activity android:name=".notification.ui.NotificationDetailActivity" />
+        <activity android:name=".event.ui.CreateEventActivity" />
+        <activity android:name=".event.ui.EventDetailActivity" />
+        <activity android:name=".file.ui.FilePreviewActivity" />
+        <activity android:name=".file.ui.FileUploadActivity" />
+        <activity android:name=".gallery.ui.ImageViewerActivity" />
+        <activity android:name=".gallery.ui.GalleryUploadActivity" />
+        <activity android:name=".profile.ui.EditProfileActivity" />
+
+        <!-- FCM Service -->
+        <service
+            android:name=".core.fcm.CSEHubFCMService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- FCM Default Channel -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="cse_hub_notifications" />
+
+        <!-- FCM Default Icon -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notification" />
+
+        <!-- FCM Default Color -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/primary" />
+
+        <!-- File Provider for sharing -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+    </application>
+
+</manifest>

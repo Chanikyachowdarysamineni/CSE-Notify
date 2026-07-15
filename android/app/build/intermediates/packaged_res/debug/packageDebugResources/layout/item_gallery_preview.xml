@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="120dp"
+    android:layout_height="120dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="1dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="?attr/colorSurfaceVariant">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/galleryImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_gallery"
+            android:contentDescription="Gallery Highlight" />
+
+        <!-- Semi-transparent overlay for text protection -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bg_gradient_overlay" />
+
+        <TextView
+            android:id="@+id/categoryText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="6dp"
+            android:text="Workshop"
+            android:textColor="@color/on_primary"
+            android:textSize="10sp"
+            android:textStyle="bold"/>
+
+        <!-- Action Button (Visible only for owners) -->
+        <ImageButton
+            android:id="@+id/deleteButton"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@android:drawable/ic_menu_delete"
+            android:background="@drawable/bg_circle_dark_overlay"
+            app:tint="@color/on_primary"
+            android:visibility="gone"
+            android:layout_gravity="top|end"
+            android:layout_margin="4dp"/>
+    </FrameLayout>
+</com.google.android.material.card.MaterialCardView>

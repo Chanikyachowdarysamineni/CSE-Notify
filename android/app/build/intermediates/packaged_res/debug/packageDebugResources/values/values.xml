@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="http://schemas.android.com/tools">
+    <color name="background">#FFFFFF</color>
+    <color name="error">#B00020</color>
+    <color name="error_container">#FDE8E8</color>
+    <color name="glass_black_low">#1A000000</color>
+    <color name="glass_white_low">#1AFFFFFF</color>
+    <color name="glass_white_medium">#4DFFFFFF</color>
+    <color name="on_background">#000000</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="on_secondary">#FFFFFF</color>
+    <color name="on_surface">#000000</color>
+    <color name="on_surface_variant">#424242</color>
+    <color name="on_tertiary">#FFFFFF</color>
+    <color name="primary">#03A9F4</color>
+    <color name="primary_container">#E1F5FE</color>
+    <color name="priority_high">#FF9800</color>
+    <color name="priority_low">#4CAF50</color>
+    <color name="priority_medium">#2196F3</color>
+    <color name="priority_urgent">#F44336</color>
+    <color name="secondary">#4CAF50</color>
+    <color name="secondary_container">#E8F5E9</color>
+    <color name="shimmer_base">#E0E0E0</color>
+    <color name="shimmer_highlight">#F5F5F5</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#F5F5F5</color>
+    <color name="tertiary">#F44336</color>
+    <color name="tertiary_container">#FFEBEE</color>
+    <string name="action_add">Add New</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_download">Download</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_forgot_password">Forgot Password?</string>
+    <string name="action_save">Save</string>
+    <string name="action_sign_in">Sign In</string>
+    <string name="action_upload">Upload</string>
+    <string name="app_name">CSE HUB</string>
+    <string name="desc_splash_logo">CSE HUB Logo</string>
+    <string name="empty_events">No events found.</string>
+    <string name="empty_files">No files uploaded yet.</string>
+    <string name="empty_gallery">No posts in gallery.</string>
+    <string name="empty_notifications">No notifications found.</string>
+    <string name="empty_timetable">No classes scheduled for today.</string>
+    <string name="error_empty_password">Password cannot be empty</string>
+    <string name="error_invalid_email">Invalid email address</string>
+    <string name="error_short_password">Password must be at least 6 characters</string>
+    <string name="gcm_defaultSenderId" translatable="false">203681298144</string>
+    <string name="google_api_key" translatable="false">AIzaSyBvLG1qd8TEX1ScYQ6sSZkRKWqe8hU7GRk</string>
+    <string name="google_app_id" translatable="false">1:203681298144:android:0530497e04633d40ac8285</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBvLG1qd8TEX1ScYQ6sSZkRKWqe8hU7GRk</string>
+    <string name="google_storage_bucket" translatable="false">cse-hub-bd655.firebasestorage.app</string>
+    <string name="menu_admin">Admin Module</string>
+    <string name="menu_dashboard">Dashboard</string>
+    <string name="menu_events">Events</string>
+    <string name="menu_files">Files</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_logout">Logout</string>
+    <string name="menu_notifications">Notifications</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_search_student">Search Student</string>
+    <string name="menu_timetable">Timetable</string>
+    <string name="project_id" translatable="false">cse-hub-bd655</string>
+    <string name="prompt_email">College or Registered Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="shortcut_notifications_long">Check today\'s notifications</string>
+    <string name="shortcut_notifications_short">Notifications</string>
+    <string name="shortcut_timetable_long">View today\'s timetable</string>
+    <string name="shortcut_timetable_short">Timetable</string>
+    <string name="title_admin_crud">Admin Panel</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_events">Events</string>
+    <string name="title_files">Files</string>
+    <string name="title_forgot_password">Forgot Password</string>
+    <string name="title_gallery">Gallery</string>
+    <string name="title_login">Login</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_search_student">Search Student</string>
+    <string name="title_timetable">Timetable</string>
+    <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+    <style name="Theme.CSEHub" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorPrimaryContainer">@color/primary_container</item>
+        
+        
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorOnSecondary">@color/on_secondary</item>
+        <item name="colorSecondaryContainer">@color/secondary_container</item>
+        
+        
+        <item name="colorTertiary">@color/tertiary</item>
+        <item name="colorTertiaryContainer">@color/tertiary_container</item>
+        
+        
+        <item name="android:windowBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorSurfaceVariant">@color/surface_variant</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
+        
+        
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="android:windowLightStatusBar" ns1:targetApi="23">false</item>
+    </style>
+    <style name="Theme.CSEHub.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/primary</item>
+        
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.CSEHub</item>
+    </style>
+</resources>

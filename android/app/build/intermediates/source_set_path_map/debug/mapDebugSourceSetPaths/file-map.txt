@@ -1,0 +1,69 @@
+com.csehub.app-activity-ktx-1.8.0-0 C:\Users\chani\.gradle\caches\8.9\transforms\076d2bc1bbab5b607861e9056f8d990c\transformed\activity-ktx-1.8.0\res
+com.csehub.app-room-ktx-2.6.1-1 C:\Users\chani\.gradle\caches\8.9\transforms\0851e3dead0161be22867fe2bdf4db3b\transformed\room-ktx-2.6.1\res
+com.csehub.app-appcompat-resources-1.7.0-2 C:\Users\chani\.gradle\caches\8.9\transforms\0dbf814f132005cd288a2e1050f1e47e\transformed\appcompat-resources-1.7.0\res
+com.csehub.app-work-runtime-2.10.0-3 C:\Users\chani\.gradle\caches\8.9\transforms\0e22e5a526b27b296c01cf3ab54fdde3\transformed\work-runtime-2.10.0\res
+com.csehub.app-room-runtime-2.6.1-4 C:\Users\chani\.gradle\caches\8.9\transforms\0e4fdebca3952f43f4191a672b211cdb\transformed\room-runtime-2.6.1\res
+com.csehub.app-core-runtime-2.2.0-5 C:\Users\chani\.gradle\caches\8.9\transforms\0efb0d40ed76fd76846edb9914913c2e\transformed\core-runtime-2.2.0\res
+com.csehub.app-core-ktx-1.15.0-6 C:\Users\chani\.gradle\caches\8.9\transforms\117251a4693e6fe7be4b45cde54d2953\transformed\core-ktx-1.15.0\res
+com.csehub.app-customview-poolingcontainer-1.0.0-7 C:\Users\chani\.gradle\caches\8.9\transforms\13f2b3b804c1187aeafc9924cd59de5f\transformed\customview-poolingcontainer-1.0.0\res
+com.csehub.app-lifecycle-viewmodel-release-8 C:\Users\chani\.gradle\caches\8.9\transforms\1e2dba221978568a8393a3c5a528ae35\transformed\lifecycle-viewmodel-release\res
+com.csehub.app-coordinatorlayout-1.1.0-9 C:\Users\chani\.gradle\caches\8.9\transforms\22c1f8b0f644cf5df8474ccde94c9c5b\transformed\coordinatorlayout-1.1.0\res
+com.csehub.app-activity-1.8.0-10 C:\Users\chani\.gradle\caches\8.9\transforms\2742a79047e27954b7c3ea3eed250442\transformed\activity-1.8.0\res
+com.csehub.app-lifecycle-viewmodel-ktx-2.8.7-11 C:\Users\chani\.gradle\caches\8.9\transforms\28f6345c72415c413c283a772df8ea14\transformed\lifecycle-viewmodel-ktx-2.8.7\res
+com.csehub.app-window-1.0.0-12 C:\Users\chani\.gradle\caches\8.9\transforms\2bd92708a33183b61144e5eda9698f48\transformed\window-1.0.0\res
+com.csehub.app-play-services-base-18.5.0-13 C:\Users\chani\.gradle\caches\8.9\transforms\3098474b25cb11b942973e47ce1f0354\transformed\play-services-base-18.5.0\res
+com.csehub.app-recyclerview-1.3.2-14 C:\Users\chani\.gradle\caches\8.9\transforms\385f4eef929255423ca8d569e6ed7149\transformed\recyclerview-1.3.2\res
+com.csehub.app-lifecycle-livedata-2.8.7-15 C:\Users\chani\.gradle\caches\8.9\transforms\39aeda19aa33426002d89c7ed637f6b4\transformed\lifecycle-livedata-2.8.7\res
+com.csehub.app-firebase-common-21.0.0-16 C:\Users\chani\.gradle\caches\8.9\transforms\3a0319d4bf7909ef850f06241f127ee1\transformed\firebase-common-21.0.0\res
+com.csehub.app-circleimageview-3.1.0-17 C:\Users\chani\.gradle\caches\8.9\transforms\3d41d980c31ec1d846e4774f2de970e8\transformed\circleimageview-3.1.0\res
+com.csehub.app-lifecycle-viewmodel-savedstate-2.8.7-18 C:\Users\chani\.gradle\caches\8.9\transforms\3f09e91633aba28aa91d0ccd954b36a9\transformed\lifecycle-viewmodel-savedstate-2.8.7\res
+com.csehub.app-drawerlayout-1.1.1-19 C:\Users\chani\.gradle\caches\8.9\transforms\4097df27ac880ec330c126e5e687e566\transformed\drawerlayout-1.1.1\res
+com.csehub.app-fragment-ktx-1.6.2-20 C:\Users\chani\.gradle\caches\8.9\transforms\4f70c75c664a7434d389282483e5061a\transformed\fragment-ktx-1.6.2\res
+com.csehub.app-lifecycle-runtime-release-21 C:\Users\chani\.gradle\caches\8.9\transforms\5194bfc2a3dcebf6be862222954775cc\transformed\lifecycle-runtime-release\res
+com.csehub.app-slidingpanelayout-1.2.0-22 C:\Users\chani\.gradle\caches\8.9\transforms\60f421c8188a58bb76ccd15745c83796\transformed\slidingpanelayout-1.2.0\res
+com.csehub.app-swiperefreshlayout-1.1.0-23 C:\Users\chani\.gradle\caches\8.9\transforms\6c18f26ff63689f5e28fde801cfb2bde\transformed\swiperefreshlayout-1.1.0\res
+com.csehub.app-cardview-1.0.0-24 C:\Users\chani\.gradle\caches\8.9\transforms\79870bac4d10b429cc7772d7d460aecf\transformed\cardview-1.0.0\res
+com.csehub.app-ads-adservices-java-1.0.0-beta05-25 C:\Users\chani\.gradle\caches\8.9\transforms\7a57b67841357a1dcb968831b058e69e\transformed\ads-adservices-java-1.0.0-beta05\res
+com.csehub.app-lifecycle-runtime-ktx-release-26 C:\Users\chani\.gradle\caches\8.9\transforms\855fa4850cdd53c965756f932a75cc35\transformed\lifecycle-runtime-ktx-release\res
+com.csehub.app-play-services-measurement-api-22.1.2-27 C:\Users\chani\.gradle\caches\8.9\transforms\862b948236a8989b45e10d609dd16ef5\transformed\play-services-measurement-api-22.1.2\res
+com.csehub.app-navigation-runtime-2.8.4-28 C:\Users\chani\.gradle\caches\8.9\transforms\866d669dd359156cc8ba0a85cead4802\transformed\navigation-runtime-2.8.4\res
+com.csehub.app-savedstate-1.2.1-29 C:\Users\chani\.gradle\caches\8.9\transforms\8f9041dd7bcb6550774da8e4e328f73b\transformed\savedstate-1.2.1\res
+com.csehub.app-profileinstaller-1.4.0-30 C:\Users\chani\.gradle\caches\8.9\transforms\901e5c7f22269c1b740f5b159a99fdf5\transformed\profileinstaller-1.4.0\res
+com.csehub.app-shimmer-0.5.0-31 C:\Users\chani\.gradle\caches\8.9\transforms\9205b6b83217c6340533e96171b133db\transformed\shimmer-0.5.0\res
+com.csehub.app-lifecycle-livedata-core-2.8.7-32 C:\Users\chani\.gradle\caches\8.9\transforms\9303adb364879f74c2ad3cf64b4b4820\transformed\lifecycle-livedata-core-2.8.7\res
+com.csehub.app-tracing-1.2.0-33 C:\Users\chani\.gradle\caches\8.9\transforms\942fb3d5178b0f3d5368768cf32ec060\transformed\tracing-1.2.0\res
+com.csehub.app-fragment-1.6.2-34 C:\Users\chani\.gradle\caches\8.9\transforms\9a6447a1e55ba088eda6cdcc1d8e53b4\transformed\fragment-1.6.2\res
+com.csehub.app-lifecycle-process-2.8.7-35 C:\Users\chani\.gradle\caches\8.9\transforms\9cd9fcb11d02e65b71222a80334dc464\transformed\lifecycle-process-2.8.7\res
+com.csehub.app-savedstate-ktx-1.2.1-36 C:\Users\chani\.gradle\caches\8.9\transforms\9d5e93197b8bc120094c52e5111e4217\transformed\savedstate-ktx-1.2.1\res
+com.csehub.app-security-crypto-1.1.0-alpha06-37 C:\Users\chani\.gradle\caches\8.9\transforms\a35a01cb17ba034d7505013af8fa0aa8\transformed\security-crypto-1.1.0-alpha06\res
+com.csehub.app-material-1.12.0-38 C:\Users\chani\.gradle\caches\8.9\transforms\a5abaccb317974680f0a1ad0016ed532\transformed\material-1.12.0\res
+com.csehub.app-sqlite-framework-2.4.0-39 C:\Users\chani\.gradle\caches\8.9\transforms\a73226ae455379e2ed07cc80f59df226\transformed\sqlite-framework-2.4.0\res
+com.csehub.app-firebase-messaging-24.1.0-40 C:\Users\chani\.gradle\caches\8.9\transforms\a75ba0b021d2b037c226edb325dded64\transformed\firebase-messaging-24.1.0\res
+com.csehub.app-core-splashscreen-1.0.1-41 C:\Users\chani\.gradle\caches\8.9\transforms\a7ee3f8c869b1b942b74e901af687581\transformed\core-splashscreen-1.0.1\res
+com.csehub.app-ads-adservices-1.0.0-beta05-42 C:\Users\chani\.gradle\caches\8.9\transforms\b2e523826f28a02b460e0c95fc5912f2\transformed\ads-adservices-1.0.0-beta05\res
+com.csehub.app-lifecycle-service-2.8.7-43 C:\Users\chani\.gradle\caches\8.9\transforms\b8b16badeb3c9bda223aadaebeed71a5\transformed\lifecycle-service-2.8.7\res
+com.csehub.app-navigation-ui-2.8.4-44 C:\Users\chani\.gradle\caches\8.9\transforms\bc590b4ad111100550e7a8da0693c98a\transformed\navigation-ui-2.8.4\res
+com.csehub.app-sqlite-2.4.0-45 C:\Users\chani\.gradle\caches\8.9\transforms\bfc65dfca62091c599c211364177755d\transformed\sqlite-2.4.0\res
+com.csehub.app-startup-runtime-1.1.1-46 C:\Users\chani\.gradle\caches\8.9\transforms\c1a6b911f26a77f793980f5e37e45248\transformed\startup-runtime-1.1.1\res
+com.csehub.app-annotation-experimental-1.4.1-47 C:\Users\chani\.gradle\caches\8.9\transforms\c4fa168d9f934cca5b2993c8848e8502\transformed\annotation-experimental-1.4.1\res
+com.csehub.app-core-1.15.0-48 C:\Users\chani\.gradle\caches\8.9\transforms\c7e99122833fffc61df7788ac53c502e\transformed\core-1.15.0\res
+com.csehub.app-transition-1.5.0-49 C:\Users\chani\.gradle\caches\8.9\transforms\c87a37e33e26d01348220f093d2251ca\transformed\transition-1.5.0\res
+com.csehub.app-lifecycle-livedata-core-ktx-2.8.7-50 C:\Users\chani\.gradle\caches\8.9\transforms\cdbe2e447d767865c170387621acd259\transformed\lifecycle-livedata-core-ktx-2.8.7\res
+com.csehub.app-glide-4.16.0-51 C:\Users\chani\.gradle\caches\8.9\transforms\ddf8439fc1a862369af9271e8d1d0a8a\transformed\glide-4.16.0\res
+com.csehub.app-tracing-ktx-1.2.0-52 C:\Users\chani\.gradle\caches\8.9\transforms\e2957998a3c5ac54b4cb5cba007ddb67\transformed\tracing-ktx-1.2.0\res
+com.csehub.app-navigation-common-2.8.4-53 C:\Users\chani\.gradle\caches\8.9\transforms\e9456abbb51f47ebd6499907f3e8dea8\transformed\navigation-common-2.8.4\res
+com.csehub.app-constraintlayout-2.2.0-54 C:\Users\chani\.gradle\caches\8.9\transforms\ea176c6fe63f12048c8a4d9d2c9c24fa\transformed\constraintlayout-2.2.0\res
+com.csehub.app-appcompat-1.7.0-55 C:\Users\chani\.gradle\caches\8.9\transforms\f3a6ffce60e8bd7da2c834a41a832b08\transformed\appcompat-1.7.0\res
+com.csehub.app-viewpager2-1.1.0-56 C:\Users\chani\.gradle\caches\8.9\transforms\f526d7568dbae763b588c953967a14ed\transformed\viewpager2-1.1.0\res
+com.csehub.app-navigation-fragment-2.8.4-57 C:\Users\chani\.gradle\caches\8.9\transforms\f709f254c761977ff04b6642712bc40e\transformed\navigation-fragment-2.8.4\res
+com.csehub.app-play-services-basement-18.4.0-58 C:\Users\chani\.gradle\caches\8.9\transforms\f96c2d7d07a7d56ebb7987b252fef9cf\transformed\play-services-basement-18.4.0\res
+com.csehub.app-emoji2-views-helper-1.3.0-59 C:\Users\chani\.gradle\caches\8.9\transforms\fb74ed6087b4dfea5723d9797c4921cd\transformed\emoji2-views-helper-1.3.0\res
+com.csehub.app-emoji2-1.3.0-60 C:\Users\chani\.gradle\caches\8.9\transforms\fba9192373ef3f1f7a347db81a90d0f8\transformed\emoji2-1.3.0\res
+com.csehub.app-pngs-61 D:\CSE Notify\android\app\build\generated\res\pngs\debug
+com.csehub.app-res-62 D:\CSE Notify\android\app\build\generated\res\processDebugGoogleServices
+com.csehub.app-resValues-63 D:\CSE Notify\android\app\build\generated\res\resValues\debug
+com.csehub.app-packageDebugResources-64 D:\CSE Notify\android\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.csehub.app-packageDebugResources-65 D:\CSE Notify\android\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.csehub.app-debug-66 D:\CSE Notify\android\app\build\intermediates\merged_res\debug\mergeDebugResources
+com.csehub.app-debug-67 D:\CSE Notify\android\app\src\debug\res
+com.csehub.app-main-68 D:\CSE Notify\android\app\src\main\res

@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">CSE HUB</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_events">Events</string>
+    <string name="title_timetable">Timetable</string>
+    <string name="title_files">Files</string>
+    <string name="title_gallery">Gallery</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_search_student">Search Student</string>
+    <string name="title_admin_crud">Admin Panel</string>
+    <string name="title_login">Login</string>
+    <string name="title_forgot_password">Forgot Password</string>
+    
+    <!-- Shortcuts -->
+    <string name="shortcut_timetable_short">Timetable</string>
+    <string name="shortcut_timetable_long">View today\'s timetable</string>
+    <string name="shortcut_notifications_short">Notifications</string>
+    <string name="shortcut_notifications_long">Check today\'s notifications</string>
+    
+    <!-- Bottom Nav / Drawer -->
+    <string name="menu_home">Home</string>
+    <string name="menu_dashboard">Dashboard</string>
+    <string name="menu_notifications">Notifications</string>
+    <string name="menu_events">Events</string>
+    <string name="menu_timetable">Timetable</string>
+    <string name="menu_files">Files</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_search_student">Search Student</string>
+    <string name="menu_admin">Admin Module</string>
+    <string name="menu_logout">Logout</string>
+    
+    <!-- Login screen -->
+    <string name="prompt_email">College or Registered Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign In</string>
+    <string name="action_forgot_password">Forgot Password?</string>
+    
+    <!-- Validation error messages -->
+    <string name="error_invalid_email">Invalid email address</string>
+    <string name="error_empty_password">Password cannot be empty</string>
+    <string name="error_short_password">Password must be at least 6 characters</string>
+    
+    <!-- Misc -->
+    <string name="desc_splash_logo">CSE HUB Logo</string>
+    <string name="empty_notifications">No notifications found.</string>
+    <string name="empty_events">No events found.</string>
+    <string name="empty_timetable">No classes scheduled for today.</string>
+    <string name="empty_files">No files uploaded yet.</string>
+    <string name="empty_gallery">No posts in gallery.</string>
+    
+    <!-- Buttons -->
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_add">Add New</string>
+    <string name="action_upload">Upload</string>
+    <string name="action_download">Download</string>
+</resources>
