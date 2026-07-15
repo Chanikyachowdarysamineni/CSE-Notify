@@ -12,7 +12,7 @@ const path = require('path');
 /**
  * GET /api/gallery
  */
-const getGalleryPosts = async (req, res) => {
+const getGalleryPosts = async (req, res, next) => {
     try {
         const { page = 1, limit = 20, category } = req.query;
         const skip = (page - 1) * limit;
@@ -33,15 +33,14 @@ const getGalleryPosts = async (req, res) => {
         return apiResponse(res, 200, true, 'Gallery posts retrieved', posts,
             paginationMeta(page, limit, total));
     } catch (error) {
-        logger.error('Get gallery error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
 /**
  * POST /api/gallery
  */
-const createGalleryPost = async (req, res) => {
+const createGalleryPost = async (req, res, next) => {
     try {
         if (!req.file) {
             return apiResponse(res, 400, false, 'Image is required');
@@ -58,15 +57,14 @@ const createGalleryPost = async (req, res) => {
 
         return apiResponse(res, 201, true, 'Gallery post created', post);
     } catch (error) {
-        logger.error('Create gallery post error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
 /**
  * PUT /api/gallery/:id
  */
-const updateGalleryPost = async (req, res) => {
+const updateGalleryPost = async (req, res, next) => {
     try {
         const post = await Gallery.findById(req.params.id);
         if (!post) {
@@ -98,15 +96,14 @@ const updateGalleryPost = async (req, res) => {
 
         return apiResponse(res, 200, true, 'Gallery post updated', updated);
     } catch (error) {
-        logger.error('Update gallery post error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
 /**
  * DELETE /api/gallery/:id
  */
-const deleteGalleryPost = async (req, res) => {
+const deleteGalleryPost = async (req, res, next) => {
     try {
         const post = await Gallery.findById(req.params.id);
         if (!post) {
@@ -128,8 +125,7 @@ const deleteGalleryPost = async (req, res) => {
 
         return apiResponse(res, 200, true, 'Gallery post deleted');
     } catch (error) {
-        logger.error('Delete gallery post error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 

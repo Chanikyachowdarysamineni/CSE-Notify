@@ -5,6 +5,7 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const User = require('../models/User');
+const RefreshToken = require('../models/RefreshToken');
 const Student = require('../models/Student');
 const Faculty = require('../models/Faculty');
 const Admin = require('../models/Admin');
@@ -17,6 +18,23 @@ const logger = require('../utils/logger');
 /**
  * Generate JWT token
  */
+/**
+ * Generate a new refresh token and store its hash in DB
+ */
+const generateRefreshToken = async (user) => {
+    const rawToken = crypto.randomBytes(40).toString('hex');
+    const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
+    const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
+
+    await RefreshToken.create({
+        userId: user._id,
+        tokenHash,
+        expiresAt,
+    });
+
+    return rawToken;
+};
+
 const generateToken = (user) => {
     return jwt.sign(
         { id: user._id, email: user.email, role: user.role },
@@ -278,6 +296,50 @@ const refreshFCMToken = async (req, res) => {
     }
 };
 
+
+/**
+ * POST /api/auth/refresh
+ * Rotate access token using refresh token
+ */
+const refreshTokenAuth = async (req, res, next) => {
+    try {
+        const { refreshToken } = req.body;
+        if (!refreshToken) {
+            return apiResponse(res, 400, false, 'Refresh token is required');
+        }
+
+        const tokenHash = crypto.createHash('sha256').update(refreshToken).digest('hex');
+        const tokenDoc = await RefreshToken.findOne({ tokenHash });
+
+        if (!tokenDoc) {
+            return apiResponse(res, 401, false, 'Invalid refresh token');
+        }
+
+        if (tokenDoc.expiresAt < new Date()) {
+            await RefreshToken.deleteOne({ _id: tokenDoc._id });
+            return apiResponse(res, 401, false, 'Refresh token expired');
+        }
+
+        const user = await User.findById(tokenDoc.userId);
+        if (!user || !user.isActive) {
+            return apiResponse(res, 401, false, 'User not found or inactive');
+        }
+
+        // Token rotation: delete old, issue new access & refresh token
+        await RefreshToken.deleteOne({ _id: tokenDoc._id });
+
+        const token = generateToken(user);
+        const newRefreshToken = await generateRefreshToken(user);
+
+        return apiResponse(res, 200, true, 'Token refreshed successfully', {
+            token,
+            refreshToken: newRefreshToken,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     login,
     forgotPassword,
@@ -285,4 +347,5 @@ module.exports = {
     changePassword,
     logout,
     refreshFCMToken,
+    refreshTokenAuth,
 };

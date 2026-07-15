@@ -60,7 +60,7 @@ public class DashboardRepository {
 
             @Override
             public void onFailure(Call<ApiResponse<DashboardData>> call, Throwable t) {
-                data.setValue(AuthRepository.Resource.error("No internet connection. Loading offline..."));
+                data.setValue(AuthRepository.Resource.error(t != null ? t.getMessage() : "Unknown network error"));
             }
         });
 

@@ -22,6 +22,17 @@ const validate = (req, res, next) => {
     next();
 };
 
+const parseJsonArray = (value) => {
+    if (typeof value === 'string') {
+        try {
+            return JSON.parse(value);
+        } catch (e) {
+            return [];
+        }
+    }
+    return value;
+};
+
 // ============================================
 // Validation Rules
 // ============================================
@@ -95,10 +106,12 @@ const notificationValidation = {
             .withMessage('Priority must be low, medium, high, or urgent'),
         body('targetYears')
             .optional()
+            .customSanitizer(parseJsonArray)
             .isArray()
             .withMessage('Target years must be an array'),
         body('targetSections')
             .optional()
+            .customSanitizer(parseJsonArray)
             .isArray()
             .withMessage('Target sections must be an array'),
         body('scheduleTime')
@@ -182,6 +195,47 @@ const profileValidation = {
     ],
 };
 
+const academicYearValidation = {
+    createOrUpdate: [
+        body('name')
+            .trim()
+            .notEmpty()
+            .withMessage('Academic Year name is required'),
+        body('session')
+            .trim()
+            .notEmpty()
+            .withMessage('Session is required'),
+        body('status')
+            .optional()
+            .isIn(['active', 'inactive'])
+            .withMessage('Status must be active or inactive'),
+        body('order')
+            .optional()
+            .isInt()
+            .withMessage('Order must be an integer'),
+    ],
+};
+
+const sectionValidation = {
+    createOrUpdate: [
+        body('name')
+            .trim()
+            .notEmpty()
+            .withMessage('Section name is required'),
+        body('academicYear')
+            .isMongoId()
+            .withMessage('A valid Academic Year ID is required'),
+        body('status')
+            .optional()
+            .isIn(['active', 'inactive'])
+            .withMessage('Status must be active or inactive'),
+        body('capacity')
+            .optional()
+            .isInt({ min: 1 })
+            .withMessage('Capacity must be a positive integer'),
+    ],
+};
+
 const paginationValidation = [
     query('page')
         .optional()
@@ -205,6 +259,8 @@ module.exports = {
     notificationValidation,
     eventValidation,
     profileValidation,
+    academicYearValidation,
+    sectionValidation,
     paginationValidation,
     idValidation,
 };

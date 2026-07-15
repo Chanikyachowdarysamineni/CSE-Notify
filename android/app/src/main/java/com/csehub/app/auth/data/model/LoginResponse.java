@@ -7,10 +7,14 @@ public class LoginResponse {
     @SerializedName("token")
     private String token;
 
+    @SerializedName("refreshToken")
+    private String refreshToken;
+
     @SerializedName("user")
     private UserInfo user;
 
     public String getToken() { return token; }
+    public String getRefreshToken() { return refreshToken; }
     public UserInfo getUser() { return user; }
 
     public static class UserInfo {

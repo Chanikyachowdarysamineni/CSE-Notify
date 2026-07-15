@@ -13,6 +13,8 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
 const { Server } = require('socket.io');
+const mongoSanitize = require('express-mongo-sanitize');
+const rateLimit = require('express-rate-limit');
 
 const connectDB = require('./src/config/db');
 const { errorHandler, notFound } = require('./src/middleware/errorHandler');
@@ -57,7 +59,19 @@ app.set('io', io);
 // ============================================
 
 // Security headers
-app.use(helmet());
+app.use(helmet({
+    crossOriginResourcePolicy: false // Allow loading images from same origin (for uploads)
+}));
+
+// Rate limiting (Global)
+const globalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 1000, // Limit each IP to 1000 requests per `window`
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { success: false, message: 'Too many requests from this IP, please try again after 15 minutes' }
+});
+app.use('/api/', globalLimiter);
 
 // CORS configuration
 app.use(cors({
@@ -79,6 +93,9 @@ if (process.env.NODE_ENV === 'development') {
 // Body parsing
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Data sanitization against NoSQL query injection
+app.use(mongoSanitize());
 
 // Static files (uploads)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

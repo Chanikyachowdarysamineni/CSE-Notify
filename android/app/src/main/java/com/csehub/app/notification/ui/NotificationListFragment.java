@@ -227,6 +227,13 @@ public class NotificationListFragment extends BaseFragment {
                 filtered.add(n);
             }
         }
+        
+        boolean show = filtered.isEmpty();
+        if (show) {
+            binding.emptyStateLayout.getRoot().setVisibility(View.VISIBLE);
+        } else {  binding.recyclerView.setVisibility(View.VISIBLE);
+        }
+        
         adapter.submitList(filtered);
     }
     

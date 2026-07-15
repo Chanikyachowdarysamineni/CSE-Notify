@@ -6,7 +6,7 @@ const { apiResponse } = require('../utils/constants');
 const logger = require('../utils/logger');
 
 // Create Academic Year
-const createAcademicYear = async (req, res) => {
+const createAcademicYear = async (req, res, next) => {
     try {
         const { name, session, status, order } = req.body;
 
@@ -30,13 +30,12 @@ const createAcademicYear = async (req, res) => {
 
         return apiResponse(res, 201, true, 'Academic year created successfully', year);
     } catch (error) {
-        logger.error('Create academic year error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
 // Get Academic Years (Active or All depending on role or query)
-const getAcademicYears = async (req, res) => {
+const getAcademicYears = async (req, res, next) => {
     try {
         const { status } = req.query;
         const query = {};
@@ -45,13 +44,12 @@ const getAcademicYears = async (req, res) => {
         const years = await AcademicYear.find(query).sort({ order: 1, name: 1 }).lean();
         return apiResponse(res, 200, true, 'Academic years retrieved', years);
     } catch (error) {
-        logger.error('Get academic years error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
 // Update Academic Year
-const updateAcademicYear = async (req, res) => {
+const updateAcademicYear = async (req, res, next) => {
     try {
         const { name, session, status, order } = req.body;
         const yearId = req.params.id;
@@ -81,13 +79,12 @@ const updateAcademicYear = async (req, res) => {
 
         return apiResponse(res, 200, true, 'Academic year updated', updated);
     } catch (error) {
-        logger.error('Update academic year error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
 // Delete Academic Year (if no dependencies)
-const deleteAcademicYear = async (req, res) => {
+const deleteAcademicYear = async (req, res, next) => {
     try {
         const yearId = req.params.id;
 
@@ -115,8 +112,7 @@ const deleteAcademicYear = async (req, res) => {
         await AcademicYear.findByIdAndDelete(yearId);
         return apiResponse(res, 200, true, 'Academic year deleted successfully');
     } catch (error) {
-        logger.error('Delete academic year error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 

@@ -2,7 +2,7 @@
  * Auth Routes
  */
 const router = require('express').Router();
-const { login, forgotPassword, resetPassword, changePassword, logout, refreshFCMToken } = require('../controllers/auth.controller');
+const { login, forgotPassword, resetPassword, changePassword, logout, refreshFCMToken, refreshTokenAuth } = require('../controllers/auth.controller');
 const { auth } = require('../middleware/auth');
 const { authValidation, validate } = require('../middleware/validate');
 const { authLimiter } = require('../middleware/rateLimiter');
@@ -13,5 +13,6 @@ router.post('/reset-password', authLimiter, authValidation.resetPassword, valida
 router.put('/change-password', auth, authValidation.changePassword, validate, changePassword);
 router.post('/logout', auth, logout);
 router.post('/refresh-token', auth, refreshFCMToken);
+router.post('/refresh', refreshTokenAuth);
 
 module.exports = router;

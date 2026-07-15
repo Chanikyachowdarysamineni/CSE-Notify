@@ -21,6 +21,8 @@ import com.csehub.app.auth.ui.LoginActivity;
 import com.csehub.app.core.base.BaseActivity;
 import com.csehub.app.databinding.ActivityMainBinding;
 
+import java.io.File;
+
 /**
  * MainActivity orchestration role-based layouts (Bottom Navigation vs Navigation Drawer)
  * and deep link parsing
@@ -50,6 +52,32 @@ public class MainActivity extends BaseActivity {
         setupRoleBasedNavigation();
         handleIntentExtras(getIntent());
         checkNotificationPermission();
+        checkDeviceSecurity();
+    }
+
+    private void checkDeviceSecurity() {
+        boolean isRooted = checkRootMethod1() || checkRootMethod2();
+        if (isRooted) {
+            android.widget.Toast.makeText(this, "WARNING: Rooted device detected! Sensitive operations may be restricted.", android.widget.Toast.LENGTH_LONG).show();
+            // Restrict features if necessary based on user requirements.
+        }
+    }
+
+    private boolean checkRootMethod1() {
+        String buildTags = android.os.Build.TAGS;
+        return buildTags != null && buildTags.contains("test-keys");
+    }
+
+    private boolean checkRootMethod2() {
+        String[] paths = {
+            "/system/app/Superuser.apk", "/sbin/su", "/system/bin/su", "/system/xbin/su",
+            "/data/local/xbin/su", "/data/local/bin/su", "/system/sd/xbin/su",
+            "/system/bin/failsafe/su", "/data/local/su"
+        };
+        for (String path : paths) {
+            if (new File(path).exists()) return true;
+        }
+        return false;
     }
 
     private void checkNotificationPermission() {

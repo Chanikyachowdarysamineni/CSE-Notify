@@ -20,7 +20,7 @@ const logger = require('../utils/logger');
 // Student Management
 // ============================================
 
-const getStudents = async (req, res) => {
+const getStudents = async (req, res, next) => {
     try {
         const { page = 1, limit = 20, academicYear, section, search } = req.query;
         const skip = (page - 1) * limit;
@@ -50,12 +50,11 @@ const getStudents = async (req, res) => {
         return apiResponse(res, 200, true, 'Students retrieved', students,
             paginationMeta(page, limit, total));
     } catch (error) {
-        logger.error('Get students error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
-const createStudent = async (req, res) => {
+const createStudent = async (req, res, next) => {
     try {
         const { email, password, name, regNo, academicYear, section, mobile, personalEmail, collegeEmail, dob, dayScholarHosteller, cgpa } = req.body;
 
@@ -94,7 +93,7 @@ const createStudent = async (req, res) => {
     }
 };
 
-const updateStudent = async (req, res) => {
+const updateStudent = async (req, res, next) => {
     try {
         const student = await Student.findById(req.params.id);
         if (!student) {
@@ -116,12 +115,11 @@ const updateStudent = async (req, res) => {
 
         return apiResponse(res, 200, true, 'Student updated', updated);
     } catch (error) {
-        logger.error('Update student error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
-const deleteStudent = async (req, res) => {
+const deleteStudent = async (req, res, next) => {
     try {
         const student = await Student.findById(req.params.id);
         if (!student) {
@@ -136,8 +134,7 @@ const deleteStudent = async (req, res) => {
 
         return apiResponse(res, 200, true, 'Student deleted');
     } catch (error) {
-        logger.error('Delete student error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
@@ -145,7 +142,7 @@ const deleteStudent = async (req, res) => {
 // Faculty Management
 // ============================================
 
-const getFaculty = async (req, res) => {
+const getFaculty = async (req, res, next) => {
     try {
         const { page = 1, limit = 20, search } = req.query;
         const skip = (page - 1) * limit;
@@ -171,12 +168,11 @@ const getFaculty = async (req, res) => {
         return apiResponse(res, 200, true, 'Faculty retrieved', faculty,
             paginationMeta(page, limit, total));
     } catch (error) {
-        logger.error('Get faculty error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
-const createFaculty = async (req, res) => {
+const createFaculty = async (req, res, next) => {
     try {
         const { email, password, name, employeeId, designation, mobile, personalEmail, collegeEmail } = req.body;
 
@@ -209,7 +205,7 @@ const createFaculty = async (req, res) => {
     }
 };
 
-const updateFaculty = async (req, res) => {
+const updateFaculty = async (req, res, next) => {
     try {
         const faculty = await Faculty.findById(req.params.id);
         if (!faculty) {
@@ -230,12 +226,11 @@ const updateFaculty = async (req, res) => {
 
         return apiResponse(res, 200, true, 'Faculty updated', updated);
     } catch (error) {
-        logger.error('Update faculty error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
-const deleteFaculty = async (req, res) => {
+const deleteFaculty = async (req, res, next) => {
     try {
         const faculty = await Faculty.findById(req.params.id);
         if (!faculty) {
@@ -249,8 +244,7 @@ const deleteFaculty = async (req, res) => {
 
         return apiResponse(res, 200, true, 'Faculty deleted');
     } catch (error) {
-        logger.error('Delete faculty error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
@@ -258,7 +252,7 @@ const deleteFaculty = async (req, res) => {
 // Statistics & Audit
 // ============================================
 
-const getStatistics = async (req, res) => {
+const getStatistics = async (req, res, next) => {
     try {
         const [students, faculty, notifications, events, files, gallery, users] = await Promise.all([
             Student.countDocuments(),
@@ -296,12 +290,11 @@ const getStatistics = async (req, res) => {
             sectionWise,
         });
     } catch (error) {
-        logger.error('Get statistics error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 
-const getAuditLogs = async (req, res) => {
+const getAuditLogs = async (req, res, next) => {
     try {
         const { page = 1, limit = 50, action, resource } = req.query;
         const skip = (page - 1) * limit;
@@ -323,8 +316,7 @@ const getAuditLogs = async (req, res) => {
         return apiResponse(res, 200, true, 'Audit logs retrieved', logs,
             paginationMeta(page, limit, total));
     } catch (error) {
-        logger.error('Get audit logs error:', error);
-        return apiResponse(res, 500, false, 'Server error');
+        next(error);
     }
 };
 

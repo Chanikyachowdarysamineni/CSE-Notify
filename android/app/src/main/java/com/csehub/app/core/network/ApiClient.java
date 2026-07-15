@@ -51,6 +51,9 @@ public class ApiClient {
                 .connectTimeout(Constants.CONNECT_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(Constants.READ_TIMEOUT, TimeUnit.SECONDS)
                 .writeTimeout(Constants.WRITE_TIMEOUT, TimeUnit.SECONDS)
+                .addInterceptor(new NetworkConnectionInterceptor(appContext))
+                .addInterceptor(new AuthErrorInterceptor(appContext))
+                .authenticator(new TokenAuthenticator(appContext))
                 .addInterceptor(chain -> {
                     // Auth interceptor - inject JWT token
                     Request original = chain.request();
