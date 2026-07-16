@@ -15,8 +15,9 @@ const path = require('path');
 const { Server } = require('socket.io');
 const mongoSanitize = require('express-mongo-sanitize');
 const rateLimit = require('express-rate-limit');
+const mongoose = require('mongoose');
 
-const connectDB = require('./src/config/db');
+const { connectDB, disconnectDB } = require('./src/config/db');
 const { errorHandler, notFound } = require('./src/middleware/errorHandler');
 const logger = require('./src/utils/logger');
 
@@ -63,15 +64,8 @@ app.use(helmet({
     crossOriginResourcePolicy: false // Allow loading images from same origin (for uploads)
 }));
 
-// Rate limiting (Global)
-const globalLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 1000, // Limit each IP to 1000 requests per `window`
-    standardHeaders: true,
-    legacyHeaders: false,
-    message: { success: false, message: 'Too many requests from this IP, please try again after 15 minutes' }
-});
-app.use('/api/', globalLimiter);
+const { apiLimiter } = require('./src/middleware/rateLimiter');
+app.use('/api/', apiLimiter);
 
 // CORS configuration
 app.use(cors({
@@ -119,8 +113,10 @@ app.use('/api/sections', sectionRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-    res.json({
-        status: 'ok',
+    const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+    res.status(dbStatus === 'connected' ? 200 : 500).json({
+        status: dbStatus === 'connected' ? 'ok' : 'error',
+        database: dbStatus,
         timestamp: new Date().toISOString(),
         uptime: process.uptime(),
         environment: process.env.NODE_ENV
@@ -198,16 +194,32 @@ const startServer = async () => {
 startServer();
 
 // Graceful shutdown
-process.on('SIGTERM', () => {
-    logger.info('SIGTERM received. Shutting down gracefully...');
-    server.close(() => {
-        logger.info('Server closed');
+const gracefulShutdown = async (signal) => {
+    logger.info(`${signal} received. Shutting down gracefully...`);
+    server.close(async () => {
+        logger.info('HTTP server closed');
+        await disconnectDB();
+        logger.info('Clean shutdown complete');
         process.exit(0);
     });
-});
+
+    // Force exit after 10s if connections do not close
+    setTimeout(() => {
+        logger.error('Forcefully shutting down after timeout');
+        process.exit(1);
+    }, 10000);
+};
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
 process.on('unhandledRejection', (err) => {
     logger.error('Unhandled Rejection:', err);
+});
+
+process.on('uncaughtException', (err) => {
+    logger.error('Uncaught Exception:', err);
+    process.exit(1);
 });
 
 module.exports = { app, server, io };
