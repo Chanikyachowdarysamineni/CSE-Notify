@@ -15,3 +15,5 @@ local.properties
 *.apk
 *.ap_
 *.aab
+google-services.json
+app/build/

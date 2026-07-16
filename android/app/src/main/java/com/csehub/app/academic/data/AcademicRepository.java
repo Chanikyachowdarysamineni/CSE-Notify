@@ -18,7 +18,7 @@ public class AcademicRepository {
     private final AcademicApi academicApi;
 
     public AcademicRepository() {
-        academicApi = ApiClient.getClient().create(AcademicApi.class);
+        academicApi = ApiClient.createService(AcademicApi.class);
     }
 
     public LiveData<ApiResponse<List<AcademicYear>>> getAcademicYears() {
