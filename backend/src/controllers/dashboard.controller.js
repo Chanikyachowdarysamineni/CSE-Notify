@@ -1,7 +1,8 @@
 /**
  * Dashboard Controller
- * Role-based dashboard widgets data
+ * Role-based dashboard widgets data — all queries parallelized
  */
+const mongoose = require('mongoose');
 const Notification = require('../models/Notification');
 const NotificationRead = require('../models/NotificationRead');
 const Event = require('../models/Event');
@@ -21,13 +22,11 @@ const getDashboard = async (req, res, next) => {
     try {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
         const dayName = DAYS[new Date().getDay() - 1] || 'Monday';
 
         const dashboard = {};
 
-        // Today's notifications (last 24 hours)
+        // Base notification query (today's)
         const notifQuery = {
             createdAt: { $gte: today },
             $or: [
@@ -36,79 +35,120 @@ const getDashboard = async (req, res, next) => {
             ],
         };
 
-        dashboard.todayNotifications = await Notification.find(notifQuery)
-            .populate('createdBy', 'name')
-            .sort({ createdAt: -1 })
-            .limit(10)
-            .lean();
-
-        // Upcoming events (next 30 days)
-        dashboard.upcomingEvents = await Event.find({
-            date: { $gte: today },
-            isActive: true,
-        })
-            .sort({ date: 1 })
-            .limit(5)
-            .lean();
-
-        // Today's timetable
+        // Role-specific profile fetch (needed for timetable)
+        let profilePromise = Promise.resolve(null);
         if (req.user.role === ROLES.STUDENT) {
-            const student = await Student.findOne({ userId: req.user.id });
-            if (student) {
-                dashboard.todayTimetable = await Timetable.find({
-                    academicYear: student.academicYear,
-                    section: student.section,
-                    day: dayName,
-                }).sort({ period: 1 }).lean();
-            }
+            profilePromise = Student.findOne({ userId: req.user.id })
+                .select('academicYear section')
+                .lean();
         } else if (req.user.role === ROLES.FACULTY) {
-            const faculty = await Faculty.findOne({ userId: req.user.id });
-            if (faculty) {
-                dashboard.todayTimetable = await Timetable.find({
-                    faculty: faculty._id,
-                    day: dayName,
-                }).sort({ period: 1 }).lean();
-            }
+            profilePromise = Faculty.findOne({ userId: req.user.id })
+                .select('_id')
+                .lean();
         }
 
-        // Recent files
-        dashboard.recentFiles = await File.find()
-            .sort({ createdAt: -1 })
-            .limit(5)
-            .lean();
+        // Run all independent top-level queries in parallel
+        const [
+            todayNotifications,
+            upcomingEvents,
+            recentFiles,
+            galleryHighlights,
+            profile,
+        ] = await Promise.all([
+            Notification.find(notifQuery)
+                .populate('createdBy', 'name')
+                .sort({ createdAt: -1 })
+                .limit(10)
+                .lean(),
+            Event.find({ date: { $gte: today }, isActive: true })
+                .sort({ date: 1 })
+                .limit(5)
+                .lean(),
+            File.find()
+                .sort({ createdAt: -1 })
+                .limit(5)
+                .lean(),
+            Gallery.find()
+                .sort({ createdAt: -1 })
+                .limit(6)
+                .lean(),
+            profilePromise,
+        ]);
 
-        // Gallery highlights
-        dashboard.galleryHighlights = await Gallery.find()
-            .sort({ createdAt: -1 })
-            .limit(6)
-            .lean();
+        dashboard.todayNotifications = todayNotifications;
+        dashboard.upcomingEvents = upcomingEvents;
+        dashboard.recentFiles = recentFiles;
+        dashboard.galleryHighlights = galleryHighlights;
 
-        // Quick statistics (Admin only)
+        // Today's timetable (requires profile)
+        if (req.user.role === ROLES.STUDENT && profile) {
+            dashboard.todayTimetable = await Timetable.find({
+                academicYear: profile.academicYear,
+                section: profile.section,
+                day: dayName,
+            }).sort({ period: 1 }).lean();
+        } else if (req.user.role === ROLES.FACULTY && profile) {
+            dashboard.todayTimetable = await Timetable.find({
+                faculty: profile._id,
+                day: dayName,
+            }).sort({ period: 1 }).lean();
+        }
+
+        // Unread count — use aggregation to avoid loading IDs into memory
+        const userId = new mongoose.Types.ObjectId(req.user.id);
+        const unreadAgg = await Notification.aggregate([
+            { $match: notifQuery },
+            {
+                $lookup: {
+                    from: 'notificationreads',
+                    let: { notifId: '$_id' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$notificationId', '$$notifId'] },
+                                        { $eq: ['$userId', userId] },
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    as: 'reads'
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: 1 },
+                    readCount: { $sum: { $cond: [{ $gt: [{ $size: '$reads' }, 0] }, 1, 0] } },
+                }
+            }
+        ]);
+        const unreadData = unreadAgg[0] || { total: 0, readCount: 0 };
+        dashboard.unreadCount = Math.max(0, unreadData.total - unreadData.readCount);
+
+        // Quick statistics (Admin only) — fully parallel
         if (req.user.role === ROLES.ADMIN) {
-            const [totalStudents, totalFaculty, totalNotifications, totalEvents] = await Promise.all([
-                Student.countDocuments(),
-                Faculty.countDocuments(),
-                Notification.countDocuments(),
-                Event.countDocuments(),
-            ]);
+            const [totalStudents, totalFaculty, totalNotifications, totalEvents, totalFiles, totalGalleryPosts] =
+                await Promise.all([
+                    Student.countDocuments(),
+                    Faculty.countDocuments(),
+                    Notification.countDocuments(),
+                    Event.countDocuments(),
+                    File.countDocuments(),
+                    Gallery.countDocuments(),
+                ]);
 
             dashboard.statistics = {
                 totalStudents,
                 totalFaculty,
                 totalNotifications,
                 totalEvents,
-                totalFiles: await File.countDocuments(),
-                totalGalleryPosts: await Gallery.countDocuments(),
+                totalFiles,
+                totalGalleryPosts,
             };
         }
-
-        // Unread notification count
-        const totalNotifs = await Notification.countDocuments(notifQuery);
-        const readCount = await NotificationRead.countDocuments({
-            userId: req.user.id,
-            notificationId: { $in: (await Notification.find(notifQuery).select('_id')).map(n => n._id) },
-        });
-        dashboard.unreadCount = Math.max(0, totalNotifs - readCount);
 
         return apiResponse(res, 200, true, 'Dashboard data retrieved', dashboard);
     } catch (error) {

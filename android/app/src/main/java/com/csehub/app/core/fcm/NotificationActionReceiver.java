@@ -6,14 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.csehub.app.auth.data.AuthRepository;
-import com.csehub.app.core.database.AppDatabase;
-import com.csehub.app.core.network.ApiClient;
-import com.csehub.app.notification.data.NotificationApi;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import androidx.work.Data;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 /**
  * BroadcastReceiver to handle notification actions (like "Mark as Read")
@@ -39,37 +36,24 @@ public class NotificationActionReceiver extends BroadcastReceiver {
                 manager.cancel(systemNotificationId);
             }
 
-            // 2. Update local database in background thread
-            AppDatabase db = AppDatabase.getInstance(context);
-            new Thread(() -> {
-                db.notificationDao().markAsRead(notificationId);
-                Log.d(TAG, "Notification marked as read in local Room cache");
-            }).start();
+            // 2. Queue WorkManager job for reliable DB + Network sync
+            Data inputData = new Data.Builder()
+                    .putString(NotificationReadWorker.KEY_NOTIFICATION_ID, notificationId)
+                    .build();
 
-            // 3. Make API call to sync read status with backend
-            try {
-                // Initialize ApiClient if needed
-                ApiClient.init(context);
-                NotificationApi api = ApiClient.createService(NotificationApi.class);
-                api.markAsRead(notificationId).enqueue(new Callback<com.csehub.app.core.network.models.ApiResponse<Void>>() {
-                    @Override
-                    public void onResponse(Call<com.csehub.app.core.network.models.ApiResponse<Void>> call,
-                                           Response<com.csehub.app.core.network.models.ApiResponse<Void>> response) {
-                        if (response.isSuccessful()) {
-                            Log.d(TAG, "Successfully synced read status with server");
-                        } else {
-                            Log.w(TAG, "Failed to sync read status with server: Code " + response.code());
-                        }
-                    }
+            OneTimeWorkRequest readWork = new OneTimeWorkRequest.Builder(NotificationReadWorker.class)
+                    .setInputData(inputData)
+                    .build();
 
-                    @Override
-                    public void onFailure(Call<com.csehub.app.core.network.models.ApiResponse<Void>> call, Throwable t) {
-                        Log.w(TAG, "Network failure syncing read status with server: " + t.getMessage());
-                    }
-                });
-            } catch (Exception e) {
-                Log.e(TAG, "Error initiating API call for read sync", e);
-            }
+            WorkManager.getInstance(context).enqueueUniqueWork(
+                    "mark_read_" + notificationId,
+                    ExistingWorkPolicy.REPLACE,
+                    readWork
+            );
+
+            // 3. Notify UI to update the badge immediately
+            Intent updateIntent = new Intent("ACTION_UNREAD_COUNT_UPDATE");
+            LocalBroadcastManager.getInstance(context).sendBroadcast(updateIntent);
         }
     }
 }

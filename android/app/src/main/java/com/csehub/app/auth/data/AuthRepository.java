@@ -24,8 +24,10 @@ public class AuthRepository {
 
     private final AuthApi authApi;
     private final TokenManager tokenManager;
+    private final Context context;
 
     public AuthRepository(Context context) {
+        this.context = context.getApplicationContext();
         this.authApi = ApiClient.createService(AuthApi.class);
         this.tokenManager = TokenManager.getInstance(context);
     }
@@ -34,7 +36,15 @@ public class AuthRepository {
         MutableLiveData<Resource<LoginResponse>> data = new MutableLiveData<>();
         data.setValue(Resource.loading());
 
-        authApi.login(new LoginRequest(email, password, fcmToken)).enqueue(new Callback<ApiResponse<LoginResponse>>() {
+        String deviceId = android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+        String deviceModel = android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL;
+        String appVersion = "1.0.0";
+        try {
+            android.content.pm.PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            appVersion = pInfo.versionName;
+        } catch (Exception e) { /* ignored */ }
+
+        authApi.login(new LoginRequest(email, password, fcmToken, deviceId, deviceModel, appVersion)).enqueue(new Callback<ApiResponse<LoginResponse>>() {
             @Override
             public void onResponse(Call<ApiResponse<LoginResponse>> call, Response<ApiResponse<LoginResponse>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {

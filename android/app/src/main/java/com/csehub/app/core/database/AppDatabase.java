@@ -17,7 +17,7 @@ import com.csehub.app.core.database.entity.TimetableEntity;
         NotificationEntity.class,
         EventEntity.class,
         TimetableEntity.class
-}, version = 2, exportSchema = false)
+}, version = 3, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase instance;

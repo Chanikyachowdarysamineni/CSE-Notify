@@ -28,6 +28,8 @@ import retrofit2.Response;
 
 public class NotificationRepository {
 
+    private static final com.google.gson.Gson GSON = new com.google.gson.Gson();
+
     private final NotificationApi notificationApi;
     private final AppDatabase db;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -39,6 +41,10 @@ public class NotificationRepository {
 
     public LiveData<List<NotificationEntity>> getOfflineNotifications() {
         return db.notificationDao().getAllNotifications();
+    }
+
+    public LiveData<Integer> getUnreadCount() {
+        return db.notificationDao().getUnreadCount();
     }
 
     public LiveData<AuthRepository.Resource<List<Notification>>> getNotifications(
@@ -129,8 +135,8 @@ public class NotificationRepository {
         map.put("link", RequestBody.create(link == null ? "" : link, MediaType.parse("text/plain")));
 
         // Map target lists
-        String yearsJson = new com.google.gson.Gson().toJson(targetYears);
-        String sectionsJson = new com.google.gson.Gson().toJson(targetSections);
+        String yearsJson = GSON.toJson(targetYears);
+        String sectionsJson = GSON.toJson(targetSections);
         map.put("targetYears", RequestBody.create(yearsJson, MediaType.parse("application/json")));
         map.put("targetSections", RequestBody.create(sectionsJson, MediaType.parse("application/json")));
 
@@ -175,6 +181,23 @@ public class NotificationRepository {
 
         return result;
     }
+
+    public void markAllAsRead() {
+        notificationApi.markAllAsRead().enqueue(new Callback<ApiResponse<Void>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
+                if (response.isSuccessful()) {
+                    executor.execute(() -> db.notificationDao().markAllAsRead());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
+                // Ignore network errors, it's optimistic
+            }
+        });
+    }
+
     public LiveData<AuthRepository.Resource<Void>> deleteNotification(String id) {
         MutableLiveData<AuthRepository.Resource<Void>> result = new MutableLiveData<>();
         result.setValue(AuthRepository.Resource.loading());
@@ -211,8 +234,8 @@ public class NotificationRepository {
         map.put("priority", RequestBody.create(priority, MediaType.parse("text/plain")));
         map.put("link", RequestBody.create(link == null ? "" : link, MediaType.parse("text/plain")));
 
-        String yearsJson = new com.google.gson.Gson().toJson(targetYears);
-        String sectionsJson = new com.google.gson.Gson().toJson(targetSections);
+        String yearsJson = GSON.toJson(targetYears);
+        String sectionsJson = GSON.toJson(targetSections);
         map.put("targetYears", RequestBody.create(yearsJson, MediaType.parse("application/json")));
         map.put("targetSections", RequestBody.create(sectionsJson, MediaType.parse("application/json")));
 

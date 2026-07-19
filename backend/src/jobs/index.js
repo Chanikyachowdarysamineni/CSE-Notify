@@ -7,6 +7,7 @@
  */
 const cron = require('node-cron');
 const Notification = require('../models/Notification');
+const NotificationRead = require('../models/NotificationRead');
 const Student = require('../models/Student');
 const Faculty = require('../models/Faculty');
 const Timetable = require('../models/Timetable');
@@ -62,7 +63,7 @@ const generateBirthdayWishes = async () => {
                     { $eq: [{ $dayOfMonth: '$dob' }, day] },
                 ]
             }
-        });
+        }).select('name').lean();
 
         if (birthdayStudents.length === 0) {
             logger.info('No birthdays today');
@@ -89,7 +90,7 @@ const generateBirthdayWishes = async () => {
         });
 
         // Send push notification
-        const tokens = await DeviceToken.find({ isActive: true }).select('token');
+        const tokens = await DeviceToken.find({ isActive: true }).select('token').lean();
         const tokenStrings = tokens.map(t => t.token).filter(Boolean);
         if (tokenStrings.length > 0) {
             await sendPushNotification(tokenStrings, title, message, { category: 'Birthday' });
@@ -138,7 +139,7 @@ const generateTimetableReminders = async () => {
         });
 
         // Send push notification
-        const tokens = await DeviceToken.find({ isActive: true }).select('token');
+        const tokens = await DeviceToken.find({ isActive: true }).select('token').lean();
         const tokenStrings = tokens.map(t => t.token).filter(Boolean);
         if (tokenStrings.length > 0) {
             await sendPushNotification(tokenStrings, title, message, {
@@ -154,34 +155,73 @@ const generateTimetableReminders = async () => {
 };
 
 /**
- * Process scheduled notifications that are due
+ * Process scheduled notifications that are due.
+ *
+ * CRITICAL FIX (Race Condition / Duplicate Send Prevention):
+ * Each notification is claimed atomically using findOneAndUpdate with
+ * { isSent: false } as the query and { $set: { isSent: true } } as the update.
+ * Only the server instance that successfully claims the document (gets a non-null
+ * return) will send the push notification. This prevents duplicate sends when
+ * multiple server instances are running.
  */
 const processScheduledNotifications = async () => {
     try {
         const now = new Date();
-        const scheduledNotifications = await Notification.find({
+
+        // Find all due-but-unsent scheduled notifications (IDs only)
+        const dueNotifications = await Notification.find({
             isScheduled: true,
             isSent: false,
             scheduleTime: { $lte: now },
-        });
+        }).select('_id').lean();
 
-        for (const notification of scheduledNotifications) {
-            notification.isSent = true;
-            await notification.save();
+        for (const { _id } of dueNotifications) {
+            // Atomically claim this notification: only one server instance wins
+            const claimed = await Notification.findOneAndUpdate(
+                { _id, isScheduled: true, isSent: false }, // Guard: must still be unsent
+                { $set: { isSent: true } },
+                { new: true }
+            );
 
-            // Send push notification
-            const tokens = await DeviceToken.find({ isActive: true }).select('token');
-            const tokenStrings = tokens.map(t => t.token).filter(Boolean);
+            if (!claimed) {
+                // Another instance already claimed it — skip
+                continue;
+            }
+
+            // Send push notification — respect targeting
+            let tokenStrings = [];
+            if (claimed.targetYears && claimed.targetYears.length > 0) {
+                const studentQuery = { academicYear: { $in: claimed.targetYears } };
+                if (claimed.targetSections && claimed.targetSections.length > 0) {
+                    studentQuery.section = { $in: claimed.targetSections };
+                }
+                const [students, staffTokens] = await Promise.all([
+                    Student.find(studentQuery).select('userId').lean(),
+                    DeviceToken.find({ role: { $in: ['faculty', 'admin'] }, isActive: true }).select('token').lean(),
+                ]);
+                const studentUserIds = students.map(s => s.userId.toString());
+                const [studentTokens] = await Promise.all([
+                    DeviceToken.find({ userId: { $in: studentUserIds }, isActive: true }).select('token').lean(),
+                ]);
+                const seen = new Set();
+                tokenStrings = [...studentTokens, ...staffTokens]
+                    .map(t => t.token)
+                    .filter(t => t && !seen.has(t) && seen.add(t));
+            } else {
+                const tokens = await DeviceToken.find({ isActive: true }).select('token').lean();
+                tokenStrings = tokens.map(t => t.token).filter(Boolean);
+            }
+
             if (tokenStrings.length > 0) {
                 await sendPushNotification(
                     tokenStrings,
-                    notification.title,
-                    notification.message.substring(0, 200),
-                    { notificationId: notification._id.toString(), category: notification.category }
+                    claimed.title,
+                    claimed.message ? claimed.message.substring(0, 200) : '',
+                    { notificationId: claimed._id.toString(), category: claimed.category || '' }
                 );
             }
 
-            logger.info(`Scheduled notification sent: ${notification.title}`);
+            logger.info(`Scheduled notification sent: ${claimed.title}`);
         }
     } catch (error) {
         logger.error('Process scheduled notifications error:', error);
@@ -189,18 +229,28 @@ const processScheduledNotifications = async () => {
 };
 
 /**
- * Clean expired notifications (soft cleanup - mark as expired)
+ * Clean expired auto-generated notifications.
+ * Also deletes associated NotificationRead records to prevent orphans.
  */
 const cleanExpiredNotifications = async () => {
     try {
-        const result = await Notification.deleteMany({
+        // Find expired auto-generated notification IDs first
+        const expiredDocs = await Notification.find({
             expiryDate: { $lt: new Date() },
-            isAutoGenerated: true, // Only auto-clean system-generated ones
-        });
+            isAutoGenerated: true,
+        }).select('_id').lean();
 
-        if (result.deletedCount > 0) {
-            logger.info(`Cleaned ${result.deletedCount} expired auto-generated notifications`);
-        }
+        if (expiredDocs.length === 0) return;
+
+        const expiredIds = expiredDocs.map(d => d._id);
+
+        // Delete orphan read records first, then delete the notifications
+        const [readResult, notifResult] = await Promise.all([
+            NotificationRead.deleteMany({ notificationId: { $in: expiredIds } }),
+            Notification.deleteMany({ _id: { $in: expiredIds } }),
+        ]);
+
+        logger.info(`Cleaned ${notifResult.deletedCount} expired auto-generated notifications and ${readResult.deletedCount} associated read records`);
     } catch (error) {
         logger.error('Clean expired notifications error:', error);
     }

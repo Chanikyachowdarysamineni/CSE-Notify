@@ -27,4 +27,13 @@ public interface NotificationDao {
 
     @Query("UPDATE notifications SET isRead = 1 WHERE id = :id")
     void markAsRead(String id);
+
+    @Query("UPDATE notifications SET isRead = 1")
+    void markAllAsRead();
+
+    @Query("SELECT COUNT(*) FROM notifications WHERE isRead = 0")
+    LiveData<Integer> getUnreadCount();
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertSingle(NotificationEntity entity);
 }

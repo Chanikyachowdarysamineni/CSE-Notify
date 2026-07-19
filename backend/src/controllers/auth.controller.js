@@ -55,8 +55,6 @@ const login = async (req, res) => {
     try {
         const { loginId, password, fcmToken } = req.body;
 
-        console.log("LOGIN REQUEST RECEIVED: loginId =", loginId, "passwordLength =", password ? password.length : 0);
-
         if (!loginId || !password) {
             return apiResponse(res, 400, false, 'Please provide login credentials');
         }
@@ -64,12 +62,15 @@ const login = async (req, res) => {
         // Find user by loginId
         let user = await User.findOne({ loginId: new RegExp(`^${loginId}$`, 'i') }).select('+password');
         
-        // Fallback: check if loginId is a mobile number in profiles
+        // Fallback: check if loginId is a mobile number — query all profile types in parallel
         if (!user) {
-            let profile = await Student.findOne({ mobile: loginId });
-            if (!profile) profile = await Faculty.findOne({ mobile: loginId });
-            if (!profile) profile = await Admin.findOne({ mobile: loginId });
+            const [studentProfile, facultyProfile, adminProfile] = await Promise.all([
+                Student.findOne({ mobile: loginId }).select('userId').lean(),
+                Faculty.findOne({ mobile: loginId }).select('userId').lean(),
+                Admin.findOne({ mobile: loginId }).select('userId').lean(),
+            ]);
 
+            const profile = studentProfile || facultyProfile || adminProfile;
             if (profile && profile.userId) {
                 user = await User.findById(profile.userId).select('+password');
             }
@@ -102,9 +103,19 @@ const login = async (req, res) => {
 
         // Save/update device token
         if (fcmToken) {
+            const { deviceId, deviceModel, appVersion } = req.body;
             await DeviceToken.findOneAndUpdate(
                 { token: fcmToken },
-                { userId: user._id, role: user.role, platform: 'android', isActive: true, lastUsed: new Date() },
+                { 
+                    userId: user._id, 
+                    role: user.role, 
+                    platform: 'android', 
+                    isActive: true, 
+                    lastUsed: new Date(),
+                    deviceId: deviceId || null,
+                    deviceModel: deviceModel || null,
+                    appVersion: appVersion || null
+                },
                 { upsert: true, new: true }
             );
         }
@@ -287,7 +298,7 @@ const logout = async (req, res) => {
  */
 const refreshFCMToken = async (req, res) => {
     try {
-        const { fcmToken } = req.body;
+        const { fcmToken, deviceId, deviceModel, appVersion } = req.body;
 
         if (!fcmToken) {
             return apiResponse(res, 400, false, 'FCM token is required');
@@ -296,7 +307,16 @@ const refreshFCMToken = async (req, res) => {
         // Upsert by token to prevent overwriting other devices' tokens for the same user
         await DeviceToken.findOneAndUpdate(
             { token: fcmToken },
-            { userId: req.user.id, role: req.user.role, platform: 'android', isActive: true, lastUsed: new Date() },
+            { 
+                userId: req.user.id, 
+                role: req.user.role, 
+                platform: 'android', 
+                isActive: true, 
+                lastUsed: new Date(),
+                deviceId: deviceId || null,
+                deviceModel: deviceModel || null,
+                appVersion: appVersion || null
+            },
             { upsert: true, new: true }
         );
 

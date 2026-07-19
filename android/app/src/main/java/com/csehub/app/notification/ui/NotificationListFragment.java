@@ -11,6 +11,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.csehub.app.core.base.BaseFragment;
 import com.csehub.app.core.database.entity.NotificationEntity;
@@ -43,6 +50,22 @@ public class NotificationListFragment extends BaseFragment {
     private final List<Notification> allNotifications = new ArrayList<>();
     private boolean showingMyNotifications = false;
 
+    // Guard: prevent double-fetch on first onResume (onViewCreated already fetches)
+    private boolean firstLoadDone = false;
+
+    private final BroadcastReceiver updateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            fetchNotifications(); // Refresh list automatically when FCM arrives
+        }
+    };
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -63,6 +86,7 @@ public class NotificationListFragment extends BaseFragment {
         setupSearchView();
         setupObservers();   // ← Set up ONCE; do NOT re-call on every refresh
         fetchNotifications();
+        firstLoadDone = true;
 
         binding.swipeRefresh.setOnRefreshListener(this::fetchNotifications);
     }
@@ -180,6 +204,21 @@ public class NotificationListFragment extends BaseFragment {
             }
         });
 
+        viewModel.getDeleteResultLiveData().observe(getViewLifecycleOwner(), resource -> {
+            if (resource == null) return;
+            switch (resource.status) {
+                case SUCCESS:
+                    showToast("Notification deleted successfully");
+                    fetchNotifications();
+                    break;
+                case ERROR:
+                    showErrorSnackbar(resource.message);
+                    break;
+                case LOADING:
+                    break;
+            }
+        });
+
         // Offline (Room) fallback
         viewModel.getOfflineNotifications().observe(getViewLifecycleOwner(), entities -> {
             if (entities != null && !entities.isEmpty() && allNotifications.isEmpty()) {
@@ -209,20 +248,9 @@ public class NotificationListFragment extends BaseFragment {
     }
 
     private void deleteNotification(String id) {
-        viewModel.deleteNotification(id).observe(getViewLifecycleOwner(), resource -> {
-            if (resource == null) return;
-            switch (resource.status) {
-                case SUCCESS:
-                    showToast("Notification deleted successfully");
-                    fetchNotifications();
-                    break;
-                case ERROR:
-                    showErrorSnackbar(resource.message);
-                    break;
-                case LOADING:
-                    break;
-            }
-        });
+        // Use the persistent deleteResultLiveData — observed once in setupObservers()
+        // This prevents creating a new observer on every delete call (observer leak)
+        viewModel.triggerDelete(id);
     }
 
     // -------------------------------------------------------------------------
@@ -290,8 +318,35 @@ public class NotificationListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        // Refresh to capture read-status updates when returning from detail screen
-        fetchNotifications();
+        // Only refresh on subsequent resumes (returning from detail screen, etc).
+        // Skip the very first resume — onViewCreated already triggered the initial fetch.
+        if (firstLoadDone) {
+            fetchNotifications();
+        }
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(updateReceiver, 
+                new IntentFilter("ACTION_UNREAD_COUNT_UPDATE"));
+    }
+    
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(updateReceiver);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        MenuItem markAllReadItem = menu.add(Menu.NONE, 1001, Menu.NONE, "Mark All as Read");
+        markAllReadItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == 1001) {
+            viewModel.markAllAsRead();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

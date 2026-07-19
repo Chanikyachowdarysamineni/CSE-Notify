@@ -108,9 +108,28 @@ public class NotificationDetailActivity extends BaseActivity {
 
     private void markAsRead() {
         if (currentNotification == null || currentNotification.isRead()) return;
-        viewModel.markAsRead(notificationId).observe(this, resource -> {
-            // Silently mark read
-        });
+        
+        // Queue WorkManager job for reliable DB + Network sync (offline friendly)
+        androidx.work.Data inputData = new androidx.work.Data.Builder()
+                .putString(com.csehub.app.core.fcm.NotificationReadWorker.KEY_NOTIFICATION_ID, notificationId)
+                .build();
+
+        androidx.work.OneTimeWorkRequest readWork = new androidx.work.OneTimeWorkRequest.Builder(com.csehub.app.core.fcm.NotificationReadWorker.class)
+                .setInputData(inputData)
+                .build();
+
+        androidx.work.WorkManager.getInstance(this).enqueueUniqueWork(
+                "mark_read_" + notificationId,
+                androidx.work.ExistingWorkPolicy.REPLACE,
+                readWork
+        );
+
+        // Update local state
+        currentNotification.setRead(true);
+        
+        // Notify UI to update the badge instantly
+        Intent updateIntent = new Intent("ACTION_UNREAD_COUNT_UPDATE");
+        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this).sendBroadcast(updateIntent);
     }
 
     private void downloadAttachment() {

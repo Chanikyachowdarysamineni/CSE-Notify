@@ -18,6 +18,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
     <application
         android:name=".CSEHubApp"
@@ -52,6 +53,7 @@
         <!-- Main Activity (Dashboard + Navigation) -->
         <activity
             android:name=".dashboard.ui.MainActivity"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan"
             android:launchMode="singleTop" />
 

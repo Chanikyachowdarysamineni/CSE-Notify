@@ -32,6 +32,11 @@ public class NotificationViewModel extends AndroidViewModel {
     private final MediatorLiveData<AuthRepository.Resource<List<Notification>>> notificationsLiveData =
             new MediatorLiveData<>();
 
+    // Persistent delete result LiveData — observed once in Fragment, avoids observer leak
+    private final MediatorLiveData<AuthRepository.Resource<Void>> deleteResultLiveData =
+            new MediatorLiveData<>();
+    private LiveData<AuthRepository.Resource<Void>> currentDeleteSource = null;
+
     // Track the currently active source so we can remove it before adding a new one
     private LiveData<AuthRepository.Resource<List<Notification>>> currentSource = null;
 
@@ -93,6 +98,33 @@ public class NotificationViewModel extends AndroidViewModel {
         return repository.getOfflineNotifications();
     }
 
+    public LiveData<Integer> getUnreadCount() {
+        return repository.getUnreadCount();
+    }
+
+    // -------------------------------------------------------------------------
+    // Persistent delete result stream (observe once)
+    // -------------------------------------------------------------------------
+
+    /** Returns the persistent delete result LiveData. Fragment observes this once. */
+    public LiveData<AuthRepository.Resource<Void>> getDeleteResultLiveData() {
+        return deleteResultLiveData;
+    }
+
+    /**
+     * Triggers a delete. Result is delivered through getDeleteResultLiveData().
+     * Safe to call multiple times — swaps the mediator source each call.
+     */
+    public void triggerDelete(String id) {
+        deleteResultLiveData.setValue(AuthRepository.Resource.loading());
+        if (currentDeleteSource != null) {
+            deleteResultLiveData.removeSource(currentDeleteSource);
+        }
+        currentDeleteSource = repository.deleteNotification(id);
+        deleteResultLiveData.addSource(currentDeleteSource,
+                value -> deleteResultLiveData.setValue(value));
+    }
+
     // -------------------------------------------------------------------------
     // Detail / CRUD operations
     // -------------------------------------------------------------------------
@@ -111,6 +143,10 @@ public class NotificationViewModel extends AndroidViewModel {
 
     public LiveData<AuthRepository.Resource<Void>> markAsRead(String id) {
         return repository.markAsRead(id);
+    }
+
+    public void markAllAsRead() {
+        repository.markAllAsRead();
     }
 
     public LiveData<AuthRepository.Resource<Void>> deleteNotification(String id) {

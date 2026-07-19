@@ -21,6 +21,18 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import android.graphics.Color;
+import android.graphics.BitmapFactory;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import com.csehub.app.core.database.AppDatabase;
+import com.csehub.app.core.database.entity.NotificationEntity;
+import com.csehub.app.core.network.ApiClient;
+import com.csehub.app.auth.data.AuthApi;
+import com.csehub.app.auth.data.model.RefreshTokenRequest;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import com.csehub.app.core.network.models.ApiResponse;
 
 /**
  * Firebase Cloud Messaging Service
@@ -60,33 +72,33 @@ public class CSEHubFCMService extends FirebaseMessagingService {
      */
     private void uploadFCMToken(String token) {
         try {
-            com.csehub.app.auth.data.AuthApi authApi =
-                    com.csehub.app.core.network.ApiClient.createService(
-                            com.csehub.app.auth.data.AuthApi.class);
-            com.csehub.app.auth.data.model.RefreshTokenRequest req =
-                    new com.csehub.app.auth.data.model.RefreshTokenRequest(token);
+            AuthApi authApi = ApiClient.createService(AuthApi.class);
+            
+            String deviceId = android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+            String deviceModel = android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL;
+            String appVersion = "1.0.0";
+            try {
+                android.content.pm.PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                appVersion = pInfo.versionName;
+            } catch (Exception e) { /* ignored */ }
 
-            authApi.refreshFCMToken(req).enqueue(
-                    new retrofit2.Callback<com.csehub.app.core.network.models.ApiResponse<Void>>() {
-                        @Override
-                        public void onResponse(
-                                @NonNull retrofit2.Call<com.csehub.app.core.network.models.ApiResponse<Void>> call,
-                                @NonNull retrofit2.Response<com.csehub.app.core.network.models.ApiResponse<Void>> response) {
-                            if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                                Log.d(TAG, "FCM token successfully synced to backend");
-                            } else {
-                                Log.w(TAG, "FCM token sync failed: HTTP " + response.code());
-                            }
-                        }
+            RefreshTokenRequest req = new RefreshTokenRequest(token, deviceId, deviceModel, appVersion);
 
-                        @Override
-                        public void onFailure(
-                                @NonNull retrofit2.Call<com.csehub.app.core.network.models.ApiResponse<Void>> call,
-                                @NonNull Throwable t) {
-                            Log.w(TAG, "FCM token sync network error: " + t.getMessage());
-                            // Token is saved locally; will be synced on next successful network operation
-                        }
-                    });
+            authApi.refreshFCMToken(req).enqueue(new Callback<ApiResponse<Void>>() {
+                @Override
+                public void onResponse(@NonNull Call<ApiResponse<Void>> call, @NonNull Response<ApiResponse<Void>> response) {
+                    if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                        Log.d(TAG, "FCM token successfully synced to backend");
+                    } else {
+                        Log.w(TAG, "FCM token sync failed: HTTP " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ApiResponse<Void>> call, @NonNull Throwable t) {
+                    Log.w(TAG, "FCM token sync network error: " + t.getMessage());
+                }
+            });
         } catch (Exception e) {
             Log.e(TAG, "Error uploading FCM token", e);
         }
@@ -116,17 +128,42 @@ public class CSEHubFCMService extends FirebaseMessagingService {
             body = remoteMessage.getNotification().getBody();
         }
 
-        // --- DUPLICATE PREVENTION ---
-        // FCM network retries can sometimes deliver the same payload twice.
+        // --- DUPLICATE PREVENTION & CACHE PRUNING ---
         String notificationId = data.containsKey("notificationId") ? data.get("notificationId") : "";
         if (!notificationId.isEmpty()) {
             android.content.SharedPreferences prefs = getSharedPreferences("fcm_cache", Context.MODE_PRIVATE);
+            long now = System.currentTimeMillis();
+            
             if (prefs.getBoolean("processed_" + notificationId, false)) {
                 Log.w(TAG, "Duplicate FCM payload detected for ID: " + notificationId + " — discarding.");
                 return;
             }
+            
+            // Periodically prune old entries (e.g., > 3 days) to prevent SharedPreferences unbounded growth
+            if (Math.random() < 0.05) { // 5% chance on receive
+                Map<String, ?> allEntries = prefs.getAll();
+                android.content.SharedPreferences.Editor editor = prefs.edit();
+                for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+                    if (entry.getKey().startsWith("time_")) {
+                        long time = (Long) entry.getValue();
+                        if (now - time > 3 * 24 * 60 * 60 * 1000L) {
+                            String id = entry.getKey().replace("time_", "");
+                            editor.remove("processed_" + id);
+                            editor.remove("time_" + id);
+                        }
+                    }
+                }
+                editor.apply();
+            }
+
             // Save as processed
-            prefs.edit().putBoolean("processed_" + notificationId, true).apply();
+            prefs.edit()
+                 .putBoolean("processed_" + notificationId, true)
+                 .putLong("time_" + notificationId, now)
+                 .apply();
+                 
+            // --- OFFLINE SYNC: Save to Room DB ---
+            saveToDatabase(notificationId, title, body, data);
         }
 
         // Show notification even if only title is present
@@ -135,6 +172,29 @@ public class CSEHubFCMService extends FirebaseMessagingService {
         } else {
             Log.w(TAG, "Received FCM message with no title — ignoring");
         }
+    }
+
+    private void saveToDatabase(String notificationId, String title, String message, Map<String, String> data) {
+        new Thread(() -> {
+            try {
+                NotificationEntity entity = new NotificationEntity();
+                entity.setId(notificationId);
+                entity.setTitle(title);
+                entity.setMessage(message);
+                entity.setCategory(data.containsKey("category") ? data.get("category") : "General");
+                entity.setPriority(data.containsKey("priority") ? data.get("priority") : "medium");
+                entity.setRead(false);
+                entity.setCreatedAt(System.currentTimeMillis());
+                
+                AppDatabase.getInstance(getApplicationContext()).notificationDao().insertSingle(entity);
+                
+                // Notify UI that a new notification arrived
+                Intent updateIntent = new Intent("ACTION_UNREAD_COUNT_UPDATE");
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(updateIntent);
+            } catch (Exception e) {
+                Log.e(TAG, "Error saving to local DB", e);
+            }
+        }).start();
     }
 
     /**
@@ -167,25 +227,51 @@ public class CSEHubFCMService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, requestCode, intent, flags);
 
-        // Select channel based on priority
+        // Select channel based on category and priority
         String priority = data.containsKey("priority") ? data.get("priority") : "medium";
-        String channelId = "urgent".equalsIgnoreCase(priority)
-                ? CSEHubApp.CHANNEL_URGENT
-                : CSEHubApp.CHANNEL_ID;
+        String category = data.containsKey("category") ? data.get("category") : "";
+        
+        String channelId = CSEHubApp.CHANNEL_GENERAL;
+        if ("urgent".equalsIgnoreCase(priority)) {
+            channelId = CSEHubApp.CHANNEL_URGENT;
+        } else if (category.toLowerCase().contains("academic") || category.toLowerCase().contains("exam")) {
+            channelId = CSEHubApp.CHANNEL_ACADEMIC;
+        } else if (category.toLowerCase().contains("event") || category.toLowerCase().contains("workshop")) {
+            channelId = CSEHubApp.CHANNEL_EVENTS;
+        } else if (category.toLowerCase().contains("placement") || category.toLowerCase().contains("internship")) {
+            channelId = CSEHubApp.CHANNEL_PLACEMENT;
+        } else if (category.toLowerCase().contains("timetable")) {
+            channelId = CSEHubApp.CHANNEL_TIMETABLE;
+        } else if (category.toLowerCase().contains("birthday")) {
+            channelId = CSEHubApp.CHANNEL_BIRTHDAY;
+        }
 
         Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.drawable.ic_notification)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_logo))
+                .setColor(Color.parseColor("#1565C0"))
                 .setContentTitle(title)
                 .setContentText(body)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
                 .setAutoCancel(true)
                 .setSound(soundUri)
                 .setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setGroup("com.csehub.app.NOTIFICATIONS")
                 .setDefaults(NotificationCompat.DEFAULT_ALL);
+                
+        // Set priority mapping
+        if ("urgent".equalsIgnoreCase(priority)) {
+            builder.setPriority(NotificationCompat.PRIORITY_MAX);
+            builder.setFullScreenIntent(pendingIntent, true);
+        } else if ("high".equalsIgnoreCase(priority)) {
+            builder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        } else if ("low".equalsIgnoreCase(priority)) {
+            builder.setPriority(NotificationCompat.PRIORITY_LOW);
+        } else {
+            builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        }
 
         // Add category badge
         if (data.containsKey("category")) {

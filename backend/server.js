@@ -50,7 +50,10 @@ const io = new Server(server, {
     cors: {
         origin: process.env.CLIENT_URL || '*',
         methods: ['GET', 'POST']
-    }
+    },
+    pingTimeout: 60000,   // 60s — time to wait for pong before closing connection
+    pingInterval: 25000,  // 25s — interval between keep-alive pings
+    transports: ['websocket', 'polling'], // Prefer WebSocket, fallback to polling
 });
 
 // Make io accessible to routes
@@ -69,7 +72,7 @@ app.use(helmet({
 const compression = require('compression');
 app.use(compression({
     level: 6,
-    threshold: 100 * 1024 // Only compress responses > 100KB (e.g. large JSON lists)
+    threshold: 1024 // Compress responses > 1KB — covers all typical API JSON payloads
 }));
 
 const { apiLimiter } = require('./src/middleware/rateLimiter');

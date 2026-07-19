@@ -56,5 +56,6 @@ const facultySchema = new mongoose.Schema({
 
 // Indexes (employeeId and userId have unique:true which already creates indexes)
 facultySchema.index({ name: 1 }); // Optimize name-based searches
+facultySchema.index({ mobile: 1 }, { sparse: true }); // Login-by-mobile fallback
 
 module.exports = mongoose.model('Faculty', facultySchema);

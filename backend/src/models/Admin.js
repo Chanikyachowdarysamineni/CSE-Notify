@@ -38,6 +38,8 @@ const adminSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-// No additional indexes needed — userId and employeeId have unique:true
+// Indexes
+adminSchema.index({ mobile: 1 }, { sparse: true }); // Login-by-mobile fallback
+// Note: userId and employeeId have unique:true which already creates indexes
 
 module.exports = mongoose.model('Admin', adminSchema);

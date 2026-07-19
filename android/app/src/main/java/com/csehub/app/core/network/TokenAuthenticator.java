@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Authenticator;
 import okhttp3.MediaType;
@@ -26,6 +27,18 @@ public class TokenAuthenticator implements Authenticator {
 
     private static final String TAG = "TokenAuthenticator";
     private final Context context;
+
+    /**
+     * Static singleton OkHttpClient for token refresh.
+     * Created once with explicit timeouts — avoids creating a new bare client
+     * (with no timeouts) on every 401 response, which could hang indefinitely
+     * on poor mobile networks.
+     */
+    private static final OkHttpClient REFRESH_CLIENT = new OkHttpClient.Builder()
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(15, TimeUnit.SECONDS)
+            .writeTimeout(10, TimeUnit.SECONDS)
+            .build();
 
     public TokenAuthenticator(Context context) {
         this.context = context;
@@ -83,8 +96,6 @@ public class TokenAuthenticator implements Authenticator {
 
     private String refreshAccessToken(String refreshToken) {
         try {
-            OkHttpClient client = new OkHttpClient();
-            
             JsonObject jsonBody = new JsonObject();
             jsonBody.addProperty("refreshToken", refreshToken);
 
@@ -98,9 +109,11 @@ public class TokenAuthenticator implements Authenticator {
                     .post(body)
                     .build();
 
-            Response response = client.newCall(request).execute();
+            // Use the singleton client with proper timeouts
+            Response response = REFRESH_CLIENT.newCall(request).execute();
             if (response.isSuccessful() && response.body() != null) {
                 String responseBody = response.body().string();
+                response.body().close();
                 
                 // Parse using Gson
                 Gson gson = new Gson();

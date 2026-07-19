@@ -55,20 +55,22 @@ const getStudents = async (req, res, next) => {
 };
 
 const createStudent = async (req, res, next) => {
+    const session = await require('mongoose').startSession();
+    session.startTransaction();
     try {
         const { email, password, name, regNo, academicYear, section, mobile, personalEmail, collegeEmail, dob, dayScholarHosteller, cgpa } = req.body;
 
-        // Create user account
-        const user = await User.create({
+        // Create user account within the transaction
+        const [user] = await User.create([{
             loginId: regNo,
             email,
             password: password || regNo, // Default password is registration number
             name,
             role: 'student',
-        });
+        }], { session });
 
-        // Create student profile
-        const student = await Student.create({
+        // Create student profile within the same transaction
+        const [student] = await Student.create([{
             userId: user._id,
             name,
             regNo,
@@ -80,12 +82,17 @@ const createStudent = async (req, res, next) => {
             dob,
             dayScholarHosteller,
             cgpa,
-        });
+        }], { session });
+
+        await session.commitTransaction();
+        session.endSession();
 
         await createAuditLog(req, 'CREATE', 'student', student._id, { regNo, name });
 
         return apiResponse(res, 201, true, 'Student created successfully', { user, student });
     } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
         logger.error('Create student error:', error);
         if (error.code === 11000) {
             return apiResponse(res, 400, false, 'Email or registration number already exists');
@@ -174,18 +181,20 @@ const getFaculty = async (req, res, next) => {
 };
 
 const createFaculty = async (req, res, next) => {
+    const session = await require('mongoose').startSession();
+    session.startTransaction();
     try {
         const { email, password, name, employeeId, designation, mobile, personalEmail, collegeEmail } = req.body;
 
-        const user = await User.create({
+        const [user] = await User.create([{
             loginId: employeeId,
             email,
             password: password || employeeId,
             name,
             role: 'faculty',
-        });
+        }], { session });
 
-        const faculty = await Faculty.create({
+        const [faculty] = await Faculty.create([{
             userId: user._id,
             name,
             employeeId,
@@ -193,12 +202,17 @@ const createFaculty = async (req, res, next) => {
             mobile,
             personalEmail,
             collegeEmail,
-        });
+        }], { session });
+
+        await session.commitTransaction();
+        session.endSession();
 
         await createAuditLog(req, 'CREATE', 'faculty', faculty._id, { employeeId, name });
 
         return apiResponse(res, 201, true, 'Faculty created successfully', { user, faculty });
     } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
         logger.error('Create faculty error:', error);
         if (error.code === 11000) {
             return apiResponse(res, 400, false, 'Email or employee ID already exists');

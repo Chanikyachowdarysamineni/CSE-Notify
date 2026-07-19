@@ -29,7 +29,9 @@ const getDailyTimetable = async (req, res, next) => {
 
         // Student: use their assigned academicYear/section ObjectIds
         if (req.user.role === ROLES.STUDENT) {
-            const student = await Student.findOne({ userId: req.user.id });
+            const student = await Student.findOne({ userId: req.user.id })
+                .select('academicYear section')
+                .lean();
             if (!student) return apiResponse(res, 404, false, 'Student profile not found');
             academicYear = student.academicYear;
             section = student.section;
@@ -37,7 +39,9 @@ const getDailyTimetable = async (req, res, next) => {
 
         // Faculty: show their assigned periods
         if (req.user.role === ROLES.FACULTY) {
-            const faculty = await Faculty.findOne({ userId: req.user.id });
+            const faculty = await Faculty.findOne({ userId: req.user.id })
+                .select('_id')
+                .lean();
             if (!faculty) return apiResponse(res, 404, false, 'Faculty profile not found');
 
             const timetable = await Timetable.find({ faculty: faculty._id, day })
@@ -83,14 +87,18 @@ const getWeeklyTimetable = async (req, res, next) => {
         let { academicYear, section } = req.query;
 
         if (req.user.role === ROLES.STUDENT) {
-            const student = await Student.findOne({ userId: req.user.id });
+            const student = await Student.findOne({ userId: req.user.id })
+                .select('academicYear section')
+                .lean();
             if (!student) return apiResponse(res, 404, false, 'Student profile not found');
             academicYear = student.academicYear;
             section = student.section;
         }
 
         if (req.user.role === ROLES.FACULTY) {
-            const faculty = await Faculty.findOne({ userId: req.user.id });
+            const faculty = await Faculty.findOne({ userId: req.user.id })
+                .select('_id')
+                .lean();
             if (!faculty) return apiResponse(res, 404, false, 'Faculty profile not found');
 
             const timetable = await Timetable.find({ faculty: faculty._id })
@@ -260,6 +268,26 @@ const importCSV = async (req, res, next) => {
         const assignedPeriods = new Map(); // key: "facultyId_day_period", value: "sectionName"
 
 
+        // Pre-fetch ALL existing faculty timetable conflicts in ONE bulk query
+        // to avoid N+1 queries inside the row-processing loop below.
+        const allFacultyIds = Object.values(facultyMap);
+        const existingConflicts = await Timetable.find({
+            faculty: { $in: allFacultyIds },
+        }).select('faculty day period section academicYear').populate('section', 'name').lean();
+
+        // Build a Map: key = "facultyId_day_period", value = { sectionId, sectionName, academicYear }
+        const dbConflictMap = new Map();
+        existingConflicts.forEach(e => {
+            if (e.faculty) {
+                const key = `${e.faculty.toString()}_${e.day}_${e.period}`;
+                dbConflictMap.set(key, {
+                    sectionId: e.section?._id?.toString() || e.section?.toString(),
+                    sectionName: e.section?.name || String(e.section),
+                    academicYear: e.academicYear?.toString(),
+                });
+            }
+        });
+
         for (const row of results) {
             line++;
             const yName = row.yearName?.trim().toLowerCase();
@@ -299,22 +327,16 @@ const importCSV = async (req, res, next) => {
                     continue;
                 }
 
-                // Check for faculty conflict within the CSV or existing DB
+                // Check for faculty conflict within the CSV batch
                 const conflictKey = `${facultyId.toString()}_${day}_${period}`;
                 if (assignedPeriods.has(conflictKey)) {
                     errors.push(`Row ${line}: Faculty '${facultyNameRaw}' is already assigned to section '${assignedPeriods.get(conflictKey)}' on ${day} Period ${period}`);
                     continue;
                 } else {
-                    // Check DB
-                    const existing = await Timetable.findOne({
-                        faculty: facultyId,
-                        day,
-                        period,
-                        academicYear: { $ne: yearId }, // It's fine if they are assigned to the exact same year/section (overwriting) but NOT another section
-                    }).populate('section');
-                    
-                    if (existing && existing.section.toString() !== sectionId.toString()) {
-                        errors.push(`Row ${line}: Faculty '${facultyNameRaw}' is already assigned to another section (${existing.section.name}) on ${day} Period ${period}`);
+                    // Check pre-fetched DB conflict map — O(1) instead of per-row DB query
+                    const dbConflict = dbConflictMap.get(conflictKey);
+                    if (dbConflict && dbConflict.academicYear !== yearId.toString() && dbConflict.sectionId !== sectionId.toString()) {
+                        errors.push(`Row ${line}: Faculty '${facultyNameRaw}' is already assigned to another section (${dbConflict.sectionName}) on ${day} Period ${period}`);
                         continue;
                     }
 

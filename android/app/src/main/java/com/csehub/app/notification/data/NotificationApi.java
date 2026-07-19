@@ -54,4 +54,7 @@ public interface NotificationApi {
 
     @POST("notifications/{id}/read")
     Call<ApiResponse<Void>> markAsRead(@Path("id") String id);
+
+    @POST("notifications/read-all")
+    Call<ApiResponse<Void>> markAllAsRead();
 }

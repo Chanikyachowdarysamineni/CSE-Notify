@@ -19,9 +19,16 @@ import com.csehub.app.R;
 import com.csehub.app.auth.data.AuthRepository;
 import com.csehub.app.auth.ui.LoginActivity;
 import com.csehub.app.core.base.BaseActivity;
+import com.csehub.app.core.fcm.NotificationPermissionHelper;
 import com.csehub.app.databinding.ActivityMainBinding;
 
 import java.io.File;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.lifecycle.ViewModelProvider;
+import com.csehub.app.notification.viewmodel.NotificationViewModel;
 
 /**
  * MainActivity orchestration role-based layouts (Bottom Navigation vs Navigation Drawer)
@@ -32,6 +39,14 @@ public class MainActivity extends BaseActivity {
     private ActivityMainBinding binding;
     private NavController navController;
     private AppBarConfiguration appBarConfiguration;
+    private NotificationViewModel notificationViewModel;
+
+    private final BroadcastReceiver unreadCountReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateBadgeCount();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +66,10 @@ public class MainActivity extends BaseActivity {
 
         setupRoleBasedNavigation();
         handleIntentExtras(getIntent());
-        checkNotificationPermission();
+        NotificationPermissionHelper.checkAndRequestPermission(this);
         checkDeviceSecurity();
-        syncFCMToken();
+        
+        notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
         
         // Fetch dynamic metadata from server instead of relying solely on local seed constants
         com.csehub.app.core.network.ConfigRepository.getInstance(this).fetchAndCacheMetadata(null);
@@ -84,12 +100,29 @@ public class MainActivity extends BaseActivity {
         return false;
     }
 
-    private void checkNotificationPermission() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            if (androidx.core.content.ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
-                androidx.core.app.ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 101);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateBadgeCount();
+        LocalBroadcastManager.getInstance(this).registerReceiver(unreadCountReceiver, 
+                new IntentFilter("ACTION_UNREAD_COUNT_UPDATE"));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(unreadCountReceiver);
+    }
+
+    private void updateBadgeCount() {
+        if (notificationViewModel == null) return;
+        notificationViewModel.getUnreadCount().observe(this, count -> {
+            if (count != null && count > 0) {
+                binding.bottomNavView.getOrCreateBadge(R.id.navigation_notifications).setNumber(count);
+            } else {
+                binding.bottomNavView.removeBadge(R.id.navigation_notifications);
             }
-        }
+        });
     }
 
     private void setupRoleBasedNavigation() {
@@ -231,44 +264,5 @@ public class MainActivity extends BaseActivity {
     public boolean onSupportNavigateUp() {
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
-    }
-
-    private void syncFCMToken() {
-        if (!tokenManager.isLoggedIn()) return;
-        com.google.firebase.messaging.FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        String token = task.getResult();
-                        tokenManager.saveFCMToken(token);
-                        uploadFCMToken(token);
-                    }
-                });
-    }
-
-    private void uploadFCMToken(String token) {
-        try {
-            com.csehub.app.auth.data.AuthApi authApi =
-                    com.csehub.app.core.network.ApiClient.createService(com.csehub.app.auth.data.AuthApi.class);
-            com.csehub.app.auth.data.model.RefreshTokenRequest req =
-                    new com.csehub.app.auth.data.model.RefreshTokenRequest(token);
-
-            authApi.refreshFCMToken(req).enqueue(new retrofit2.Callback<com.csehub.app.core.network.models.ApiResponse<Void>>() {
-                @Override
-                public void onResponse(@NonNull retrofit2.Call<com.csehub.app.core.network.models.ApiResponse<Void>> call,
-                                       @NonNull retrofit2.Response<com.csehub.app.core.network.models.ApiResponse<Void>> response) {
-                    if (response.isSuccessful()) {
-                        android.util.Log.d("MainActivity", "FCM Token synchronized with server");
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull retrofit2.Call<com.csehub.app.core.network.models.ApiResponse<Void>> call,
-                                      @NonNull Throwable t) {
-                    android.util.Log.w("MainActivity", "Failed to sync FCM Token: " + t.getMessage());
-                }
-            });
-        } catch (Exception e) {
-            android.util.Log.e("MainActivity", "Error syncing FCM token", e);
-        }
     }
 }

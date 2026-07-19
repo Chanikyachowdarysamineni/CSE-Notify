@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.csehub.app.R;
 import com.csehub.app.core.network.models.Notification;
+import java.util.Objects;
 import com.csehub.app.databinding.ItemNotificationBinding;
 
 public class NotificationAdapter extends ListAdapter<Notification, NotificationAdapter.ViewHolder> {
@@ -49,15 +50,15 @@ public class NotificationAdapter extends ListAdapter<Notification, NotificationA
     private static final DiffUtil.ItemCallback<Notification> DIFF_CALLBACK = new DiffUtil.ItemCallback<Notification>() {
         @Override
         public boolean areItemsTheSame(@NonNull Notification oldItem, @NonNull Notification newItem) {
-            return oldItem.getId().equals(newItem.getId());
+            return Objects.equals(oldItem.getId(), newItem.getId());
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull Notification oldItem, @NonNull Notification newItem) {
-            return oldItem.getTitle().equals(newItem.getTitle())
-                    && oldItem.getMessage().equals(newItem.getMessage())
+            return Objects.equals(oldItem.getTitle(), newItem.getTitle())
+                    && Objects.equals(oldItem.getMessage(), newItem.getMessage())
                     && oldItem.isRead() == newItem.isRead()
-                    && oldItem.getPriority().equals(newItem.getPriority());
+                    && Objects.equals(oldItem.getPriority(), newItem.getPriority());
         }
     };
 
