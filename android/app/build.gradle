@@ -17,7 +17,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         // Backend API Base URL
-        buildConfigField "String", "BASE_URL", "\"http://192.168.1.37:5000/api/\""
+        buildConfigField "String", "BASE_URL", "\"https://cse-notify.onrender.com/api/\""
     }
 
     // Load keystore properties securely
@@ -41,7 +41,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField "String", "BASE_URL", "\"https://your-production-server.com/api/\""
+            buildConfigField "String", "BASE_URL", "\"https://cse-notify.onrender.com/api/\""
             
             // Only apply signing if properties are actually provided
             if (keystoreProperties['keystore.file'] != null) {
@@ -50,7 +50,7 @@ android {
         }
         debug {
             debuggable true
-            buildConfigField "String", "BASE_URL", "\"http://192.168.1.37:5000/api/\""
+            buildConfigField "String", "BASE_URL", "\"https://cse-notify.onrender.com/api/\""
         }
     }
 
