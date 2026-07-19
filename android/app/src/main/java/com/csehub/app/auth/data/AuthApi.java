@@ -26,7 +26,7 @@ public interface AuthApi {
     Call<ApiResponse<LoginResponse>> changePassword(@Body ChangePasswordRequest request);
 
     @POST("auth/logout")
-    Call<ApiResponse<Void>> logout();
+    Call<ApiResponse<Void>> logout(@Body com.csehub.app.auth.data.model.LogoutRequest request);
 
     @POST("auth/refresh-token")
     Call<ApiResponse<Void>> refreshFCMToken(@Body com.csehub.app.auth.data.model.RefreshTokenRequest request);

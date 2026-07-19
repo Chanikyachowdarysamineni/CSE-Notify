@@ -56,7 +56,8 @@ public class GalleryFragment extends BaseFragment {
 
     private void setupTabLayout() {
         binding.categoryTabLayout.addTab(binding.categoryTabLayout.newTab().setText("All"));
-        for (String cat : Constants.GALLERY_CATEGORIES) {
+        List<String> categories = com.csehub.app.core.network.ConfigRepository.getInstance(requireContext()).getGalleryCategories();
+        for (String cat : categories) {
             binding.categoryTabLayout.addTab(binding.categoryTabLayout.newTab().setText(cat));
         }
 

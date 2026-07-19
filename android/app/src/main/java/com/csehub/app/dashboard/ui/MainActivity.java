@@ -53,6 +53,7 @@ public class MainActivity extends BaseActivity {
         handleIntentExtras(getIntent());
         checkNotificationPermission();
         checkDeviceSecurity();
+        syncFCMToken();
     }
 
     private void checkDeviceSecurity() {
@@ -185,15 +186,33 @@ public class MainActivity extends BaseActivity {
 
         switch (navigateTo) {
             case "notifications":
-            case "notification_detail":
                 navController.navigate(R.id.navigation_notifications);
+                break;
+            case "notification_detail":
+                String notificationId = intent.getStringExtra("notification_id");
+                if (notificationId != null && !notificationId.isEmpty()) {
+                    Intent detailIntent = new Intent(this, com.csehub.app.notification.ui.NotificationDetailActivity.class);
+                    detailIntent.putExtra(com.csehub.app.core.utils.Constants.EXTRA_NOTIFICATION_ID, notificationId);
+                    startActivity(detailIntent);
+                } else {
+                    navController.navigate(R.id.navigation_notifications);
+                }
                 break;
             case "timetable":
                 navController.navigate(R.id.navigation_timetable);
                 break;
             case "events":
-            case "event_detail":
                 navController.navigate(R.id.navigation_events);
+                break;
+            case "event_detail":
+                String eventId = intent.getStringExtra("event_id");
+                if (eventId != null && !eventId.isEmpty()) {
+                    Intent detailIntent = new Intent(this, com.csehub.app.event.ui.EventDetailActivity.class);
+                    detailIntent.putExtra(com.csehub.app.core.utils.Constants.EXTRA_EVENT_ID, eventId);
+                    startActivity(detailIntent);
+                } else {
+                    navController.navigate(R.id.navigation_events);
+                }
                 break;
         }
     }
@@ -211,4 +230,42 @@ public class MainActivity extends BaseActivity {
                 || super.onSupportNavigateUp();
     }
 
+    private void syncFCMToken() {
+        if (!tokenManager.isLoggedIn()) return;
+        com.google.firebase.messaging.FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        String token = task.getResult();
+                        tokenManager.saveFCMToken(token);
+                        uploadFCMToken(token);
+                    }
+                });
+    }
+
+    private void uploadFCMToken(String token) {
+        try {
+            com.csehub.app.auth.data.AuthApi authApi =
+                    com.csehub.app.core.network.ApiClient.createService(com.csehub.app.auth.data.AuthApi.class);
+            com.csehub.app.auth.data.model.RefreshTokenRequest req =
+                    new com.csehub.app.auth.data.model.RefreshTokenRequest(token);
+
+            authApi.refreshFCMToken(req).enqueue(new retrofit2.Callback<com.csehub.app.core.network.models.ApiResponse<Void>>() {
+                @Override
+                public void onResponse(@NonNull retrofit2.Call<com.csehub.app.core.network.models.ApiResponse<Void>> call,
+                                       @NonNull retrofit2.Response<com.csehub.app.core.network.models.ApiResponse<Void>> response) {
+                    if (response.isSuccessful()) {
+                        android.util.Log.d("MainActivity", "FCM Token synchronized with server");
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull retrofit2.Call<com.csehub.app.core.network.models.ApiResponse<Void>> call,
+                                      @NonNull Throwable t) {
+                    android.util.Log.w("MainActivity", "Failed to sync FCM Token: " + t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            android.util.Log.e("MainActivity", "Error syncing FCM token", e);
+        }
+    }
 }

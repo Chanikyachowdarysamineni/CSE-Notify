@@ -79,9 +79,6 @@ const getEventById = async (req, res, next) => {
     }
 };
 
-/**
- * POST /api/events
- */
 const createEvent = async (req, res, next) => {
     try {
         const targetYears = req.body.targetYears ? (typeof req.body.targetYears === 'string' ? JSON.parse(req.body.targetYears) : req.body.targetYears) : [];
@@ -106,9 +103,74 @@ const createEvent = async (req, res, next) => {
 
         await createAuditLog(req, 'CREATE', 'event', event._id, { title: event.title });
 
+        // Trigger FCM Push Asynchronously
+        sendEventPush(event);
+
         return apiResponse(res, 201, true, 'Event created successfully', event);
     } catch (error) {
         next(error);
+    }
+};
+
+/**
+ * Send FCM push notification for a new event
+ */
+const sendEventPush = async (event) => {
+    try {
+        const DeviceToken = require('../models/DeviceToken');
+        const Faculty = require('../models/Faculty');
+        const Admin = require('../models/Admin');
+        const { sendPushNotification } = require('../config/firebase');
+
+        let tokenStrings = [];
+        const pushData = {
+            eventId: event._id.toString(),
+            category: 'Event',
+            priority: 'medium',
+        };
+
+        if (event.targetYears && event.targetYears.length > 0) {
+            const studentQuery = { academicYear: { $in: event.targetYears } };
+            if (event.targetSections && event.targetSections.length > 0) {
+                studentQuery.section = { $in: event.targetSections };
+            }
+
+            // Get targeted students
+            const students = await Student.find(studentQuery).select('userId');
+            const studentUserIds = students.map(s => s.userId);
+
+            // Staff (Faculty/Admin) always get notifications
+            const facultyUsers = await Faculty.find({}).select('userId');
+            const adminUsers = await Admin.find({}).select('userId');
+            const staffUserIds = [
+                ...facultyUsers.map(f => f.userId),
+                ...adminUsers.map(a => a.userId),
+            ];
+
+            const allTargetUserIds = [...new Set([...studentUserIds.map(String), ...staffUserIds.map(String)])];
+
+            const tokens = await DeviceToken.find({
+                userId: { $in: allTargetUserIds },
+                isActive: true,
+            }).select('token');
+
+            tokenStrings = tokens.map(t => t.token).filter(Boolean);
+        } else {
+            // Broadcast to all active tokens
+            const tokens = await DeviceToken.find({ isActive: true }).select('token');
+            tokenStrings = tokens.map(t => t.token).filter(Boolean);
+        }
+
+        if (tokenStrings.length > 0) {
+            const title = `📅 New Event: ${event.title}`;
+            const body = event.description ? event.description.substring(0, 200) : '';
+            await sendPushNotification(tokenStrings, title, body, pushData);
+            logger.info(`Push sent to ${tokenStrings.length} device(s) for event: ${event.title}`);
+        } else {
+            logger.warn(`No active device tokens found for event: ${event.title}`);
+        }
+    } catch (error) {
+        logger.error('Send event push error:', error);
     }
 };
 

@@ -6,6 +6,8 @@ const Notification = require('../models/Notification');
 const NotificationRead = require('../models/NotificationRead');
 const DeviceToken = require('../models/DeviceToken');
 const Student = require('../models/Student');
+const Faculty = require('../models/Faculty');
+const Admin = require('../models/Admin');
 const { apiResponse, paginationMeta, ROLES } = require('../utils/constants');
 const { sendPushNotification } = require('../config/firebase');
 const { createAuditLog } = require('../services/audit.service');
@@ -314,40 +316,54 @@ const markAsRead = async (req, res) => {
  */
 const getUnreadCount = async (req, res) => {
     try {
-        // Get all valid notification IDs for this user
+        // Build the same query that getNotifications uses for this user
         let query = {
             $or: [
                 { expiryDate: { $exists: false } },
                 { expiryDate: null },
                 { expiryDate: { $gte: new Date() } },
             ],
+            $and: [
+                {
+                    $or: [
+                        { isScheduled: false },
+                        { isScheduled: true, isSent: true },
+                    ]
+                }
+            ],
         };
 
         if (req.user.role === ROLES.STUDENT) {
             const student = await Student.findOne({ userId: req.user.id });
             if (student) {
-                query.$and = [
-                    {
-                        $or: [
-                            { targetYears: student.academicYear },
-                            { targetYears: { $size: 0 } },
-                            { targetYears: { $exists: false } },
-                        ]
-                    },
-                    {
-                        $or: [
-                            { targetSections: student.section },
-                            { targetSections: { $size: 0 } },
-                            { targetSections: { $exists: false } },
-                        ]
-                    }
-                ];
+                query.$and.push({
+                    $or: [
+                        { targetYears: student.academicYear },
+                        { targetYears: { $size: 0 } },
+                        { targetYears: { $exists: false } },
+                    ]
+                });
+                query.$and.push({
+                    $or: [
+                        { targetSections: student.section },
+                        { targetSections: { $size: 0 } },
+                        { targetSections: { $exists: false } },
+                    ]
+                });
             }
         }
 
-        const totalNotifications = await Notification.countDocuments(query);
-        const readCount = await NotificationRead.countDocuments({ userId: req.user.id });
-        const unreadCount = Math.max(0, totalNotifications - readCount);
+        // Get the actual matching notification IDs for this user
+        const matchingNotifications = await Notification.find(query).select('_id').lean();
+        const matchingIds = matchingNotifications.map(n => n._id);
+
+        // Count how many of THOSE specifically have been read
+        const readCount = await NotificationRead.countDocuments({
+            userId: req.user.id,
+            notificationId: { $in: matchingIds },
+        });
+
+        const unreadCount = Math.max(0, matchingIds.length - readCount);
 
         return apiResponse(res, 200, true, 'Unread count retrieved', { unreadCount });
     } catch (error) {
@@ -361,48 +377,62 @@ const getUnreadCount = async (req, res) => {
  */
 const sendNotificationPush = async (notification) => {
     try {
-        let userQuery = {};
+        let tokenStrings = [];
 
-        // Build query based on targets
-        if (notification.targetYears.length > 0) {
-            // Get student user IDs for targeted years
+        const notifData = {
+            notificationId: notification._id.toString(),
+            category: notification.category || '',
+            priority: notification.priority || 'medium',
+        };
+
+        if (notification.targetYears && notification.targetYears.length > 0) {
+            // === Targeted send: specific year(s) and/or section(s) ===
             const studentQuery = { academicYear: { $in: notification.targetYears } };
-            if (notification.targetSections.length > 0) {
+            if (notification.targetSections && notification.targetSections.length > 0) {
                 studentQuery.section = { $in: notification.targetSections };
             }
-            const students = await Student.find(studentQuery).select('userId');
-            const userIds = students.map(s => s.userId);
 
-            // Also include faculty and admin
+            // 1. Get targeted student user IDs
+            const students = await Student.find(studentQuery).select('userId');
+            const studentUserIds = students.map(s => s.userId);
+
+            // 2. Get faculty/admin user IDs (they always receive targeted notifications)
+            const facultyUsers = await Faculty.find({}).select('userId');
+            const adminUsers = await Admin.find({}).select('userId');
+            const staffUserIds = [
+                ...facultyUsers.map(f => f.userId),
+                ...adminUsers.map(a => a.userId),
+            ];
+
+            // 3. Merge all target user IDs
+            const allTargetUserIds = [...new Set([...studentUserIds.map(String), ...staffUserIds.map(String)])];
+
+            // 4. Fetch active device tokens for all target users
             const tokens = await DeviceToken.find({
-                $or: [
-                    { userId: { $in: userIds }, isActive: true },
-                    // Admin and faculty get all notifications
-                ],
+                userId: { $in: allTargetUserIds },
                 isActive: true,
             }).select('token');
 
-            const tokenStrings = tokens.map(t => t.token).filter(Boolean);
-            if (tokenStrings.length > 0) {
-                await sendPushNotification(
-                    tokenStrings,
-                    notification.title,
-                    notification.message.substring(0, 200),
-                    { notificationId: notification._id.toString(), category: notification.category }
-                );
-            }
+            tokenStrings = tokens.map(t => t.token).filter(Boolean);
         } else {
-            // Send to all
+            // === Broadcast: send to ALL active device tokens ===
             const tokens = await DeviceToken.find({ isActive: true }).select('token');
-            const tokenStrings = tokens.map(t => t.token).filter(Boolean);
-            if (tokenStrings.length > 0) {
-                await sendPushNotification(
-                    tokenStrings,
-                    notification.title,
-                    notification.message.substring(0, 200),
-                    { notificationId: notification._id.toString(), category: notification.category }
-                );
-            }
+            tokenStrings = tokens.map(t => t.token).filter(Boolean);
+        }
+
+        if (tokenStrings.length > 0) {
+            const truncatedBody = notification.message
+                ? notification.message.substring(0, 200)
+                : '';
+            await sendPushNotification(
+                tokenStrings,
+                notification.title,
+                truncatedBody,
+                notifData
+            );
+            logger.info(`Push sent to ${tokenStrings.length} device(s) for notification: ${notification.title}`);
+        } else {
+            logger.warn(`No active device tokens found for notification: ${notification.title}`);
         }
     } catch (error) {
         logger.error('Send notification push error:', error);

@@ -29,5 +29,6 @@ const refreshTokenSchema = new mongoose.Schema({
 
 // TTL index to automatically delete expired refresh tokens
 refreshTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+refreshTokenSchema.index({ userId: 1 }); // Optimize token invalidation queries
 
 module.exports = mongoose.model('RefreshToken', refreshTokenSchema);

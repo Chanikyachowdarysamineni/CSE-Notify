@@ -142,12 +142,14 @@ public class CreateNotificationActivity extends BaseActivity {
     }
 
     private void setupSpinners() {
-        // Categories autocomplete
+        List<String> categories = com.csehub.app.core.network.ConfigRepository.getInstance(this).getNotificationCategories();
         ArrayAdapter<String> catAdapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_dropdown_item_1line, Constants.NOTIFICATION_CATEGORIES
+                this, android.R.layout.simple_dropdown_item_1line, categories
         );
         binding.categorySpinner.setAdapter(catAdapter);
-        binding.categorySpinner.setText(Constants.NOTIFICATION_CATEGORIES[0], false);
+        if (!categories.isEmpty()) {
+            binding.categorySpinner.setText(categories.get(0), false);
+        }
 
         // Priorities autocomplete
         ArrayAdapter<String> prioAdapter = new ArrayAdapter<>(

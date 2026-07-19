@@ -51,9 +51,8 @@ const userSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-// Index for faster lookups
-userSchema.index({ loginId: 1 });
-userSchema.index({ email: 1 }, { sparse: true });
+// Indexes (loginId has unique:true which already creates an index)
+// email has sparse:true in the schema definition which already creates a sparse index
 userSchema.index({ role: 1 });
 
 // Hash password before saving

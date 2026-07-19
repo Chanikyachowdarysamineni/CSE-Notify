@@ -34,6 +34,7 @@ const adminRoutes = require('./src/routes/admin.routes');
 const dashboardRoutes = require('./src/routes/dashboard.routes');
 const academicYearRoutes = require('./src/routes/academicYear.routes');
 const sectionRoutes = require('./src/routes/section.routes');
+const configRoutes = require('./src/routes/config.routes');
 
 // Import cron jobs
 const { initCronJobs } = require('./src/jobs');
@@ -64,6 +65,13 @@ app.use(helmet({
     crossOriginResourcePolicy: false // Allow loading images from same origin (for uploads)
 }));
 
+// Compression middleware
+const compression = require('compression');
+app.use(compression({
+    level: 6,
+    threshold: 100 * 1024 // Only compress responses > 100KB (e.g. large JSON lists)
+}));
+
 const { apiLimiter } = require('./src/middleware/rateLimiter');
 app.use('/api/', apiLimiter);
 
@@ -91,6 +99,15 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
 
+// Data sanitization against XSS
+const xss = require('xss-clean');
+app.use(xss());
+
+// Root path health check (For Render deployment ping)
+app.get('/', (req, res) => {
+    res.status(200).send('CSE HUB Backend is running gracefully.');
+});
+
 // Static files (uploads)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -110,6 +127,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/academic-years', academicYearRoutes);
 app.use('/api/sections', sectionRoutes);
+app.use('/api/config', configRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

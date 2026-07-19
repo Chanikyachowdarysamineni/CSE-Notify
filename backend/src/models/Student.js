@@ -77,9 +77,9 @@ const studentSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-// Indexes
-studentSchema.index({ regNo: 1 });
-studentSchema.index({ academicYear: 1, section: 1 });
-studentSchema.index({ userId: 1 });
+// Indexes (note: regNo and userId have unique:true which already creates indexes)
+studentSchema.index({ academicYear: 1, section: 1 }); // Compound for notification targeting
+studentSchema.index({ dob: 1 });                       // For birthday reminder cron job
+studentSchema.index({ name: 1 });                      // Optimize search queries
 
 module.exports = mongoose.model('Student', studentSchema);

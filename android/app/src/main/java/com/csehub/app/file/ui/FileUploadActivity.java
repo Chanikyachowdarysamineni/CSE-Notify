@@ -95,11 +95,14 @@ public class FileUploadActivity extends BaseActivity {
     }
 
     private void setupSpinner() {
+        List<String> fileCategories = com.csehub.app.core.network.ConfigRepository.getInstance(this).getFileCategories();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_dropdown_item_1line, Constants.FILE_CATEGORIES
+                this, android.R.layout.simple_dropdown_item_1line, fileCategories
         );
         binding.categorySpinner.setAdapter(adapter);
-        binding.categorySpinner.setText(Constants.FILE_CATEGORIES[0], false);
+        if (!fileCategories.isEmpty()) {
+            binding.categorySpinner.setText(fileCategories.get(0), false);
+        }
     }
 
     private void setupListeners() {

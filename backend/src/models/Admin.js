@@ -38,6 +38,6 @@ const adminSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-adminSchema.index({ userId: 1 });
+// No additional indexes needed — userId and employeeId have unique:true
 
 module.exports = mongoose.model('Admin', adminSchema);

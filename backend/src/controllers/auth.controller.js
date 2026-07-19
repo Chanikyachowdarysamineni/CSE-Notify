@@ -53,8 +53,9 @@ const generateToken = (user) => {
  */
 const login = async (req, res) => {
     try {
-        console.log("LOGIN PAYLOAD RECEIVED: ", req.body);
         const { loginId, password, fcmToken } = req.body;
+
+        console.log("LOGIN REQUEST RECEIVED: loginId =", loginId, "passwordLength =", password ? password.length : 0);
 
         if (!loginId || !password) {
             return apiResponse(res, 400, false, 'Please provide login credentials');
@@ -103,7 +104,7 @@ const login = async (req, res) => {
         if (fcmToken) {
             await DeviceToken.findOneAndUpdate(
                 { token: fcmToken },
-                { userId: user._id, platform: 'android', isActive: true, lastUsed: new Date() },
+                { userId: user._id, role: user.role, platform: 'android', isActive: true, lastUsed: new Date() },
                 { upsert: true, new: true }
             );
         }
@@ -255,11 +256,20 @@ const changePassword = async (req, res) => {
  */
 const logout = async (req, res) => {
     try {
-        // Deactivate device token
-        await DeviceToken.findOneAndUpdate(
-            { userId: req.user.id },
-            { isActive: false }
-        );
+        const { fcmToken } = req.body;
+
+        // Deactivate the specific device token if provided, else deactivate all for this user
+        if (fcmToken) {
+            await DeviceToken.findOneAndUpdate(
+                { userId: req.user.id, token: fcmToken },
+                { isActive: false }
+            );
+        } else {
+            await DeviceToken.updateMany(
+                { userId: req.user.id },
+                { isActive: false }
+            );
+        }
 
         // Audit log
         await createAuditLog(req, 'LOGOUT', 'auth', req.user.id);
@@ -283,10 +293,11 @@ const refreshFCMToken = async (req, res) => {
             return apiResponse(res, 400, false, 'FCM token is required');
         }
 
+        // Upsert by token to prevent overwriting other devices' tokens for the same user
         await DeviceToken.findOneAndUpdate(
-            { userId: req.user.id },
-            { token: fcmToken, isActive: true, lastUsed: new Date() },
-            { upsert: true }
+            { token: fcmToken },
+            { userId: req.user.id, role: req.user.role, platform: 'android', isActive: true, lastUsed: new Date() },
+            { upsert: true, new: true }
         );
 
         return apiResponse(res, 200, true, 'FCM token updated');

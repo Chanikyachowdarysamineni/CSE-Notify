@@ -124,7 +124,8 @@ public class AuthRepository {
     }
 
     public void logout(Runnable onComplete) {
-        authApi.logout().enqueue(new Callback<ApiResponse<Void>>() {
+        String fcmToken = tokenManager.getFCMToken();
+        authApi.logout(new com.csehub.app.auth.data.model.LogoutRequest(fcmToken)).enqueue(new Callback<ApiResponse<Void>>() {
             @Override
             public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
                 tokenManager.clearSession();

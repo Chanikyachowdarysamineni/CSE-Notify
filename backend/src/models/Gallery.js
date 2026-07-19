@@ -16,7 +16,6 @@ const gallerySchema = new mongoose.Schema({
     category: {
         type: String,
         required: [true, 'Category is required'],
-        enum: ['Achievements', 'Workshops', 'Placements', 'Campus Life', 'Events', 'Sports'],
     },
     postedBy: {
         type: mongoose.Schema.Types.ObjectId,

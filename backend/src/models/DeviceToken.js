@@ -9,6 +9,11 @@ const deviceTokenSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
+    role: {
+        type: String,
+        enum: ['admin', 'faculty', 'student'],
+        required: [true, 'User role is required'],
+    },
     token: {
         type: String,
         required: [true, 'Device token is required'],
@@ -32,7 +37,7 @@ const deviceTokenSchema = new mongoose.Schema({
 });
 
 // Indexes
-deviceTokenSchema.index({ userId: 1 });
-deviceTokenSchema.index({ token: 1 });
+deviceTokenSchema.index({ userId: 1, isActive: 1 }); // Compound for active token lookups
+// Note: token has unique:true which already creates an index
 
 module.exports = mongoose.model('DeviceToken', deviceTokenSchema);

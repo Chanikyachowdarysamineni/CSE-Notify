@@ -33,31 +33,52 @@ public class TokenAuthenticator implements Authenticator {
 
     @Override
     public Request authenticate(Route route, Response response) {
+        // Guard 1: Don't attempt token refresh for auth endpoints.
+        // This prevents an infinite loop when the user enters wrong credentials on the login screen.
+        String url = response.request().url().toString();
+        if (url.contains("/auth/login")
+                || url.contains("/auth/forgot-password")
+                || url.contains("/auth/reset-password")
+                || url.contains("/auth/refresh")) {
+            return null;
+        }
+
+        // Guard 2: Don't retry more than once (the previous response was already a retry)
+        if (responseCount(response) >= 2) {
+            return null;
+        }
+
         TokenManager tokenManager = TokenManager.getInstance(context);
         String refreshToken = tokenManager.getRefreshToken();
 
         if (refreshToken == null || refreshToken.isEmpty()) {
-            return null; // No refresh token available, give up
+            return null; // No refresh token — can't recover
         }
 
-        // Synchronous API call to refresh token
+        // Synchronous token refresh
         String newToken = refreshAccessToken(refreshToken);
 
         if (newToken != null && !newToken.isEmpty()) {
-            // Save new token
             tokenManager.saveToken(newToken);
-
-            // Retry the original request with the new token
             return response.request().newBuilder()
                     .header("Authorization", "Bearer " + newToken)
                     .build();
         } else {
-            // Refresh failed (expired or invalid). Force logout.
+            // Refresh failed → force logout
             tokenManager.clearSession();
-            Intent intent = new Intent(Constants.ACTION_AUTH_ERROR);
-            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(context)
+                    .sendBroadcast(new Intent(Constants.ACTION_AUTH_ERROR));
             return null;
         }
+    }
+
+    /** Count the number of prior responses in the redirect chain. */
+    private int responseCount(Response response) {
+        int count = 1;
+        while ((response = response.priorResponse()) != null) {
+            count++;
+        }
+        return count;
     }
 
     private String refreshAccessToken(String refreshToken) {

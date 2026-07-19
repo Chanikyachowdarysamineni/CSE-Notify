@@ -21,11 +21,6 @@ const notificationSchema = new mongoose.Schema({
     category: {
         type: String,
         required: [true, 'Category is required'],
-        enum: [
-            'General', 'Academic', 'Exam', 'Placement', 'Event',
-            'Workshop', 'Holiday', 'Sports', 'Cultural', 'Technical',
-            'Birthday', 'Timetable', 'Emergency',
-        ],
     },
     priority: {
         type: String,

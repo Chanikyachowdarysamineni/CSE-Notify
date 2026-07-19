@@ -51,7 +51,14 @@ const getDailyTimetable = async (req, res, next) => {
         }
 
         if (!academicYear || !section) {
-            return apiResponse(res, 400, false, 'Academic Year and Section are required');
+            const fallbackYear = await AcademicYear.findOne().sort({ name: 1 });
+            const fallbackSection = await Section.findOne().sort({ name: 1 });
+            if (fallbackYear && fallbackSection) {
+                academicYear = fallbackYear._id;
+                section = fallbackSection._id;
+            } else {
+                return apiResponse(res, 400, false, 'Academic Year and Section are required');
+            }
         }
 
         const timetable = await Timetable.find({ academicYear, section, day })
@@ -104,7 +111,14 @@ const getWeeklyTimetable = async (req, res, next) => {
         }
 
         if (!academicYear || !section) {
-            return apiResponse(res, 400, false, 'Academic Year and Section are required');
+            const fallbackYear = await AcademicYear.findOne().sort({ name: 1 });
+            const fallbackSection = await Section.findOne().sort({ name: 1 });
+            if (fallbackYear && fallbackSection) {
+                academicYear = fallbackYear._id;
+                section = fallbackSection._id;
+            } else {
+                return apiResponse(res, 400, false, 'Academic Year and Section are required');
+            }
         }
 
         const timetable = await Timetable.find({ academicYear, section })

@@ -1,119 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    Notification List Item — Premium Card Design
+    Features:
+    - Priority color stripe on the left edge
+    - Unread indicator dot (red badge)
+    - Category chip with background tint
+    - BigText-style 2-line preview
+    - Author + date row
+    - Edit/Delete actions for owners
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
+    android:layout_marginHorizontal="0dp"
+    android:layout_marginBottom="10dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="1dp"
+    app:cardElevation="0dp"
     app:strokeWidth="1dp"
-    app:strokeColor="?attr/colorSurfaceVariant">
+    app:strokeColor="?attr/colorOutlineVariant"
+    app:cardBackgroundColor="?attr/colorSurface">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="horizontal">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <!-- Priority color stripe (left edge accent) -->
+        <View
+            android:id="@+id/priorityStripe"
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:background="?attr/colorPrimary" />
 
-            <!-- Category Badge -->
-            <TextView
-                android:id="@+id/categoryText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Academic"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="?attr/colorPrimary"
-                android:background="@drawable/bg_badge_primary"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"/>
-
-            <!-- Priority Badge -->
-            <View
-                android:id="@+id/priorityIndicator"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:background="@drawable/bg_priority_indicator"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="4dp"/>
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/titleText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Mid-Semester Exam Timetable Published"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="?attr/colorOnSurface"/>
-
-        <TextView
-            android:id="@+id/messagePreview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:text="The exam timetable for odd semester is released. Refer to attachments."
-            android:textSize="14sp"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:maxLines="2"
-            android:ellipsize="end"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp">
-
-            <TextView
-                android:id="@+id/authorText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="By Dr. Rajesh Kumar (Faculty)"
-                android:textSize="11sp"
-                android:textColor="?attr/colorOnSurfaceVariant"/>
-
-            <TextView
-                android:id="@+id/dateText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="15 July, 2026"
-                android:textSize="11sp"
-                android:layout_alignParentEnd="true"
-                android:textColor="?attr/colorOnSurfaceVariant"/>
-        </RelativeLayout>
-
-        <!-- Action Buttons (Visible only for owners) -->
+        <!-- Main content -->
         <LinearLayout
-            android:id="@+id/actionButtonsContainer"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="end"
-            android:layout_marginTop="8dp"
-            android:visibility="gone">
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="14dp">
 
-            <ImageButton
-                android:id="@+id/editButton"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@android:drawable/ic_menu_edit"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="?attr/colorPrimary"
-                android:layout_marginEnd="8dp"/>
+            <!-- Row 1: Category chip + Unread dot + Priority label -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-            <ImageButton
-                android:id="@+id/deleteButton"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@android:drawable/ic_menu_delete"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="?attr/colorError"/>
+                <!-- Category chip -->
+                <TextView
+                    android:id="@+id/categoryText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Academic"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorPrimary"
+                    android:background="?attr/colorPrimaryContainer"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="3dp"
+                    app:cornerRadius="20dp" />
+
+                <!-- Spacer -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <!-- Priority label (text) -->
+                <TextView
+                    android:id="@+id/priorityText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="HIGH"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/priority_high"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="2dp"
+                    android:layout_marginEnd="6dp"
+                    android:visibility="gone" />
+
+                <!-- Unread dot indicator -->
+                <View
+                    android:id="@+id/unreadDot"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/bg_unread_dot"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+
+            <!-- Row 2: Title -->
+            <TextView
+                android:id="@+id/titleText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Mid-Semester Exam Timetable Published"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorOnSurface"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:lineSpacingMultiplier="1.1" />
+
+            <!-- Row 3: Message preview -->
+            <TextView
+                android:id="@+id/messagePreview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="The exam timetable for odd semester is released. Refer to attachments for details."
+                android:textSize="13sp"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:lineSpacingMultiplier="1.2" />
+
+            <!-- Row 4: Author + Date -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/authorText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Dr. Rajesh Kumar"
+                    android:textSize="11sp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:drawablePadding="4dp"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/dateText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="15 Jul"
+                    android:textSize="11sp"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+
+            </LinearLayout>
+
+            <!-- Row 5: Attachment indicator (hidden by default) -->
+            <TextView
+                android:id="@+id/attachmentIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="📎 Attachment"
+                android:textSize="11sp"
+                android:textColor="?attr/colorPrimary"
+                android:visibility="gone" />
+
+            <!-- Row 6: Action buttons (only for owners) -->
+            <LinearLayout
+                android:id="@+id/actionButtonsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="end"
+                android:layout_marginTop="4dp"
+                android:visibility="gone">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/editButton"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Edit"
+                    android:textSize="12sp"
+                    app:icon="@android:drawable/ic_menu_edit"
+                    app:iconSize="16dp"
+                    android:layout_marginEnd="4dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/deleteButton"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Delete"
+                    android:textSize="12sp"
+                    android:textColor="?attr/colorError"
+                    app:icon="@android:drawable/ic_menu_delete"
+                    app:iconSize="16dp"
+                    app:iconTint="?attr/colorError" />
+
+            </LinearLayout>
         </LinearLayout>
-
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

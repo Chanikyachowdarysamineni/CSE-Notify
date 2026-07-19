@@ -54,8 +54,7 @@ const facultySchema = new mongoose.Schema({
     timestamps: true,
 });
 
-// Indexes
-facultySchema.index({ employeeId: 1 });
-facultySchema.index({ userId: 1 });
+// Indexes (employeeId and userId have unique:true which already creates indexes)
+facultySchema.index({ name: 1 }); // Optimize name-based searches
 
 module.exports = mongoose.model('Faculty', facultySchema);

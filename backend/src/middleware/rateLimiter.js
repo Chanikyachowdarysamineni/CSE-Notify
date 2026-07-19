@@ -38,7 +38,7 @@ const rateLimitHandler = (limiterName) => {
 // General API rate limiter (for standard GET endpoints)
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: parseInt(process.env.RATE_LIMIT_API_MAX) || 500, // 500 requests per 15 mins for 6,000 active users
+    max: parseInt(process.env.RATE_LIMIT_API_MAX) || 10000, // 10000 requests per 15 mins for high volume production
     keyGenerator,
     handler: rateLimitHandler('General_API_Limiter'),
     standardHeaders: 'draft-7',

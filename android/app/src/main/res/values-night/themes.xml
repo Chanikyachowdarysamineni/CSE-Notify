@@ -1,36 +1,63 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
+    <!-- =====================================================================
+         CSE HUB — Dark Mode Theme (Material Design 3)
+         Overrides key color tokens for night mode.
+         ===================================================================== -->
     <style name="Theme.CSEHub" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
+
+        <!-- Primary brand color (lighter for dark bg) -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorOnPrimary">@color/on_primary</item>
         <item name="colorPrimaryContainer">@color/primary_container</item>
-        
-        <!-- Secondary brand color. -->
+        <item name="colorOnPrimaryContainer">@color/on_primary_container</item>
+
+        <!-- Secondary -->
         <item name="colorSecondary">@color/secondary</item>
         <item name="colorOnSecondary">@color/on_secondary</item>
         <item name="colorSecondaryContainer">@color/secondary_container</item>
-        
-        <!-- Tertiary brand color. -->
+        <item name="colorOnSecondaryContainer">@color/on_secondary_container</item>
+
+        <!-- Tertiary -->
         <item name="colorTertiary">@color/tertiary</item>
         <item name="colorTertiaryContainer">@color/tertiary_container</item>
-        
-        <!-- Other colors. -->
+        <item name="colorOnTertiary">@color/on_tertiary</item>
+        <item name="colorOnTertiaryContainer">@color/on_tertiary_container</item>
+
+        <!-- Error -->
+        <item name="colorError">@color/error</item>
+        <item name="colorErrorContainer">@color/error_container</item>
+        <item name="colorOnError">@color/on_error</item>
+
+        <!-- Surface / Background (dark) -->
         <item name="android:windowBackground">@color/background</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorOnBackground">@color/on_background</item>
         <item name="colorSurface">@color/surface</item>
         <item name="colorSurfaceVariant">@color/surface_variant</item>
         <item name="colorOnSurface">@color/on_surface</item>
         <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
-        
-        <!-- Status bar styling -->
-        <item name="android:statusBarColor">@color/background</item>
+        <item name="colorOutline">@color/outline</item>
+        <item name="colorOutlineVariant">@color/outline_variant</item>
+
+        <!-- Status bar (dark background → light icons) -->
+        <item name="android:statusBarColor" tools:targetApi="21">@color/background</item>
         <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+
+        <!-- Tonal elevation for M3 dark mode -->
+        <item name="elevationOverlayEnabled">true</item>
+
+        <!-- Shape system -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.CSEHub.Small</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.CSEHub.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.CSEHub.Large</item>
     </style>
 
-    <!-- Splash Screen theme -->
+    <!-- Splash uses primary color even in dark mode -->
     <style name="Theme.CSEHub.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/background</item>
+        <item name="windowSplashScreenBackground">@color/primary_container</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo</item>
         <item name="postSplashScreenTheme">@style/Theme.CSEHub</item>
     </style>
+
 </resources>

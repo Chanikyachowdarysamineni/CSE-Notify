@@ -15,6 +15,7 @@ import com.csehub.app.databinding.ActivityGalleryUploadBinding;
 import com.csehub.app.gallery.viewmodel.GalleryViewModel;
 
 import java.io.File;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -49,11 +50,14 @@ public class GalleryUploadActivity extends BaseActivity {
     }
 
     private void setupSpinner() {
+        List<String> galleryCategories = com.csehub.app.core.network.ConfigRepository.getInstance(this).getGalleryCategories();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_dropdown_item_1line, Constants.GALLERY_CATEGORIES
+                this, android.R.layout.simple_dropdown_item_1line, galleryCategories
         );
         binding.categorySpinner.setAdapter(adapter);
-        binding.categorySpinner.setText(Constants.GALLERY_CATEGORIES[0], false);
+        if (!galleryCategories.isEmpty()) {
+            binding.categorySpinner.setText(galleryCategories.get(0), false);
+        }
     }
 
     private void setupListeners() {

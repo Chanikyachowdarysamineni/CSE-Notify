@@ -1,37 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Dark Mode Color Palette -->
-    <color name="primary">#C5CAE9</color>
-    <color name="primary_container">#283593</color>
-    <color name="secondary">#80CBC4</color>
-    <color name="secondary_container">#00695C</color>
-    <color name="tertiary">#FFE082</color>
-    <color name="tertiary_container">#EF6C00</color>
-    
-    <color name="background">#121212</color>
-    <color name="surface">#1E1E1E</color>
-    <color name="surface_variant">#2A2A2A</color>
-    
-    <color name="error">#CF6679</color>
-    <color name="error_container">#4E1C24</color>
-    
-    <color name="on_primary">#1A237E</color>
-    <color name="on_secondary">#004D40</color>
-    <color name="on_background">#E3E3E3</color>
-    <color name="on_surface">#E3E3E3</color>
-    <color name="on_surface_variant">#AAAAAA</color>
-    
-    <!-- Status priority colors (dimmed for dark mode) -->
-    <color name="priority_low">#81C784</color>
-    <color name="priority_medium">#64B5F6</color>
-    <color name="priority_high">#FFB74D</color>
-    <color name="priority_urgent">#E57373</color>
-    
-    <!-- Shimmer loading base/highlight for dark mode -->
-    <color name="shimmer_base">#2A2A2A</color>
-    <color name="shimmer_highlight">#3A3A3A</color>
+    <!-- Dark mode colors — same names, different values -->
 
-    <color name="glass_white_low">#0DFFFFFF</color>
-    <color name="glass_white_medium">#1DFFFFFF</color>
-    <color name="glass_black_low">#33000000</color>
+    <!-- Primary — Lighter blue for dark backgrounds -->
+    <color name="primary">#90CAF9</color>
+    <color name="primary_dark">#64B5F6</color>
+    <color name="primary_light">#BBDEFB</color>
+    <color name="primary_container">#0D47A1</color>
+    <color name="on_primary">#003064</color>
+    <color name="on_primary_container">#BBDEFB</color>
+
+    <!-- Secondary — Light teal -->
+    <color name="secondary">#80CBC4</color>
+    <color name="secondary_container">#004D40</color>
+    <color name="on_secondary">#003731</color>
+    <color name="on_secondary_container">#B2DFDB</color>
+
+    <!-- Tertiary — Light amber -->
+    <color name="tertiary">#FFCC80</color>
+    <color name="tertiary_container">#BF360C</color>
+    <color name="on_tertiary">#5D1A00</color>
+    <color name="on_tertiary_container">#FFE0B2</color>
+
+    <!-- Neutral surfaces (Dark mode) -->
+    <color name="background">#111318</color>
+    <color name="surface">#1C1F26</color>
+    <color name="surface_variant">#252930</color>
+    <color name="surface_container">#1E2128</color>
+    <color name="on_background">#E3E2E6</color>
+    <color name="on_surface">#E3E2E6</color>
+    <color name="on_surface_variant">#C4C6D0</color>
+    <color name="outline">#8E9099</color>
+    <color name="outline_variant">#44474F</color>
+
+    <!-- Error -->
+    <color name="error">#FFB4AB</color>
+    <color name="error_container">#93000A</color>
+    <color name="on_error">#690005</color>
+    <color name="on_error_container">#FFDAD6</color>
+
+    <!-- Priority badges -->
+    <color name="priority_low">#A5D6A7</color>
+    <color name="priority_medium">#90CAF9</color>
+    <color name="priority_high">#FFCC80</color>
+    <color name="priority_urgent">#EF9A9A</color>
+    <color name="priority_low_bg">#1B3A1D</color>
+    <color name="priority_medium_bg">#0A2240</color>
+    <color name="priority_high_bg">#3E1F00</color>
+    <color name="priority_urgent_bg">#3B0909</color>
+
+    <!-- Category colors (dark mode) -->
+    <color name="cat_academic">#90CAF9</color>
+    <color name="cat_event">#CE93D8</color>
+    <color name="cat_exam">#EF9A9A</color>
+    <color name="cat_placement">#80DEEA</color>
+    <color name="cat_sports">#A5D6A7</color>
+    <color name="cat_general">#B0BEC5</color>
+
+    <!-- Shimmer loading -->
+    <color name="shimmer_base">#2A2D35</color>
+    <color name="shimmer_highlight">#34383F</color>
+
+    <!-- Unread indicator -->
+    <color name="unread_dot">#EF9A9A</color>
+
+    <!-- Overlay / glass effects -->
+    <color name="overlay_light">#1AFFFFFF</color>
+    <color name="overlay_dark">#33000000</color>
+    <color name="scrim">#73000000</color>
 </resources>

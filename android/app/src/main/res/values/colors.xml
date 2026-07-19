@@ -1,39 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Material 3 Color Palette (White/Black theme for CSE HUB) -->
-    <color name="primary">#03A9F4</color> <!-- Light Blue -->
-    <color name="primary_container">#E1F5FE</color>
-    <color name="secondary">#4CAF50</color> <!-- Green -->
-    <color name="secondary_container">#E8F5E9</color>
-    <color name="tertiary">#F44336</color> <!-- Red -->
-    <color name="tertiary_container">#FFEBEE</color>
-    
-    <color name="background">#FFFFFF</color> <!-- White background -->
-    <color name="surface">#FFFFFF</color>
-    <color name="surface_variant">#F5F5F5</color>
-    
-    <color name="error">#B00020</color>
-    <color name="error_container">#FDE8E8</color>
-    
+    <!-- =====================================================================
+         CSE HUB — Premium Material 3 Color Palette
+         Inspired by enterprise apps: Google Classroom, Microsoft Teams
+         Primary: Deep Blue (trust, education, professionalism)
+         Secondary: Teal (success, active states)
+         Tertiary: Amber/Red (urgent, warnings)
+         ===================================================================== -->
+
+    <!-- Primary — Deep Blue -->
+    <color name="primary">#1565C0</color>
+    <color name="primary_dark">#0D47A1</color>
+    <color name="primary_light">#1976D2</color>
+    <color name="primary_container">#BBDEFB</color>
     <color name="on_primary">#FFFFFF</color>
+    <color name="on_primary_container">#0A1929</color>
+
+    <!-- Secondary — Teal -->
+    <color name="secondary">#00796B</color>
+    <color name="secondary_container">#B2DFDB</color>
     <color name="on_secondary">#FFFFFF</color>
+    <color name="on_secondary_container">#002319</color>
+
+    <!-- Tertiary — Amber for warnings, Red for errors -->
+    <color name="tertiary">#E65100</color>
+    <color name="tertiary_container">#FFE0B2</color>
     <color name="on_tertiary">#FFFFFF</color>
-    <color name="on_background">#000000</color> <!-- Black font -->
-    <color name="on_surface">#000000</color> <!-- Black font -->
-    <color name="on_surface_variant">#424242</color>
-    
-    <!-- Status priority colors -->
-    <color name="priority_low">#4CAF50</color>
-    <color name="priority_medium">#2196F3</color>
-    <color name="priority_high">#FF9800</color>
-    <color name="priority_urgent">#F44336</color>
-    
-    <!-- Shimmer loading base/highlight -->
-    <color name="shimmer_base">#E0E0E0</color>
-    <color name="shimmer_highlight">#F5F5F5</color>
-    
-    <!-- Glassmorphic overlays -->
-    <color name="glass_white_low">#1AFFFFFF</color>
-    <color name="glass_white_medium">#4DFFFFFF</color>
-    <color name="glass_black_low">#1A000000</color>
+    <color name="on_tertiary_container">#3E1300</color>
+
+    <!-- Neutral surfaces (Light mode) -->
+    <color name="background">#F8F9FA</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#EEF2F6</color>
+    <color name="surface_container">#F0F4F8</color>
+    <color name="on_background">#1A1C1E</color>
+    <color name="on_surface">#1A1C1E</color>
+    <color name="on_surface_variant">#44474F</color>
+    <color name="outline">#74777F</color>
+    <color name="outline_variant">#C4C6D0</color>
+
+    <!-- Error -->
+    <color name="error">#B00020</color>
+    <color name="error_container">#FDECEA</color>
+    <color name="on_error">#FFFFFF</color>
+    <color name="on_error_container">#410001</color>
+
+    <!-- Priority badges -->
+    <color name="priority_low">#388E3C</color>         <!-- Green -->
+    <color name="priority_medium">#1565C0</color>      <!-- Blue -->
+    <color name="priority_high">#E65100</color>        <!-- Orange -->
+    <color name="priority_urgent">#C62828</color>      <!-- Red -->
+    <color name="priority_low_bg">#E8F5E9</color>
+    <color name="priority_medium_bg">#E3F2FD</color>
+    <color name="priority_high_bg">#FFF3E0</color>
+    <color name="priority_urgent_bg">#FFEBEE</color>
+
+    <!-- Category colors -->
+    <color name="cat_academic">#1565C0</color>
+    <color name="cat_event">#6A1B9A</color>
+    <color name="cat_exam">#B71C1C</color>
+    <color name="cat_placement">#0277BD</color>
+    <color name="cat_sports">#2E7D32</color>
+    <color name="cat_general">#37474F</color>
+
+    <!-- Shimmer loading -->
+    <color name="shimmer_base">#E8ECF0</color>
+    <color name="shimmer_highlight">#F5F7FA</color>
+
+    <!-- Unread indicator -->
+    <color name="unread_dot">#C62828</color>
+
+    <!-- Overlay / glass effects -->
+    <color name="overlay_light">#1AFFFFFF</color>
+    <color name="overlay_dark">#33000000</color>
+    <color name="scrim">#52000000</color>
 </resources>

@@ -33,7 +33,6 @@ const fileSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        enum: ['Notes', 'Assignments', 'Previous Papers', 'Lab Manuals', 'Syllabus', 'Circulars', 'Forms', 'Others'],
         default: 'Others',
     },
     description: {

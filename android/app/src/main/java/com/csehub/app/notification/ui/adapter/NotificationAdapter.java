@@ -108,7 +108,7 @@ public class NotificationAdapter extends ListAdapter<Notification, NotificationA
             colorRes = R.color.priority_urgent;
         }
 
-        holder.binding.priorityIndicator.setBackgroundTintList(
+        holder.binding.priorityStripe.setBackgroundTintList(
                 ColorStateList.valueOf(ContextCompat.getColor(holder.itemView.getContext(), colorRes))
         );
 

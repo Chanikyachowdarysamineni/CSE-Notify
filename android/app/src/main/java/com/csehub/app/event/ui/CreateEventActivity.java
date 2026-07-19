@@ -120,11 +120,14 @@ public class CreateEventActivity extends BaseActivity {
     }
 
     private void setupSpinner() {
+        List<String> eventTypes = com.csehub.app.core.network.ConfigRepository.getInstance(this).getEventTypes();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_dropdown_item_1line, Constants.EVENT_TYPES
+                this, android.R.layout.simple_dropdown_item_1line, eventTypes
         );
         binding.eventTypeSpinner.setAdapter(adapter);
-        binding.eventTypeSpinner.setText(Constants.EVENT_TYPES[0], false);
+        if (!eventTypes.isEmpty()) {
+            binding.eventTypeSpinner.setText(eventTypes.get(0), false);
+        }
     }
 
     private void setupPickers() {
