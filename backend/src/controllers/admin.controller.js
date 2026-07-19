@@ -60,6 +60,7 @@ const createStudent = async (req, res, next) => {
 
         // Create user account
         const user = await User.create({
+            loginId: regNo,
             email,
             password: password || regNo, // Default password is registration number
             name,
@@ -177,6 +178,7 @@ const createFaculty = async (req, res, next) => {
         const { email, password, name, employeeId, designation, mobile, personalEmail, collegeEmail } = req.body;
 
         const user = await User.create({
+            loginId: employeeId,
             email,
             password: password || employeeId,
             name,
