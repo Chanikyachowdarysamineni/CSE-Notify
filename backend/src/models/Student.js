@@ -73,6 +73,32 @@ const studentSchema = new mongoose.Schema({
         type: String, // URL/path to photo
         default: '',
     },
+    aadhaarNumber: {
+        type: String,
+        trim: true,
+        match: [/^\d{12}$/, 'Aadhaar must be exactly 12 digits'],
+    },
+    panNumber: {
+        type: String,
+        trim: true,
+        uppercase: true,
+        match: [/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, 'Invalid PAN format'],
+    },
+    githubUrl: {
+        type: String,
+        trim: true,
+        match: [/^https?:\/\/(www\.)?github\.com\/[a-zA-Z0-9_-]+\/?$/, 'Invalid GitHub URL'],
+    },
+    linkedinUrl: {
+        type: String,
+        trim: true,
+        match: [/^https?:\/\/(www\.)?linkedin\.com\/in\/[a-zA-Z0-9_-]+\/?$/, 'Invalid LinkedIn URL'],
+    },
+    leetcodeUrl: {
+        type: String,
+        trim: true,
+        match: [/^https?:\/\/(www\.)?leetcode\.com\/u?\/?[a-zA-Z0-9_-]+\/?$/, 'Invalid LeetCode URL'],
+    },
 }, {
     timestamps: true,
 });
@@ -81,5 +107,6 @@ const studentSchema = new mongoose.Schema({
 studentSchema.index({ academicYear: 1, section: 1 }); // Compound for notification targeting
 studentSchema.index({ dob: 1 });                       // For birthday reminder cron job
 studentSchema.index({ name: 1 });                      // Optimize search queries
+studentSchema.index({ collegeEmail: 1 }, { unique: true, sparse: true }); // Prevent duplicate college emails
 
 module.exports = mongoose.model('Student', studentSchema);

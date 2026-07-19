@@ -54,6 +54,9 @@ public class MainActivity extends BaseActivity {
         checkNotificationPermission();
         checkDeviceSecurity();
         syncFCMToken();
+        
+        // Fetch dynamic metadata from server instead of relying solely on local seed constants
+        com.csehub.app.core.network.ConfigRepository.getInstance(this).fetchAndCacheMetadata(null);
     }
 
     private void checkDeviceSecurity() {

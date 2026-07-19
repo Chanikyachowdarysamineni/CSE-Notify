@@ -69,6 +69,8 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="CircleImageView" parent="ShapeAppearanceOverlay.App.CornerSize50Percent" />
+
     <style name="ShapeAppearance.CSEHub.Small" parent="ShapeAppearance.Material3.SmallComponent">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>

@@ -41,8 +41,15 @@ public class AdminFragment extends BaseFragment {
             showSnackbar("Manage Faculty Module loading...");
         });
 
+        binding.cardManageAcademic.setOnClickListener(v -> {
+            // Need an explicit Intent to the new AcademicYearActivity since it's a completely new module
+            android.content.Intent intent = new android.content.Intent(requireContext(), com.csehub.app.academic.ui.AcademicYearActivity.class);
+            startActivity(intent);
+        });
+
         binding.cardManageTimetable.setOnClickListener(v -> {
-            Navigation.findNavController(requireView()).navigate(R.id.navigation_timetable);
+            android.content.Intent intent = new android.content.Intent(requireContext(), com.csehub.app.timetable.ui.TimetableManagementActivity.class);
+            startActivity(intent);
         });
 
         binding.cardManageNotifications.setOnClickListener(v -> {

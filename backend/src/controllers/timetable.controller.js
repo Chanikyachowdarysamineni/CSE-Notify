@@ -247,9 +247,18 @@ const importCSV = async (req, res, next) => {
         const sectionsMap = {}; // key: "yearId_name"
         sections.forEach(s => sectionsMap[`${s.academicYear.toString()}_${s.name.toLowerCase()}`] = s._id);
 
+        // Load all faculty for fast name matching
+        const allFaculty = await Faculty.find({}).lean();
+        const facultyMap = {};
+        allFaculty.forEach(f => facultyMap[f.name.trim().toLowerCase()] = f._id);
+
         const toInsert = [];
         const errors = [];
         let line = 1;
+
+        // Map to keep track of assignments in current batch and DB to prevent conflicts
+        const assignedPeriods = new Map(); // key: "facultyId_day_period", value: "sectionName"
+
 
         for (const row of results) {
             line++;
@@ -281,6 +290,38 @@ const importCSV = async (req, res, next) => {
                 continue;
             }
 
+            const facultyNameRaw = row.facultyName?.trim() || '';
+            let facultyId = null;
+            if (facultyNameRaw) {
+                facultyId = facultyMap[facultyNameRaw.toLowerCase()];
+                if (!facultyId) {
+                    errors.push(`Row ${line}: Faculty '${facultyNameRaw}' not found in database. Check exact name match.`);
+                    continue;
+                }
+
+                // Check for faculty conflict within the CSV or existing DB
+                const conflictKey = `${facultyId.toString()}_${day}_${period}`;
+                if (assignedPeriods.has(conflictKey)) {
+                    errors.push(`Row ${line}: Faculty '${facultyNameRaw}' is already assigned to section '${assignedPeriods.get(conflictKey)}' on ${day} Period ${period}`);
+                    continue;
+                } else {
+                    // Check DB
+                    const existing = await Timetable.findOne({
+                        faculty: facultyId,
+                        day,
+                        period,
+                        academicYear: { $ne: yearId }, // It's fine if they are assigned to the exact same year/section (overwriting) but NOT another section
+                    }).populate('section');
+                    
+                    if (existing && existing.section.toString() !== sectionId.toString()) {
+                        errors.push(`Row ${line}: Faculty '${facultyNameRaw}' is already assigned to another section (${existing.section.name}) on ${day} Period ${period}`);
+                        continue;
+                    }
+
+                    assignedPeriods.set(conflictKey, sName);
+                }
+            }
+
             toInsert.push({
                 academicYear: yearId,
                 section: sectionId,
@@ -288,7 +329,8 @@ const importCSV = async (req, res, next) => {
                 period,
                 subject: row.subject?.trim() || 'Free Class',
                 subjectCode: row.subjectCode?.trim() || '',
-                facultyName: row.facultyName?.trim() || '',
+                faculty: facultyId,
+                facultyName: facultyNameRaw,
                 room: row.room?.trim() || '',
                 startTime: row.startTime?.trim() || '09:00 AM',
                 endTime: row.endTime?.trim() || '09:50 AM',

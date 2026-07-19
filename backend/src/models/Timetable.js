@@ -65,7 +65,10 @@ const timetableSchema = new mongoose.Schema({
 
 // Indexes for efficient timetable queries
 timetableSchema.index({ academicYear: 1, section: 1, day: 1 });
-timetableSchema.index({ faculty: 1, day: 1 });
+timetableSchema.index({ faculty: 1, day: 1, period: 1 }, { 
+    unique: true, 
+    partialFilterExpression: { faculty: { $exists: true, $ne: null } }
+});
 timetableSchema.index({ academicYear: 1, section: 1, day: 1, period: 1 }, { unique: true });
 
 module.exports = mongoose.model('Timetable', timetableSchema);

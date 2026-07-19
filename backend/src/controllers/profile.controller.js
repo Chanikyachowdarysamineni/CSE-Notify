@@ -64,11 +64,32 @@ const updateProfile = async (req, res, next) => {
         let updated = null;
 
         if (user.role === ROLES.STUDENT) {
-            // Students can edit: mobile, personalEmail, collegeEmail, dob, dayScholarHosteller
+            const studentProfile = await Student.findOne({ userId: user._id });
+            if (!studentProfile) return apiResponse(res, 404, false, 'Student profile not found');
+
             const allowed = {};
-            const editableFields = ['mobile', 'personalEmail', 'collegeEmail', 'dob', 'dayScholarHosteller', 'section'];
+            const editableFields = ['mobile', 'personalEmail', 'collegeEmail', 'dob', 'dayScholarHosteller', 'aadhaarNumber', 'panNumber', 'githubUrl', 'linkedinUrl', 'leetcodeUrl'];
+            
             editableFields.forEach(field => {
-                if (req.body[field] !== undefined) allowed[field] = req.body[field];
+                if (req.body[field] !== undefined) {
+                    // Strict College Email validation
+                    if (field === 'collegeEmail' && req.body[field]) {
+                        const expectedEmail = `${studentProfile.regNo.toLowerCase()}@vignan.com`;
+                        if (req.body[field].toLowerCase() !== expectedEmail) {
+                            throw new Error(`College email must be exactly ${expectedEmail}`);
+                        }
+                    }
+                    
+                    // DOB Validation
+                    if (field === 'dob' && req.body[field]) {
+                        const dobDate = new Date(req.body[field]);
+                        if (dobDate > new Date()) {
+                            throw new Error('Date of Birth cannot be in the future');
+                        }
+                    }
+
+                    allowed[field] = req.body[field];
+                }
             });
 
             updated = await Student.findOneAndUpdate(
@@ -137,4 +158,61 @@ const updateProfilePhoto = async (req, res, next) => {
     }
 };
 
-module.exports = { getProfile, updateProfile, updateProfilePhoto };
+/**
+ * GET /api/profile/student/:studentId
+ * View a specific student's profile (Faculty / Admin)
+ */
+const getStudentProfileById = async (req, res, next) => {
+    try {
+        const student = await Student.findOne({ userId: req.params.studentId })
+            .populate('academicYear', 'name session')
+            .populate('section', 'name');
+
+        if (!student) {
+            return apiResponse(res, 404, false, 'Student not found');
+        }
+
+        // Audit log for Faculty viewing sensitive data
+        if (req.user.role === ROLES.FACULTY) {
+            await createAuditLog(req, 'FACULTY_VIEW_STUDENT_PROFILE', 'profile', student.userId);
+        }
+
+        return apiResponse(res, 200, true, 'Student Profile retrieved', student);
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
+ * PUT /api/profile/student/:studentId
+ * Update a specific student's profile (Admin Only)
+ */
+const updateStudentProfileById = async (req, res, next) => {
+    try {
+        const student = await Student.findOne({ userId: req.params.studentId });
+        if (!student) {
+            return apiResponse(res, 404, false, 'Student not found');
+        }
+
+        // Admin has full control to edit anything
+        const updated = await Student.findOneAndUpdate(
+            { userId: req.params.studentId },
+            { $set: req.body },
+            { new: true, runValidators: true }
+        );
+
+        await createAuditLog(req, 'ADMIN_UPDATE_STUDENT_PROFILE', 'profile', student.userId);
+
+        return apiResponse(res, 200, true, 'Student Profile updated by Admin', updated);
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = {
+    getProfile,
+    updateProfile,
+    updateProfilePhoto,
+    getStudentProfileById,
+    updateStudentProfileById
+};
