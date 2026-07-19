@@ -10,6 +10,8 @@ const User = require('../models/User');
 const Student = require('../models/Student');
 const Faculty = require('../models/Faculty');
 const Admin = require('../models/Admin');
+const AcademicYear = require('../models/AcademicYear');
+const Section = require('../models/Section');
 
 const seedData = async () => {
     try {
@@ -81,14 +83,25 @@ const seedData = async () => {
         console.log('Faculty created (3 members) - password: Faculty@123');
 
         // Create Students
-        const years = ['I', 'II', 'III', 'IV'];
-        const sections = ['A', 'B'];
+        // Ensure Academic Years and Sections exist in DB first
+        const yearNames = ['I', 'II', 'III', 'IV'];
+        const sectionNames = ['A', 'B'];
         let studentCount = 0;
 
-        for (const year of years) {
-            for (const section of sections) {
+        for (const yName of yearNames) {
+            let yearDoc = await AcademicYear.findOne({ name: yName, session: '2023-2027' });
+            if (!yearDoc) {
+                yearDoc = await AcademicYear.create({ name: yName, session: '2023-2027' });
+            }
+
+            for (const sName of sectionNames) {
+                let secDoc = await Section.findOne({ name: sName, academicYear: yearDoc._id });
+                if (!secDoc) {
+                    secDoc = await Section.create({ name: sName, academicYear: yearDoc._id });
+                }
+
                 for (let i = 1; i <= 3; i++) {
-                    const regNo = `22CSE${year === 'I' ? '1' : year === 'II' ? '2' : year === 'III' ? '3' : '4'}${section}${String(i).padStart(3, '0')}`;
+                    const regNo = `22CSE${yName === 'I' ? '1' : yName === 'II' ? '2' : yName === 'III' ? '3' : '4'}${sName}${String(i).padStart(3, '0')}`;
                     const email = `${regNo.toLowerCase()}@csehub.edu`;
 
                     const user = await User.create({
@@ -103,8 +116,8 @@ const seedData = async () => {
                         userId: user._id,
                         name: `Student ${regNo}`,
                         regNo,
-                        year,
-                        section,
+                        academicYear: yearDoc._id,
+                        section: secDoc._id,
                         mobile: `98765${String(studentCount).padStart(5, '0')}`,
                         collegeEmail: email,
                         dayScholarHosteller: i % 2 === 0 ? 'Hosteller' : 'Day Scholar',

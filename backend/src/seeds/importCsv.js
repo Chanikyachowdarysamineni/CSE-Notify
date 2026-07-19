@@ -6,7 +6,8 @@ const User = require('../models/User');
 const Student = require('../models/Student');
 const Faculty = require('../models/Faculty');
 const Admin = require('../models/Admin');
-
+const AcademicYear = require('../models/AcademicYear');
+const Section = require('../models/Section');
 const importData = async () => {
     try {
         await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/cse_hub');
@@ -115,8 +116,15 @@ const importData = async () => {
                 const name = parts[1].trim();
                 const password = parts[2].trim(); // Registration No is password according to CSV
                 const year = 'IV'; // It's 4th years
+                const sectionName = 'A'; // default
                 
                 if (!regNo) continue;
+
+                let yearDoc = await AcademicYear.findOne({ name: year, session: '2023-2027' });
+                if (!yearDoc) yearDoc = await AcademicYear.create({ name: year, session: '2023-2027' });
+                
+                let secDoc = await Section.findOne({ name: sectionName, academicYear: yearDoc._id });
+                if (!secDoc) secDoc = await Section.create({ name: sectionName, academicYear: yearDoc._id });
 
                 try {
                     const email = `${regNo.toLowerCase()}@csehub.edu`;
@@ -132,8 +140,8 @@ const importData = async () => {
                         userId: user._id,
                         name: name,
                         regNo: regNo,
-                        year: year,
-                        section: 'A', // default
+                        academicYear: yearDoc._id,
+                        section: secDoc._id,
                         mobile: '9999999999', // default
                         collegeEmail: email,
                         dayScholarHosteller: 'Day Scholar',
