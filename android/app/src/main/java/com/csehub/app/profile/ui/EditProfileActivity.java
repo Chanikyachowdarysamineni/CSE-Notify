@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.lifecycle.ViewModelProvider;
@@ -43,10 +44,17 @@ public class EditProfileActivity extends BaseActivity {
         // Enforce PAN uppercase typing
         binding.etPan.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
+        setupDropdown();
         setupDatePicker();
         setupInitialValues();
 
         binding.btnSave.setOnClickListener(v -> saveProfileChanges());
+    }
+
+    private void setupDropdown() {
+        String[] options = new String[]{"Day Scholar", "Hosteller"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, options);
+        binding.etScholar.setAdapter(adapter);
     }
 
     private void setupDatePicker() {
@@ -87,6 +95,8 @@ public class EditProfileActivity extends BaseActivity {
                     if (profile.containsKey("panNumber")) binding.etPan.setText(String.valueOf(profile.get("panNumber")));
                     if (profile.containsKey("githubUrl")) binding.etGithub.setText(String.valueOf(profile.get("githubUrl")));
                     if (profile.containsKey("linkedinUrl")) binding.etLinkedin.setText(String.valueOf(profile.get("linkedinUrl")));
+                    if (profile.containsKey("leetcodeUrl")) binding.etLeetcode.setText(String.valueOf(profile.get("leetcodeUrl")));
+                    if (profile.containsKey("dayScholarHosteller")) binding.etScholar.setText(String.valueOf(profile.get("dayScholarHosteller")), false);
                     
                     if (profile.containsKey("dob")) {
                         String dob = String.valueOf(profile.get("dob"));
@@ -116,7 +126,9 @@ public class EditProfileActivity extends BaseActivity {
         String pan = binding.etPan.getText().toString().trim().toUpperCase();
         String github = binding.etGithub.getText().toString().trim();
         String linkedin = binding.etLinkedin.getText().toString().trim();
+        String leetcode = binding.etLeetcode.getText().toString().trim();
         String dob = binding.etDob.getText().toString().trim();
+        String scholar = binding.etScholar.getText().toString().trim();
 
         boolean isValid = true;
 
@@ -151,7 +163,9 @@ public class EditProfileActivity extends BaseActivity {
         if (!pan.isEmpty()) fields.put("panNumber", pan);
         if (!github.isEmpty()) fields.put("githubUrl", github);
         if (!linkedin.isEmpty()) fields.put("linkedinUrl", linkedin);
+        if (!leetcode.isEmpty()) fields.put("leetcodeUrl", leetcode);
         if (!dob.isEmpty()) fields.put("dob", dob);
+        if (!scholar.isEmpty()) fields.put("dayScholarHosteller", scholar);
 
         binding.btnSave.setEnabled(false);
         binding.progressBar.setVisibility(View.VISIBLE);

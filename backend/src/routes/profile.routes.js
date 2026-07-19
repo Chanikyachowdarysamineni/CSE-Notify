@@ -7,6 +7,7 @@ const { auth } = require('../middleware/auth');
 const { allRoles } = require('../middleware/rbac');
 const { profileValidation, validate } = require('../middleware/validate');
 const { uploadProfile } = require('../config/multer');
+const { ROLES } = require('../utils/constants');
 
 router.use(auth);
 
