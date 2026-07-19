@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/android:windowBackground">
+    android:background="#11212D">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorSurface"
+        android:background="#6D28D9"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -16,109 +16,279 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="Privacy Policy"
-            app:titleTextColor="?attr/colorPrimary"
+            app:titleTextColor="#FFFFFF"
             app:navigationIcon="?attr/homeAsUpIndicator"
-            app:navigationIconTint="?attr/colorPrimary"/>
+            app:navigationIconTint="#FFFFFF"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:padding="20dp">
+        android:padding="20dp"
+        android:clipToPadding="false"
+        android:paddingBottom="40dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.material.card.MaterialCardView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="0dp"
-                app:cardBackgroundColor="?attr/colorSurface">
+                android:text="Last Updated: January 28, 2026"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                android:textColor="#94A3B8"
+                android:layout_marginBottom="24dp"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+            <!-- 1. Introduction -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Introduction"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="12dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Welcome to CSE Hub (&#34;we,&#34; &#34;our,&#34; or &#34;us&#34;). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our mobile application for the Computer Science and Engineering Department at VFSTR University.\n\nPlease read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the application."
+                android:textSize="14sp"
+                android:textColor="#CBD5E1"
+                android:lineSpacingMultiplier="1.2"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- 2. Information We Collect -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2. Information We Collect"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="12dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Personal Information"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#E2E8F0"
+                android:layout_marginBottom="8dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="We collect personal information that you voluntarily provide when registering for the application, including:\n• Full Name\n• Email Address\n• Registration Number (for students)\n• Employee ID (for faculty)\n• Section and Year (for students)\n• CGPA (for students)\n• Department and Designation (for faculty)"
+                android:textSize="14sp"
+                android:textColor="#CBD5E1"
+                android:lineSpacingMultiplier="1.2"
+                android:layout_marginBottom="12dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Usage Data"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#E2E8F0"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="12dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="We automatically collect certain information when you use the app:\n• Device information (model, operating system)\n• App usage statistics\n• Event registrations and attendance\n• File downloads and views\n• Notification interactions"
+                android:textSize="14sp"
+                android:textColor="#CBD5E1"
+                android:lineSpacingMultiplier="1.2"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- 3. How We Use Your Information -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="3. How We Use Your Information"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="12dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="We use the collected information for:\n• Creating and managing your account\n• Providing personalized content and notifications\n• Managing event registrations and attendance\n• Facilitating document sharing and management\n• Sending important announcements and updates\n• Improving app functionality and user experience\n• Ensuring security and preventing fraud"
+                android:textSize="14sp"
+                android:textColor="#CBD5E1"
+                android:lineSpacingMultiplier="1.2"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- 4. Data Sharing and Disclosure -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="4. Data Sharing and Disclosure"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="12dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="We do not sell your personal information. We may share your information only in the following circumstances:\n• With faculty and administrators for academic purposes\n• With other students (limited profile information for events)\n• When required by law or legal process\n• To protect the rights and safety of our users"
+                android:textSize="14sp"
+                android:textColor="#CBD5E1"
+                android:lineSpacingMultiplier="1.2"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- 5. Data Security -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="5. Data Security"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="12dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="We implement appropriate technical and organizational security measures to protect your personal information, including:\n• Encrypted data transmission (HTTPS/TLS)\n• Secure password hashing (bcrypt)\n• JWT-based authentication\n• Regular security audits\n• Access controls and user role management"
+                android:textSize="14sp"
+                android:textColor="#CBD5E1"
+                android:lineSpacingMultiplier="1.2"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- 6. Your Rights -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="6. Your Rights"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="12dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="You have the right to:\n• Access your personal information\n• Update or correct your information\n• Delete your account\n• Opt-out of notifications\n• Request a copy of your data"
+                android:textSize="14sp"
+                android:textColor="#CBD5E1"
+                android:lineSpacingMultiplier="1.2"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- 7. Data Retention -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="7. Data Retention"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="12dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="We retain your personal information for as long as your account is active or as needed to provide services. After account deletion, we may retain certain information for legal and regulatory compliance."
+                android:textSize="14sp"
+                android:textColor="#CBD5E1"
+                android:lineSpacingMultiplier="1.2"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- 8. Children's Privacy -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="8. Children's Privacy"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="12dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Our app is intended for university students (18+ years) and faculty members. We do not knowingly collect information from individuals under 18 years of age."
+                android:textSize="14sp"
+                android:textColor="#CBD5E1"
+                android:lineSpacingMultiplier="1.2"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- 9. Third-Party Services -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="9. Third-Party Services"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="12dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Our app may use third-party services:\n• MongoDB Atlas (database hosting)\n• Expo Push Notifications\n• Email service provider (Gmail SMTP)\n\nThese services have their own privacy policies governing their use of your information."
+                android:textSize="14sp"
+                android:textColor="#CBD5E1"
+                android:lineSpacingMultiplier="1.2"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- 10. Changes to This Privacy Policy -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="10. Changes to This Privacy Policy"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="12dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy in the app and updating the &#34;Last Updated&#34; date."
+                android:textSize="14sp"
+                android:textColor="#CBD5E1"
+                android:lineSpacingMultiplier="1.2"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- 11. Contact Us -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="11. Contact Us"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="12dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="If you have questions or concerns about this Privacy Policy, please contact us:\n• Email: vfstrcsevignan@gmail.com\n• Phone: +91 863 234 4402\n• Address: VFSTR University, Vadlamudi, Guntur, Andhra Pradesh"
+                android:textSize="14sp"
+                android:textColor="#CBD5E1"
+                android:lineSpacingMultiplier="1.2"
+                android:layout_marginBottom="32dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginBottom="16dp">
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="24dp">
+                    android:text="✓"
+                    android:textSize="32sp"
+                    android:textColor="#10B981"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Your privacy is important to us"
+                    android:textSize="14sp"
+                    android:textColor="#94A3B8"
+                    android:textStyle="italic"
+                    android:layout_marginTop="8dp"/>
+            </LinearLayout>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="1. Introduction"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/colorPrimary"
-                        android:layout_marginBottom="8dp"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Welcome to CSE HUB. We value your privacy and are committed to protecting the personal data of our department students, faculty members, and administrators. This Privacy Policy details how we collect, store, and utilize database parameters, device tokens, and log credentials."
-                        android:textSize="14sp"
-                        android:textColor="?attr/colorOnSurface"
-                        android:layout_marginBottom="20dp"
-                        android:lineSpacingMultiplier="1.2"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="2. Information We Collect"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/colorPrimary"
-                        android:layout_marginBottom="8dp"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="• Personal Credentials: Names, unique college/registration numbers, phone numbers, and official university email addresses.\n• Push Notification Identifiers: FCM (Firebase Cloud Messaging) tokens are associated with active devices to push alerts immediately.\n• Operational Records: Audit logs of notifications created, files imported, and profile edits."
-                        android:textSize="14sp"
-                        android:textColor="?attr/colorOnSurface"
-                        android:layout_marginBottom="20dp"
-                        android:lineSpacingMultiplier="1.2"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="3. Security and Encryption"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/colorPrimary"
-                        android:layout_marginBottom="8dp"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Passwords are encrypted using bcrypt hashing before storage. Network transmission is performed strictly over secure TLS endpoints. We monitor connection pool statuses to protect database integrity."
-                        android:textSize="14sp"
-                        android:textColor="?attr/colorOnSurface"
-                        android:layout_marginBottom="20dp"
-                        android:lineSpacingMultiplier="1.2"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="4. Contact Us"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/colorPrimary"
-                        android:layout_marginBottom="8dp"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="For queries about this policy or database correction, please contact the Computer Science and Engineering Department administrator."
-                        android:textSize="14sp"
-                        android:textColor="?attr/colorOnSurface"
-                        android:lineSpacingMultiplier="1.2"/>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
