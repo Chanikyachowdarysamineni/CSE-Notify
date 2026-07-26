@@ -5,38 +5,40 @@
     android:id="@+id/swipeRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/android:windowBackground">
+    android:background="?android:attr/colorBackground">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp"
         android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="@dimen/screen_padding">
 
-            <!-- Welcome Card -->
+            <!-- Premium Welcome Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/welcomeCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="?attr/colorPrimaryContainer">
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="?attr/colorPrimaryContainer"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="20dp">
+                    android:padding="24dp">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
                         android:layout_toStartOf="@+id/profileImage"
                         android:orientation="vertical">
 
@@ -45,34 +47,64 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="👋 Good Morning,"
-                            android:textColor="?attr/colorOnSurfaceVariant"
-                            android:textSize="14sp" />
+                            android:textAppearance="@style/TextAppearance.CSEHub.BodyMedium"
+                            android:textColor="?attr/colorOnPrimaryContainer"
+                            android:alpha="0.8" />
                             
                         <TextView
                             android:id="@+id/welcomeName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="12dp"
                             android:text="Student Name"
-                            android:textColor="?attr/colorPrimary"
-                            android:textSize="20sp"
-                            android:textStyle="bold"
-                            android:layout_marginBottom="8dp"/>
+                            android:textAppearance="@style/TextAppearance.CSEHub.TitleLarge"
+                            android:textColor="?attr/colorOnPrimaryContainer" />
 
-                        <TextView
-                            android:id="@+id/welcomeRegNo"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Registration Number"
-                            android:textColor="?attr/colorOnSurface"
-                            android:textSize="14sp" />
+                            android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/welcomeYearSection"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Year / Section"
-                            android:textColor="?attr/colorOnSurface"
-                            android:textSize="14sp" />
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:cardBackgroundColor="?attr/colorSurface"
+                                app:cardCornerRadius="8dp"
+                                app:cardElevation="0dp">
+                                <TextView
+                                    android:id="@+id/welcomeRegNo"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingHorizontal="8dp"
+                                    android:paddingVertical="4dp"
+                                    android:text="Reg No"
+                                    android:textAppearance="@style/TextAppearance.CSEHub.LabelLarge"
+                                    android:textColor="?attr/colorOnSurface" />
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <Space
+                                android:layout_width="8dp"
+                                android:layout_height="wrap_content"/>
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:cardBackgroundColor="?attr/colorSurface"
+                                app:cardCornerRadius="8dp"
+                                app:cardElevation="0dp">
+                                <TextView
+                                    android:id="@+id/welcomeYearSection"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingHorizontal="8dp"
+                                    android:paddingVertical="4dp"
+                                    android:text="Year / Sec"
+                                    android:textAppearance="@style/TextAppearance.CSEHub.LabelLarge"
+                                    android:textColor="?attr/colorOnSurface" />
+                            </com.google.android.material.card.MaterialCardView>
+
+                        </LinearLayout>
                     </LinearLayout>
 
                     <com.google.android.material.imageview.ShapeableImageView
@@ -87,48 +119,48 @@
                 </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Quick Statistics Grid -->
-            <GridLayout
+            <!-- Quick Statistics Row 1 -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:columnCount="2"
-                android:rowCount="2"
+                android:orientation="horizontal"
                 android:layout_marginBottom="16dp"
-                android:alignmentMode="alignMargins"
-                android:columnOrderPreserved="false">
+                android:baselineAligned="false">
 
                 <!-- Unread Notifications -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardNotifications"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_rowWeight="1"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="4dp"
-                    app:cardCornerRadius="12dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="?attr/colorOutlineVariant"
-                    app:cardElevation="0dp">
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    style="@style/Widget.CSEHub.CardView">
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:gravity="center"
-                        android:padding="12dp">
+                        android:padding="16dp">
+                        
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_notification"
+                            app:tint="?attr/colorTertiary"
+                            android:layout_marginBottom="8dp"/>
+                            
                         <TextView
                             android:id="@+id/statNotifications"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            android:textColor="?attr/colorTertiary"/>
+                            android:textAppearance="@style/TextAppearance.CSEHub.TitleLarge" />
+                            
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Unread Notifications"
-                            android:textAlignment="center"
-                            android:textSize="12sp"/>
+                            android:textAppearance="@style/TextAppearance.CSEHub.BodySmall" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -137,68 +169,81 @@
                     android:id="@+id/cardClasses"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_rowWeight="1"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="4dp"
-                    app:cardCornerRadius="12dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="?attr/colorOutlineVariant"
-                    app:cardElevation="0dp">
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    style="@style/Widget.CSEHub.CardView">
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:gravity="center"
-                        android:padding="12dp">
+                        android:padding="16dp">
+                        
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_timetable"
+                            app:tint="?attr/colorPrimary"
+                            android:layout_marginBottom="8dp"/>
+                            
                         <TextView
                             android:id="@+id/statClasses"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            android:textColor="?attr/colorPrimary"/>
+                            android:textAppearance="@style/TextAppearance.CSEHub.TitleLarge" />
+                            
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Today's Classes"
-                            android:textAlignment="center"
-                            android:textSize="12sp"/>
+                            android:textAppearance="@style/TextAppearance.CSEHub.BodySmall" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-                
+            </LinearLayout>
+
+            <!-- Quick Statistics Row 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="32dp"
+                android:baselineAligned="false">
+
                 <!-- Upcoming Events -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardEvents"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_rowWeight="1"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="4dp"
-                    app:cardCornerRadius="12dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="?attr/colorOutlineVariant"
-                    app:cardElevation="0dp">
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    style="@style/Widget.CSEHub.CardView">
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:gravity="center"
-                        android:padding="12dp">
+                        android:padding="16dp">
+                        
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_event"
+                            app:tint="?attr/colorSecondary"
+                            android:layout_marginBottom="8dp"/>
+                            
                         <TextView
                             android:id="@+id/statEvents"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            android:textColor="?attr/colorSecondary"/>
+                            android:textAppearance="@style/TextAppearance.CSEHub.TitleLarge" />
+                            
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Upcoming Events"
-                            android:textAlignment="center"
-                            android:textSize="12sp"/>
+                            android:textAppearance="@style/TextAppearance.CSEHub.BodySmall" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
                 
@@ -207,50 +252,50 @@
                     android:id="@+id/cardFiles"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_rowWeight="1"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="4dp"
-                    app:cardCornerRadius="12dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="?attr/colorOutlineVariant"
-                    app:cardElevation="0dp">
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    style="@style/Widget.CSEHub.CardView">
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:gravity="center"
-                        android:padding="12dp">
+                        android:padding="16dp">
+                        
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_file"
+                            app:tint="?attr/colorPrimary"
+                            android:layout_marginBottom="8dp"/>
+                            
                         <TextView
                             android:id="@+id/statFiles"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            android:textColor="?attr/colorPrimary"/>
+                            android:textAppearance="@style/TextAppearance.CSEHub.TitleLarge" />
+                            
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Available Study Materials"
-                            android:textAlignment="center"
-                            android:textSize="12sp"/>
+                            android:text="Study Materials"
+                            android:textAppearance="@style/TextAppearance.CSEHub.BodySmall" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-            </GridLayout>
+            </LinearLayout>
 
             <!-- Latest Notifications Widget -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="16dp">
                 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🔔 Latest Notifications"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorPrimary"/>
+                    android:text="Latest Notifications"
+                    android:textAppearance="@style/TextAppearance.CSEHub.TitleMedium" />
                     
                 <TextView
                     android:id="@+id/btnViewAllNotifications"
@@ -258,10 +303,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:text="View All"
+                    android:text="View all"
+                    android:textAppearance="@style/TextAppearance.CSEHub.LabelLarge"
                     android:textColor="?attr/colorPrimary"
-                    android:textStyle="bold"
-                    android:padding="4dp"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"/>
@@ -272,7 +316,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="32dp"
                 tools:listitem="@layout/item_notification"/>
                 
             <!-- Timetable Widget -->
@@ -281,20 +325,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="32dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="16dp">
                     
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📅 Today's Timetable"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/colorPrimary"/>
+                        android:text="Today's Timetable"
+                        android:textAppearance="@style/TextAppearance.CSEHub.TitleMedium" />
                         
                     <TextView
                         android:id="@+id/btnViewAllTimetable"
@@ -302,10 +344,9 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:text="View All"
+                        android:text="View all"
+                        android:textAppearance="@style/TextAppearance.CSEHub.LabelLarge"
                         android:textColor="?attr/colorPrimary"
-                        android:textStyle="bold"
-                        android:padding="4dp"
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"/>
@@ -316,6 +357,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:clipToPadding="false"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/item_dashboard_timetable"/>
             </LinearLayout>
@@ -324,15 +366,13 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="16dp">
                 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="📂 Recent Study Materials"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorPrimary"/>
+                    android:text="Recent Study Materials"
+                    android:textAppearance="@style/TextAppearance.CSEHub.TitleMedium" />
                     
                 <TextView
                     android:id="@+id/btnViewAllFiles"
@@ -340,10 +380,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:text="View All"
+                    android:text="View all"
+                    android:textAppearance="@style/TextAppearance.CSEHub.LabelLarge"
                     android:textColor="?attr/colorPrimary"
-                    android:textStyle="bold"
-                    android:padding="4dp"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"/>
@@ -354,22 +393,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="32dp"
                 tools:listitem="@layout/item_file"/>
 
             <!-- Gallery Highlights Widget -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="16dp">
                 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🏆 Achievement Gallery"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorPrimary"/>
+                    android:text="Achievement Gallery"
+                    android:textAppearance="@style/TextAppearance.CSEHub.TitleMedium" />
                     
                 <TextView
                     android:id="@+id/btnViewAllGallery"
@@ -377,10 +414,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:text="View All"
+                    android:text="View all"
+                    android:textAppearance="@style/TextAppearance.CSEHub.LabelLarge"
                     android:textColor="?attr/colorPrimary"
-                    android:textStyle="bold"
-                    android:padding="4dp"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"/>
@@ -393,22 +429,21 @@
                 android:nestedScrollingEnabled="false"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="32dp"
+                android:clipToPadding="false"
                 tools:listitem="@layout/item_gallery_preview"/>
                 
             <!-- Events Widget -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="16dp">
                 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🎉 Upcoming Events"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorPrimary"/>
+                    android:text="Upcoming Events"
+                    android:textAppearance="@style/TextAppearance.CSEHub.TitleMedium" />
                     
                 <TextView
                     android:id="@+id/btnViewAllEvents"
@@ -416,10 +451,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:text="View All"
+                    android:text="View all"
+                    android:textAppearance="@style/TextAppearance.CSEHub.LabelLarge"
                     android:textColor="?attr/colorPrimary"
-                    android:textStyle="bold"
-                    android:padding="4dp"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"/>
@@ -430,7 +464,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="32dp"
                 tools:listitem="@layout/item_event"/>
 
         </LinearLayout>

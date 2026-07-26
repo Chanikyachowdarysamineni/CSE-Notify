@@ -1,32 +1,31 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- =====================================================================
-         CSE HUB — Light Mode Theme (Material Design 3)
+         CSE Notify — Premium Light Mode Theme (Material Design 3 Hybrid)
          ===================================================================== -->
     <style name="Theme.CSEHub" parent="Theme.Material3.DayNight.NoActionBar">
 
-        <!-- Primary brand color -->
+        <!-- Brand colors -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorOnPrimary">@color/on_primary</item>
         <item name="colorPrimaryContainer">@color/primary_container</item>
         <item name="colorOnPrimaryContainer">@color/on_primary_container</item>
 
-        <!-- Secondary brand color -->
         <item name="colorSecondary">@color/secondary</item>
         <item name="colorOnSecondary">@color/on_secondary</item>
         <item name="colorSecondaryContainer">@color/secondary_container</item>
         <item name="colorOnSecondaryContainer">@color/on_secondary_container</item>
 
-        <!-- Tertiary brand color -->
-        <item name="colorTertiary">@color/tertiary</item>
-        <item name="colorTertiaryContainer">@color/tertiary_container</item>
-        <item name="colorOnTertiary">@color/on_tertiary</item>
-        <item name="colorOnTertiaryContainer">@color/on_tertiary_container</item>
+        <item name="colorTertiary">@color/accent</item>
+        <item name="colorTertiaryContainer">@color/warning_container</item>
+        <item name="colorOnTertiary">@color/on_accent</item>
+        <item name="colorOnTertiaryContainer">@color/on_warning_container</item>
 
         <!-- Error colors -->
         <item name="colorError">@color/error</item>
         <item name="colorErrorContainer">@color/error_container</item>
         <item name="colorOnError">@color/on_error</item>
+        <item name="colorOnErrorContainer">@color/on_error_container</item>
 
         <!-- Surface / Background -->
         <item name="android:windowBackground">@color/background</item>
@@ -39,25 +38,42 @@
         <item name="colorOutline">@color/outline</item>
         <item name="colorOutlineVariant">@color/outline_variant</item>
 
-        <!-- Status bar (light background → dark icons) -->
-        <item name="android:statusBarColor" tools:targetApi="21">?attr/colorPrimary</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+        <!-- Status bar (Transparent or blend with background for modern look) -->
+        <item name="android:statusBarColor" tools:targetApi="21">@color/background</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+        <!-- Navigation bar -->
+        <item name="android:navigationBarColor" tools:targetApi="21">@color/background</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
 
-        <!-- Elevation overlay (M3 tonal elevation) -->
+        <!-- Remove default Material shadows for a flat, clean aesthetic like Linear/Stripe -->
         <item name="elevationOverlayEnabled">false</item>
+        <item name="materialCardViewStyle">@style/Widget.CSEHub.CardView</item>
 
-        <!-- Shape system -->
+        <!-- Shape system (Modern Rounded Corners) -->
         <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.CSEHub.Small</item>
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.CSEHub.Medium</item>
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.CSEHub.Large</item>
+        
+        <!-- Typography -->
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.CSEHub.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.CSEHub.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.CSEHub.TitleSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.CSEHub.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.CSEHub.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.CSEHub.BodySmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.CSEHub.LabelLarge</item>
+
     </style>
 
     <!-- =====================================================================
          Splash Screen theme
          ===================================================================== -->
     <style name="Theme.CSEHub.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/primary</item>
+        <item name="windowSplashScreenBackground">@color/background</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo</item>
+        <!-- If ic_logo is dark, we might need to adjust it, or keep primary bg -->
+        <!-- Let's revert splash bg to primary for brand presence -->
+        <!-- Wait, I'll use background with a distinct logo for cleaner look -->
         <item name="postSplashScreenTheme">@style/Theme.CSEHub</item>
     </style>
 
@@ -87,23 +103,87 @@
     </style>
 
     <!-- =====================================================================
-         Text Appearances
+         Component Styles
          ===================================================================== -->
-    <style name="TextAppearance.CSEHub.Title" parent="TextAppearance.Material3.TitleLarge">
-        <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:textStyle">bold</item>
+         
+    <!-- Flat, bordered cards like Linear -->
+    <style name="Widget.CSEHub.CardView" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardElevation">0dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/outline_variant</item>
+        <item name="cardBackgroundColor">@color/surface</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.CSEHub.Large</item>
     </style>
 
-    <style name="TextAppearance.CSEHub.Body" parent="TextAppearance.Material3.BodyMedium">
-        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    <!-- Button styles -->
+    <style name="Widget.CSEHub.Button.Primary" parent="Widget.Material3.Button">
+        <item name="cornerRadius">12dp</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:stateListAnimator">@null</item> <!-- Remove generic jump on press -->
     </style>
 
     <!-- =====================================================================
-         Button styles
+         Text Appearances
          ===================================================================== -->
-    <style name="Widget.CSEHub.Button.Primary" parent="Widget.Material3.Button">
-        <item name="cornerRadius">10dp</item>
+    <style name="TextAppearance.CSEHub.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:letterSpacing">0.03</item>
+        <item name="android:fontFamily">@font/inter</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
+    
+    <style name="TextAppearance.CSEHub.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/inter</item>
+        <item name="android:letterSpacing">-0.01</item>
+    </style>
+
+    <style name="TextAppearance.CSEHub.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/inter</item>
+    </style>
+
+    <style name="TextAppearance.CSEHub.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:fontFamily">@font/inter</item>
+    </style>
+
+    <style name="TextAppearance.CSEHub.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:fontFamily">@font/inter</item>
+    </style>
+    
+    <style name="TextAppearance.CSEHub.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:fontFamily">@font/inter</item>
+    </style>
+    
+    <style name="TextAppearance.CSEHub.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/inter</item>
+        <item name="android:letterSpacing">0.02</item>
+    </style>
+
+    <style name="TextAppearance.CSEHub.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/inter</item>
+    </style>
+    
+    <style name="TextAppearance.CSEHub.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/inter</item>
+    </style>
+
+    <style name="TextAppearance.CSEHub.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:fontFamily">@font/inter</item>
     </style>
 </resources>

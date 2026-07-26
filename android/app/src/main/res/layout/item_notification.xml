@@ -1,132 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Notification List Item — Premium Card Design
-    Features:
-    - Priority color stripe on the left edge
-    - Unread indicator dot (red badge)
-    - Category chip with background tint
-    - BigText-style 2-line preview
-    - Author + date row
-    - Edit/Delete actions for owners
--->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="0dp"
-    android:layout_marginBottom="10dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="0dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="?attr/colorOutlineVariant"
-    app:cardBackgroundColor="?attr/colorSurface">
+    android:layout_marginBottom="12dp"
+    style="@style/Widget.CSEHub.CardView">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <!-- Priority color stripe (left edge accent) -->
+        <!-- Priority color stripe -->
         <View
             android:id="@+id/priorityStripe"
             android:layout_width="4dp"
             android:layout_height="match_parent"
             android:background="?attr/colorPrimary" />
 
-        <!-- Main content -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="14dp">
+            android:padding="16dp">
 
-            <!-- Row 1: Category chip + Unread dot + Priority label -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
 
-                <!-- Category chip -->
-                <TextView
-                    android:id="@+id/categoryText"
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Academic"
-                    android:textSize="11sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorPrimary"
-                    android:background="?attr/colorPrimaryContainer"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="3dp"
-                    app:cornerRadius="20dp" />
+                    app:cardBackgroundColor="?attr/colorPrimaryContainer"
+                    app:cardCornerRadius="6dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="0dp">
+                    
+                    <TextView
+                        android:id="@+id/categoryText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Academic"
+                        android:textAppearance="@style/TextAppearance.CSEHub.LabelLarge"
+                        android:textSize="11sp"
+                        android:textColor="?attr/colorPrimary"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="4dp" />
+                </com.google.android.material.card.MaterialCardView>
 
-                <!-- Spacer -->
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_weight="1" />
 
-                <!-- Priority label (text) -->
                 <TextView
                     android:id="@+id/priorityText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="HIGH"
+                    android:textAppearance="@style/TextAppearance.CSEHub.LabelLarge"
                     android:textSize="10sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/priority_high"
+                    android:textColor="?attr/colorError"
                     android:paddingHorizontal="6dp"
-                    android:paddingVertical="2dp"
-                    android:layout_marginEnd="6dp"
+                    android:layout_marginEnd="8dp"
                     android:visibility="gone" />
 
                 <!-- Unread dot indicator -->
-                <View
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/unreadDot"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:background="@drawable/bg_unread_dot"
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    app:cardBackgroundColor="?attr/colorError"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="0dp"
                     android:visibility="visible" />
-
             </LinearLayout>
 
-            <!-- Row 2: Title -->
             <TextView
                 android:id="@+id/titleText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="12dp"
                 android:text="Mid-Semester Exam Timetable Published"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="?attr/colorOnSurface"
+                android:textAppearance="@style/TextAppearance.CSEHub.TitleMedium"
                 android:maxLines="2"
-                android:ellipsize="end"
-                android:lineSpacingMultiplier="1.1" />
+                android:ellipsize="end" />
 
-            <!-- Row 3: Message preview -->
             <TextView
                 android:id="@+id/messagePreview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="6dp"
                 android:text="The exam timetable for odd semester is released. Refer to attachments for details."
-                android:textSize="13sp"
-                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textAppearance="@style/TextAppearance.CSEHub.BodyMedium"
                 android:maxLines="2"
-                android:ellipsize="end"
-                android:lineSpacingMultiplier="1.2" />
+                android:ellipsize="end" />
 
-            <!-- Row 4: Author + Date -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="12dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -135,9 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Dr. Rajesh Kumar"
-                    android:textSize="11sp"
-                    android:textColor="?attr/colorOnSurfaceVariant"
-                    android:drawablePadding="4dp"
+                    android:textAppearance="@style/TextAppearance.CSEHub.BodySmall"
                     android:maxLines="1"
                     android:ellipsize="end" />
 
@@ -146,55 +124,49 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="15 Jul"
-                    android:textSize="11sp"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
-
+                    android:textAppearance="@style/TextAppearance.CSEHub.BodySmall" />
             </LinearLayout>
 
-            <!-- Row 5: Attachment indicator (hidden by default) -->
             <TextView
                 android:id="@+id/attachmentIndicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="8dp"
                 android:text="📎 Attachment"
-                android:textSize="11sp"
+                android:textAppearance="@style/TextAppearance.CSEHub.LabelLarge"
+                android:textSize="12sp"
                 android:textColor="?attr/colorPrimary"
                 android:visibility="gone" />
 
-            <!-- Row 6: Action buttons (only for owners) -->
             <LinearLayout
                 android:id="@+id/actionButtonsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="end"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="12dp"
                 android:visibility="gone">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/editButton"
                     style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="36dp"
+                    android:layout_height="40dp"
                     android:text="Edit"
-                    android:textSize="12sp"
                     app:icon="@android:drawable/ic_menu_edit"
-                    app:iconSize="16dp"
-                    android:layout_marginEnd="4dp" />
+                    app:iconTint="?attr/colorOnSurfaceVariant"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:layout_marginEnd="8dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/deleteButton"
                     style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="36dp"
+                    android:layout_height="40dp"
                     android:text="Delete"
-                    android:textSize="12sp"
                     android:textColor="?attr/colorError"
                     app:icon="@android:drawable/ic_menu_delete"
-                    app:iconSize="16dp"
                     app:iconTint="?attr/colorError" />
-
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

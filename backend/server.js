@@ -200,8 +200,8 @@ const startServer = async () => {
         initCronJobs();
         logger.info('Cron jobs initialized');
 
-        // Start server
-        server.listen(PORT, () => {
+        // Start server explicitly on 0.0.0.0 to accept network connections
+        server.listen(PORT, '0.0.0.0', () => {
             logger.info(`CSE HUB Backend running on port ${PORT}`);
             logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
             logger.info(`API: http://localhost:${PORT}/api`);

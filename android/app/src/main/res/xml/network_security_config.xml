@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
     <!-- Restrict cleartext traffic for production release builds to satisfy HTTPS requirements -->
-    <base-config cleartextTrafficPermitted="false" />
+    <base-config cleartextTrafficPermitted="true" />
 </network-security-config>

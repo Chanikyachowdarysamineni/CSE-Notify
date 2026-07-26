@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface">
+    android:background="?android:attr/colorBackground">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorSurface"
+        android:background="?android:attr/colorBackground"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -16,9 +16,15 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="Edit Profile"
-            app:titleTextColor="?attr/colorPrimary"
+            app:titleTextAppearance="@style/TextAppearance.CSEHub.TitleLarge"
+            app:titleTextColor="?attr/colorOnBackground"
             app:navigationIcon="?attr/homeAsUpIndicator"
-            app:navigationIconTint="?attr/colorPrimary"/>
+            app:navigationIconTint="?attr/colorOnBackground"/>
+            
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/colorOutlineVariant" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
@@ -39,15 +45,15 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="32dp">
                 
-                <com.google.android.material.imageview.ShapeableImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/ivProfile"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
                     android:src="@drawable/ic_profile"
-                    app:shapeAppearanceOverlay="@style/CircleImageView"/>
+                    app:civ_border_width="2dp"
+                    app:civ_border_color="?attr/colorOutlineVariant"/>
                     
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/fabEditPhoto"
@@ -56,6 +62,9 @@
                     android:layout_gravity="bottom|end"
                     app:srcCompat="@drawable/ic_edit"
                     app:fabSize="mini"
+                    app:tint="?attr/colorOnPrimary"
+                    app:backgroundTint="?attr/colorPrimary"
+                    app:elevation="2dp"
                     android:contentDescription="Edit Photo"/>
             </FrameLayout>
 
@@ -63,97 +72,120 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Academic Information (Read Only)"
-                android:textColor="?attr/colorPrimary"
-                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.CSEHub.TitleMedium"
                 android:layout_marginBottom="16dp"/>
 
-            <!-- Name (Read-only) -->
-            <com.google.android.material.textfield.TextInputLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etName"
-                    android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+                
+                <!-- Name (Read-only) -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="Full Name"
-                    android:inputType="none"
-                    android:enabled="false"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Full Name"
+                        android:inputType="none"
+                        android:enabled="false"
+                        android:textAppearance="@style/TextAppearance.CSEHub.BodyLarge"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Reg No (Read-only) -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etRegNo"
-                    android:layout_width="match_parent"
+                <!-- Reg No (Read-only) -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="Registration Number"
-                    android:inputType="none"
-                    android:enabled="false"/>
-            </com.google.android.material.textfield.TextInputLayout>
-            
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="16dp"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etRegNo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Registration No."
+                        android:inputType="none"
+                        android:enabled="false"
+                        android:textAppearance="@style/TextAppearance.CSEHub.BodyLarge"/>
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Personal Details"
-                android:textColor="?attr/colorPrimary"
-                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.CSEHub.TitleMedium"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"/>
 
-            <!-- Scholar/Hosteller -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilScholar"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-                <AutoCompleteTextView
-                    android:id="@+id/etScholar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none"
-                    android:hint="Day Scholar / Hosteller"
-                    android:focusable="false"
-                    android:clickable="true"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
-            <!-- DOB -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilDob"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                app:endIconMode="custom"
-                app:endIconDrawable="@drawable/ic_calendar">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etDob"
-                    android:layout_width="match_parent"
+                <!-- Scholar/Hosteller -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilScholar"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="Date of Birth"
-                    android:focusable="false"
-                    android:clickable="true"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+                    <AutoCompleteTextView
+                        android:id="@+id/etScholar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:hint="Status"
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:textAppearance="@style/TextAppearance.CSEHub.BodyLarge"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- DOB -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilDob"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="16dp"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etDob"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Date of Birth"
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:textAppearance="@style/TextAppearance.CSEHub.BodyLarge"/>
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
             <!-- Personal Email -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilPersonalEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="16dp"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPersonalEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Personal Email"
-                    android:inputType="textEmailAddress"/>
+                    android:inputType="textEmailAddress"
+                    android:textAppearance="@style/TextAppearance.CSEHub.BodyLarge"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- College Email -->
@@ -161,14 +193,15 @@
                 android:id="@+id/tilCollegeEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="16dp"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etCollegeEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="College Email (@vignan.com)"
-                    android:inputType="textEmailAddress"/>
+                    android:inputType="textEmailAddress"
+                    android:textAppearance="@style/TextAppearance.CSEHub.BodyLarge"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Mobile -->
@@ -176,7 +209,7 @@
                 android:id="@+id/tilMobile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="16dp"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etMobile"
@@ -184,47 +217,60 @@
                     android:layout_height="wrap_content"
                     android:hint="Mobile Number"
                     android:inputType="phone"
-                    android:maxLength="10"/>
+                    android:maxLength="10"
+                    android:textAppearance="@style/TextAppearance.CSEHub.BodyLarge"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Aadhaar -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilAadhaar"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etAadhaar"
-                    android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+                
+                <!-- Aadhaar -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilAadhaar"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="Aadhaar Number"
-                    android:inputType="number"
-                    android:maxLength="12"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etAadhaar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Aadhaar No."
+                        android:inputType="number"
+                        android:maxLength="12"
+                        android:textAppearance="@style/TextAppearance.CSEHub.BodyLarge"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- PAN -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilPan"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etPan"
-                    android:layout_width="match_parent"
+                <!-- PAN -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilPan"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="PAN Number"
-                    android:inputType="textCapCharacters"
-                    android:maxLength="10"/>
-            </com.google.android.material.textfield.TextInputLayout>
-            
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="16dp"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="PAN No."
+                        android:inputType="textCapCharacters"
+                        android:maxLength="10"
+                        android:textAppearance="@style/TextAppearance.CSEHub.BodyLarge"/>
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Professional Links"
-                android:textColor="?attr/colorPrimary"
-                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.CSEHub.TitleMedium"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"/>
 
@@ -233,14 +279,15 @@
                 android:id="@+id/tilGithub"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="16dp"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etGithub"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="GitHub Profile URL"
-                    android:inputType="textUri"/>
+                    android:hint="GitHub URL"
+                    android:inputType="textUri"
+                    android:textAppearance="@style/TextAppearance.CSEHub.BodyLarge"/>
             </com.google.android.material.textfield.TextInputLayout>
             
             <!-- LinkedIn -->
@@ -248,14 +295,15 @@
                 android:id="@+id/tilLinkedin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="16dp"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etLinkedin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="LinkedIn Profile URL"
-                    android:inputType="textUri"/>
+                    android:hint="LinkedIn URL"
+                    android:inputType="textUri"
+                    android:textAppearance="@style/TextAppearance.CSEHub.BodyLarge"/>
             </com.google.android.material.textfield.TextInputLayout>
             
             <!-- LeetCode -->
@@ -263,14 +311,15 @@
                 android:id="@+id/tilLeetcode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="24dp"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etLeetcode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="LeetCode Profile URL"
-                    android:inputType="textUri"/>
+                    android:hint="LeetCode URL"
+                    android:inputType="textUri"
+                    android:textAppearance="@style/TextAppearance.CSEHub.BodyLarge"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Save Button -->
@@ -278,8 +327,9 @@
                 android:id="@+id/btnSave"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:text="Save Profile"
+                android:textAppearance="@style/TextAppearance.CSEHub.LabelLarge"
                 app:cornerRadius="8dp"/>
                 
         </LinearLayout>

@@ -11,21 +11,29 @@
     <!-- Primary content area -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="?android:attr/colorBackground">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorSurface"
+            android:background="?android:attr/colorBackground"
             app:elevation="0dp">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:titleTextColor="?attr/colorPrimary"
+                app:titleTextAppearance="@style/TextAppearance.CSEHub.TitleLarge"
+                app:titleTextColor="?attr/colorOnBackground"
                 app:titleCentered="true"
-                app:navigationIconTint="?attr/colorPrimary"/>
+                app:navigationIconTint="?attr/colorOnBackground"/>
+                
+            <!-- Subtle divider under toolbar -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/colorOutlineVariant" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <!-- Navigation Host Fragment Container -->
@@ -34,11 +42,12 @@
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="?attr/actionBarSize"
             app:defaultNavHost="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:navGraph="@navigation/nav_graph" />
 
-        <!-- Bottom Navigation View -->
+        <!-- Bottom Navigation View with Premium Look -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavView"
             android:layout_width="match_parent"
@@ -46,7 +55,17 @@
             android:layout_gravity="bottom"
             android:background="?attr/colorSurface"
             app:labelVisibilityMode="labeled"
-            app:elevation="8dp"/>
+            app:itemRippleColor="?attr/colorPrimaryContainer"
+            app:itemActiveIndicatorStyle="@style/Widget.Material3.BottomNavigationView.ActiveIndicator"
+            app:elevation="0dp"/>
+
+        <!-- Top border for Bottom Nav -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="?attr/actionBarSize"
+            android:background="?attr/colorOutlineVariant" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
@@ -56,8 +75,12 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="?attr/colorSurface"
         android:fitsSystemWindows="true"
         app:menu="@menu/drawer_menu"
-        app:headerLayout="@layout/nav_header_main" />
+        app:headerLayout="@layout/nav_header_main" 
+        app:itemShapeAppearanceOverlay="@style/ShapeAppearance.CSEHub.Medium"
+        app:itemIconTint="?attr/colorOnSurface"
+        app:itemTextColor="?attr/colorOnSurface"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>

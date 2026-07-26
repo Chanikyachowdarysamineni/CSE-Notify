@@ -1,77 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- =====================================================================
-         CSE HUB — Premium Material 3 Color Palette
-         Inspired by enterprise apps: Google Classroom, Microsoft Teams
-         Primary: Deep Blue (trust, education, professionalism)
-         Secondary: Teal (success, active states)
-         Tertiary: Amber/Red (urgent, warnings)
+         CSE Notify — Premium Modern Color Palette
+         Inspired by Stripe, Linear, Notion
          ===================================================================== -->
 
-    <!-- Primary — Deep Blue -->
-    <color name="primary">#1565C0</color>
-    <color name="primary_dark">#0D47A1</color>
-    <color name="primary_light">#1976D2</color>
-    <color name="primary_container">#BBDEFB</color>
+    <!-- Primary — Deep Blue / Blurple (Trust, Speed, Premium) -->
+    <color name="primary">#4F46E5</color>          <!-- Indigo 600 -->
+    <color name="primary_dark">#3730A3</color>     <!-- Indigo 800 -->
+    <color name="primary_light">#818CF8</color>    <!-- Indigo 400 -->
+    <color name="primary_container">#E0E7FF</color><!-- Indigo 100 -->
     <color name="on_primary">#FFFFFF</color>
-    <color name="on_primary_container">#0A1929</color>
+    <color name="on_primary_container">#312E81</color><!-- Indigo 900 -->
 
-    <!-- Secondary — Teal -->
-    <color name="secondary">#00796B</color>
-    <color name="secondary_container">#B2DFDB</color>
+    <!-- Secondary — Teal/Cyan (Success, Active states, Freshness) -->
+    <color name="secondary">#0D9488</color>        <!-- Teal 600 -->
+    <color name="secondary_container">#CCFBF1</color><!-- Teal 100 -->
     <color name="on_secondary">#FFFFFF</color>
-    <color name="on_secondary_container">#002319</color>
+    <color name="on_secondary_container">#115E59</color><!-- Teal 800 -->
 
-    <!-- Tertiary — Amber for warnings, Red for errors -->
-    <color name="tertiary">#E65100</color>
-    <color name="tertiary_container">#FFE0B2</color>
-    <color name="on_tertiary">#FFFFFF</color>
-    <color name="on_tertiary_container">#3E1300</color>
+    <!-- Accent — Amber (Attention, Highlights) -->
+    <color name="accent">#F59E0B</color>           <!-- Amber 500 -->
+    <color name="on_accent">#FFFFFF</color>
 
-    <!-- Neutral surfaces (Light mode) -->
-    <color name="background">#F8F9FA</color>
-    <color name="surface">#FFFFFF</color>
-    <color name="surface_variant">#EEF2F6</color>
-    <color name="surface_container">#F0F4F8</color>
-    <color name="on_background">#1A1C1E</color>
-    <color name="on_surface">#1A1C1E</color>
-    <color name="on_surface_variant">#44474F</color>
-    <color name="outline">#74777F</color>
-    <color name="outline_variant">#C4C6D0</color>
-
+    <!-- Semantic / Status Colors -->
     <!-- Error -->
-    <color name="error">#B00020</color>
-    <color name="error_container">#FDECEA</color>
+    <color name="error">#DC2626</color>            <!-- Red 600 -->
+    <color name="error_container">#FEE2E2</color>  <!-- Red 100 -->
     <color name="on_error">#FFFFFF</color>
-    <color name="on_error_container">#410001</color>
+    <color name="on_error_container">#7F1D1D</color> <!-- Red 900 -->
 
-    <!-- Priority badges -->
-    <color name="priority_low">#388E3C</color>         <!-- Green -->
-    <color name="priority_medium">#1565C0</color>      <!-- Blue -->
-    <color name="priority_high">#E65100</color>        <!-- Orange -->
-    <color name="priority_urgent">#C62828</color>      <!-- Red -->
-    <color name="priority_low_bg">#E8F5E9</color>
-    <color name="priority_medium_bg">#E3F2FD</color>
-    <color name="priority_high_bg">#FFF3E0</color>
-    <color name="priority_urgent_bg">#FFEBEE</color>
+    <!-- Success -->
+    <color name="success">#16A34A</color>          <!-- Green 600 -->
+    <color name="success_container">#DCFCE7</color><!-- Green 100 -->
+    <color name="on_success">#FFFFFF</color>
+    <color name="on_success_container">#14532D</color> <!-- Green 900 -->
 
-    <!-- Category colors -->
-    <color name="cat_academic">#1565C0</color>
-    <color name="cat_event">#6A1B9A</color>
-    <color name="cat_exam">#B71C1C</color>
-    <color name="cat_placement">#0277BD</color>
-    <color name="cat_sports">#2E7D32</color>
-    <color name="cat_general">#37474F</color>
+    <!-- Warning -->
+    <color name="warning">#D97706</color>          <!-- Amber 600 -->
+    <color name="warning_container">#FEF3C7</color><!-- Amber 100 -->
+    <color name="on_warning">#FFFFFF</color>
+    <color name="on_warning_container">#78350F</color> <!-- Amber 900 -->
+
+    <!-- Information -->
+    <color name="info">#2563EB</color>             <!-- Blue 600 -->
+    <color name="info_container">#DBEAFE</color>   <!-- Blue 100 -->
+    <color name="on_info">#FFFFFF</color>
+    <color name="on_info_container">#1E3A8A</color> <!-- Blue 900 -->
+
+    <!-- Neutral Surfaces (Light Mode) -->
+    <color name="background">#FAFAFA</color>       <!-- Neutral 50 -->
+    <color name="surface">#FFFFFF</color>          <!-- Pure White -->
+    <color name="surface_variant">#F4F4F5</color>  <!-- Zinc 100 -->
+    <color name="surface_container">#F3F4F6</color><!-- Gray 100 -->
+    
+    <!-- Text Colors (Light Mode) -->
+    <color name="on_background">#09090B</color>    <!-- Zinc 950 -->
+    <color name="on_surface">#18181B</color>       <!-- Zinc 900 (Text Primary) -->
+    <color name="on_surface_variant">#52525B</color><!-- Zinc 500 (Text Secondary) -->
+    
+    <!-- Borders & Dividers -->
+    <color name="outline">#D4D4D8</color>          <!-- Zinc 300 -->
+    <color name="outline_variant">#E4E4E7</color>  <!-- Zinc 200 -->
+    <color name="divider">#E4E4E7</color>          <!-- Zinc 200 -->
+
+    <color name="disabled">#A1A1AA</color>         <!-- Zinc 400 -->
+
+    <!-- Priority badges (Replacing old saturated colors with modern tones) -->
+    <color name="priority_low">#059669</color>         <!-- Emerald 600 -->
+    <color name="priority_medium">#2563EB</color>      <!-- Blue 600 -->
+    <color name="priority_high">#EA580C</color>        <!-- Orange 600 -->
+    <color name="priority_urgent">#E11D48</color>      <!-- Rose 600 -->
+    <color name="priority_low_bg">#D1FAE5</color>      <!-- Emerald 100 -->
+    <color name="priority_medium_bg">#DBEAFE</color>   <!-- Blue 100 -->
+    <color name="priority_high_bg">#FFEDD5</color>     <!-- Orange 100 -->
+    <color name="priority_urgent_bg">#FFE4E6</color>   <!-- Rose 100 -->
+
+    <!-- Category colors (Modernized) -->
+    <color name="cat_academic">#4F46E5</color>     <!-- Indigo -->
+    <color name="cat_event">#9333EA</color>        <!-- Purple -->
+    <color name="cat_exam">#E11D48</color>         <!-- Rose -->
+    <color name="cat_placement">#0284C7</color>    <!-- Light Blue -->
+    <color name="cat_sports">#059669</color>       <!-- Emerald -->
+    <color name="cat_general">#475569</color>      <!-- Slate -->
 
     <!-- Shimmer loading -->
-    <color name="shimmer_base">#E8ECF0</color>
-    <color name="shimmer_highlight">#F5F7FA</color>
+    <color name="shimmer_base">#E4E4E7</color>
+    <color name="shimmer_highlight">#F4F4F5</color>
 
     <!-- Unread indicator -->
-    <color name="unread_dot">#C62828</color>
+    <color name="unread_dot">#E11D48</color>
 
     <!-- Overlay / glass effects -->
     <color name="overlay_light">#1AFFFFFF</color>
     <color name="overlay_dark">#33000000</color>
-    <color name="scrim">#52000000</color>
+    <color name="scrim">#66000000</color>
 </resources>

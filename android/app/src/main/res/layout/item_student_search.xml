@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="1dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="?attr/colorSurfaceVariant">
+    style="@style/Widget.CSEHub.CardView">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp"
+        android:padding="20dp"
         android:gravity="center_vertical">
 
         <!-- Student circular photo -->
@@ -23,40 +21,36 @@
             android:layout_height="56dp"
             android:src="@drawable/ic_profile"
             app:civ_border_width="1dp"
-            app:civ_border_color="?attr/colorPrimary"/>
+            app:civ_border_color="?attr/colorOutlineVariant"/>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="16dp">
+            android:layout_marginStart="20dp">
 
             <TextView
                 android:id="@+id/nameText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Student Name"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="?attr/colorOnSurface"/>
+                android:textAppearance="@style/TextAppearance.CSEHub.TitleMedium"/>
 
             <TextView
                 android:id="@+id/regNoText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Reg No: 22CSE1A001"
-                android:textSize="12sp"
-                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textAppearance="@style/TextAppearance.CSEHub.BodySmall"
                 android:layout_marginTop="2dp"/>
 
             <TextView
                 android:id="@+id/classText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Year III | Sec A"
-                android:textSize="12sp"
-                android:textColor="?attr/colorOnSurfaceVariant"
+                android:text="Year III • Sec A"
+                android:textAppearance="@style/TextAppearance.CSEHub.BodySmall"
                 android:layout_marginTop="2dp"/>
 
             <TextView
@@ -64,8 +58,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="student@csehub.edu"
-                android:textSize="12sp"
-                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textAppearance="@style/TextAppearance.CSEHub.BodySmall"
+                android:textColor="?attr/colorPrimary"
                 android:layout_marginTop="2dp"/>
         </LinearLayout>
 
@@ -74,20 +68,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:layout_marginStart="8dp">
+            
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="CGPA"
-                android:textSize="10sp"
-                android:textColor="?attr/colorOnSurfaceVariant"/>
+                android:textAppearance="@style/TextAppearance.CSEHub.LabelLarge"
+                android:textSize="10sp"/>
+                
             <TextView
                 android:id="@+id/cgpaText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="9.12"
-                android:textSize="18sp"
-                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.CSEHub.TitleLarge"
                 android:textColor="?attr/colorPrimary"
                 android:layout_marginTop="2dp"/>
         </LinearLayout>
