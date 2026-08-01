@@ -1,44 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Dark mode colors — same names, different values -->
+    <!-- Dark Mode Glassmorphism Palette (Deep Aurora Look) -->
+    
+    <color name="aurora_start">#0F0C29</color>
+    <color name="aurora_center">#302B63</color>
+    <color name="aurora_end">#24243E</color>
 
-    <!-- Primary — Lighter blue for dark backgrounds -->
-    <color name="primary">#90CAF9</color>
-    <color name="primary_dark">#64B5F6</color>
-    <color name="primary_light">#BBDEFB</color>
-    <color name="primary_container">#0D47A1</color>
-    <color name="on_primary">#003064</color>
-    <color name="on_primary_container">#BBDEFB</color>
+    <!-- Primary: Glowing Cyan/Blue -->
+    <color name="primary">#00E5FF</color>
+    <color name="on_primary">#000000</color>
+    <color name="primary_container">#1A00E5FF</color>
+    <color name="on_primary_container">#80D8FF</color>
 
-    <!-- Secondary — Light teal -->
-    <color name="secondary">#80CBC4</color>
-    <color name="secondary_container">#004D40</color>
-    <color name="on_secondary">#003731</color>
-    <color name="on_secondary_container">#B2DFDB</color>
+    <!-- Secondary: Purple/Pink -->
+    <color name="secondary">#D500F9</color>
+    <color name="on_secondary">#FFFFFF</color>
+    <color name="secondary_container">#1AD500F9</color>
+    <color name="on_secondary_container">#EA80FC</color>
 
-    <!-- Tertiary — Light amber -->
-    <color name="tertiary">#FFCC80</color>
-    <color name="tertiary_container">#BF360C</color>
-    <color name="on_tertiary">#5D1A00</color>
-    <color name="on_tertiary_container">#FFE0B2</color>
+    <!-- Accent: Ethereal Pink -->
+    <color name="accent">#FF4081</color>
+    <color name="on_accent">#FFFFFF</color>
+    <color name="warning_container">#1AFF4081</color>
+    <color name="on_warning_container">#FF80AB</color>
 
-    <!-- Neutral surfaces (Dark mode) -->
-    <color name="background">#111318</color>
-    <color name="surface">#1C1F26</color>
-    <color name="surface_variant">#252930</color>
-    <color name="surface_container">#1E2128</color>
-    <color name="on_background">#E3E2E6</color>
-    <color name="on_surface">#E3E2E6</color>
-    <color name="on_surface_variant">#C4C6D0</color>
-    <color name="outline">#8E9099</color>
-    <color name="outline_variant">#44474F</color>
+    <!-- Errors -->
+    <color name="error">#FF5252</color>
+    <color name="error_container">#1AFF5252</color>
+    <color name="on_error">#FFFFFF</color>
+    <color name="on_error_container">#FF8A80</color>
 
-    <!-- Error -->
-    <color name="error">#FFB4AB</color>
-    <color name="error_container">#93000A</color>
-    <color name="on_error">#690005</color>
-    <color name="on_error_container">#FFDAD6</color>
-
+    <!-- Surface / Background -->
+    <color name="background">#0F0C29</color>
+    <color name="on_background">#FFFFFF</color>
+    
+    <!-- Surface is the glass layer: 12% White -->
+    <color name="surface">#1EFFFFFF</color>
+    <color name="surface_variant">#14FFFFFF</color>
+    <color name="on_surface">#FFFFFF</color>
+    <color name="on_surface_variant">#B3FFFFFF</color>
+    
+    <!-- Thin Glass Outline: 25% White -->
+    <color name="outline">#40FFFFFF</color>
+    <color name="outline_variant">#20FFFFFF</color>
     <!-- Priority badges -->
     <color name="priority_low">#A5D6A7</color>
     <color name="priority_medium">#90CAF9</color>
@@ -63,9 +67,5 @@
 
     <!-- Unread indicator -->
     <color name="unread_dot">#EF9A9A</color>
-
-    <!-- Overlay / glass effects -->
-    <color name="overlay_light">#1AFFFFFF</color>
-    <color name="overlay_dark">#33000000</color>
-    <color name="scrim">#73000000</color>
 </resources>
+

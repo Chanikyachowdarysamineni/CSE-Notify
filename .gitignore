@@ -2,3 +2,5 @@
 *.apk
 *.aab
 *.jks
+node_modules/
+

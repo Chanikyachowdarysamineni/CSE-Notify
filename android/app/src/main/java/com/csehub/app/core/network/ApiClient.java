@@ -88,6 +88,7 @@ public class ApiClient {
                     }
 
                     builder.header("Accept", "application/json");
+                    builder.header("Bypass-Tunnel-Reminder", "true");
                     // Note: do NOT set Content-Type here — multipart requests set their own
                     return chain.proceed(builder.build());
                 })

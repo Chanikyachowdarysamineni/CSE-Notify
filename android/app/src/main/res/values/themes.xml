@@ -1,7 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- =====================================================================
-         CSE Notify — Premium Light Mode Theme (Material Design 3 Hybrid)
+         CSE Notify - Glassmorphism Theme (Dark/Aurora)
          ===================================================================== -->
     <style name="Theme.CSEHub" parent="Theme.Material3.DayNight.NoActionBar">
 
@@ -28,33 +29,37 @@
         <item name="colorOnErrorContainer">@color/on_error_container</item>
 
         <!-- Surface / Background -->
-        <item name="android:windowBackground">@color/background</item>
+        <!-- Use our glass aurora gradient for window background -->
+        <item name="android:windowBackground">@drawable/bg_glass_aurora</item>
         <item name="android:colorBackground">@color/background</item>
         <item name="colorOnBackground">@color/on_background</item>
+        
         <item name="colorSurface">@color/surface</item>
         <item name="colorSurfaceVariant">@color/surface_variant</item>
         <item name="colorOnSurface">@color/on_surface</item>
         <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
+        
+        <!-- Outline for glass -->
         <item name="colorOutline">@color/outline</item>
         <item name="colorOutlineVariant">@color/outline_variant</item>
 
-        <!-- Status bar (Transparent or blend with background for modern look) -->
-        <item name="android:statusBarColor" tools:targetApi="21">@color/background</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+        <!-- Status bar (Transparent to let aurora shine through) -->
+        <item name="android:statusBarColor" tools:targetApi="21">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
         <!-- Navigation bar -->
-        <item name="android:navigationBarColor" tools:targetApi="21">@color/background</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+        <item name="android:navigationBarColor" tools:targetApi="21">@android:color/transparent</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
 
-        <!-- Remove default Material shadows for a flat, clean aesthetic like Linear/Stripe -->
+        <!-- Remove default Material shadows for glass look -->
         <item name="elevationOverlayEnabled">false</item>
         <item name="materialCardViewStyle">@style/Widget.CSEHub.CardView</item>
 
-        <!-- Shape system (Modern Rounded Corners) -->
+        <!-- Shape system (Very Rounded for Glass) -->
         <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.CSEHub.Small</item>
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.CSEHub.Medium</item>
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.CSEHub.Large</item>
         
-        <!-- Typography -->
+        <!-- Typography (White text, light font weights preferred for glass) -->
         <item name="textAppearanceTitleLarge">@style/TextAppearance.CSEHub.TitleLarge</item>
         <item name="textAppearanceTitleMedium">@style/TextAppearance.CSEHub.TitleMedium</item>
         <item name="textAppearanceTitleSmall">@style/TextAppearance.CSEHub.TitleSmall</item>
@@ -69,11 +74,8 @@
          Splash Screen theme
          ===================================================================== -->
     <style name="Theme.CSEHub.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/background</item>
+        <item name="windowSplashScreenBackground">@drawable/bg_glass_aurora</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo</item>
-        <!-- If ic_logo is dark, we might need to adjust it, or keep primary bg -->
-        <!-- Let's revert splash bg to primary for brand presence -->
-        <!-- Wait, I'll use background with a distinct logo for cleaner look -->
         <item name="postSplashScreenTheme">@style/Theme.CSEHub</item>
     </style>
 
@@ -89,40 +91,48 @@
 
     <style name="ShapeAppearance.CSEHub.Small" parent="ShapeAppearance.Material3.SmallComponent">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">8dp</item>
+        <item name="cornerSize">12dp</item>
     </style>
 
     <style name="ShapeAppearance.CSEHub.Medium" parent="ShapeAppearance.Material3.MediumComponent">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">12dp</item>
+        <item name="cornerSize">16dp</item>
     </style>
 
     <style name="ShapeAppearance.CSEHub.Large" parent="ShapeAppearance.Material3.LargeComponent">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">16dp</item>
+        <item name="cornerSize">24dp</item> <!-- Large radius for glass cards -->
     </style>
 
     <!-- =====================================================================
-         Component Styles
+         Component Styles (Glassmorphism)
          ===================================================================== -->
          
-    <!-- Flat, bordered cards like Linear -->
+    <!-- Frosted glass cards: Translucent, thin white border, soft blur shadow if possible -->
     <style name="Widget.CSEHub.CardView" parent="Widget.Material3.CardView.Elevated">
-        <item name="cardElevation">0dp</item>
+        <item name="cardElevation">8dp</item>
         <item name="strokeWidth">1dp</item>
-        <item name="strokeColor">@color/outline_variant</item>
+        <item name="strokeColor">@color/outline</item>
         <item name="cardBackgroundColor">@color/surface</item>
         <item name="shapeAppearance">@style/ShapeAppearance.CSEHub.Large</item>
+        <!-- For glass, we want a very subtle ambient shadow -->
+        <item name="android:outlineSpotShadowColor" tools:targetApi="28">#80000000</item>
+        <item name="android:outlineAmbientShadowColor" tools:targetApi="28">#40000000</item>
     </style>
 
     <!-- Button styles -->
     <style name="Widget.CSEHub.Button.Primary" parent="Widget.Material3.Button">
-        <item name="cornerRadius">12dp</item>
+        <item name="cornerRadius">24dp</item> <!-- Pill shape -->
         <item name="android:paddingTop">14dp</item>
         <item name="android:paddingBottom">14dp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:letterSpacing">0.01</item>
-        <item name="android:stateListAnimator">@null</item> <!-- Remove generic jump on press -->
+        <item name="android:textStyle">normal</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/outline</item>
+        <!-- Let's make buttons a bright glowing color but somewhat translucent, or just bright -->
+        <item name="backgroundTint">@color/primary</item>
+        <item name="android:textColor">@color/on_primary</item>
+        <item name="android:elevation">8dp</item>
     </style>
 
     <!-- =====================================================================
@@ -130,21 +140,19 @@
          ===================================================================== -->
     <style name="TextAppearance.CSEHub.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
         <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
         <item name="android:fontFamily">@font/inter</item>
-        <item name="android:letterSpacing">-0.02</item>
     </style>
     
     <style name="TextAppearance.CSEHub.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
         <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
         <item name="android:fontFamily">@font/inter</item>
-        <item name="android:letterSpacing">-0.01</item>
     </style>
 
     <style name="TextAppearance.CSEHub.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
         <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
         <item name="android:fontFamily">@font/inter</item>
     </style>
 
@@ -167,18 +175,18 @@
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">@font/inter</item>
-        <item name="android:letterSpacing">0.02</item>
+        <item name="android:letterSpacing">0.04</item>
     </style>
 
     <style name="TextAppearance.CSEHub.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
         <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
         <item name="android:fontFamily">@font/inter</item>
     </style>
     
     <style name="TextAppearance.CSEHub.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
         <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
         <item name="android:fontFamily">@font/inter</item>
     </style>
 
