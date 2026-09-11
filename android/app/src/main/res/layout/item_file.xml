@@ -21,7 +21,7 @@
             app:cardBackgroundColor="?attr/colorPrimaryContainer"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:strokeWidth="0dp">
+            app:strokeWidth="1dp">
             
             <ImageView
                 android:id="@+id/fileIcon"
@@ -64,7 +64,7 @@
                 app:cardBackgroundColor="?attr/colorSurfaceVariant"
                 app:cardCornerRadius="4dp"
                 app:cardElevation="0dp"
-                app:strokeWidth="0dp">
+                app:strokeWidth="1dp">
                 
                 <TextView
                     android:id="@+id/fileCategoryBadge"
@@ -108,3 +108,4 @@
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
+

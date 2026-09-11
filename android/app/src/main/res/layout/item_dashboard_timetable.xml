@@ -28,7 +28,7 @@
                 app:cardBackgroundColor="?attr/colorPrimaryContainer"
                 app:cardCornerRadius="4dp"
                 app:cardElevation="0dp"
-                app:strokeWidth="0dp">
+                app:strokeWidth="1dp">
                 
                 <TextView
                     android:id="@+id/periodText"
@@ -75,3 +75,4 @@
             
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
+

@@ -32,7 +32,7 @@
                 app:cardBackgroundColor="?attr/colorPrimaryContainer"
                 app:cardCornerRadius="6dp"
                 app:cardElevation="0dp"
-                app:strokeWidth="0dp">
+                app:strokeWidth="1dp">
                 
                 <TextView
                     android:id="@+id/eventTypeBadge"
@@ -108,3 +108,4 @@
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
+

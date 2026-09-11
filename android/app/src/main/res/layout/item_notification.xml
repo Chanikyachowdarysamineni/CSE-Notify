@@ -39,7 +39,7 @@
                     app:cardBackgroundColor="?attr/colorPrimaryContainer"
                     app:cardCornerRadius="6dp"
                     app:cardElevation="0dp"
-                    app:strokeWidth="0dp">
+                    app:strokeWidth="1dp">
                     
                     <TextView
                         android:id="@+id/categoryText"
@@ -78,7 +78,7 @@
                     app:cardBackgroundColor="?attr/colorError"
                     app:cardCornerRadius="4dp"
                     app:cardElevation="0dp"
-                    app:strokeWidth="0dp"
+                    app:strokeWidth="1dp"
                     android:visibility="visible" />
             </LinearLayout>
 
@@ -171,3 +171,4 @@
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
+

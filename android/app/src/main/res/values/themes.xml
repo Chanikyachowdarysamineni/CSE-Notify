@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- =====================================================================
-         CSE Notify - Glassmorphism Theme (Dark/Aurora)
+         CSE Notify - Master Clean White/Black Theme
          ===================================================================== -->
     <style name="Theme.CSEHub" parent="Theme.Material3.DayNight.NoActionBar">
 
@@ -29,8 +29,8 @@
         <item name="colorOnErrorContainer">@color/on_error_container</item>
 
         <!-- Surface / Background -->
-        <!-- Use our glass aurora gradient for window background -->
-        <item name="android:windowBackground">@drawable/bg_glass_aurora</item>
+        <!-- Clean solid color background -->
+        <item name="android:windowBackground">@color/background</item>
         <item name="android:colorBackground">@color/background</item>
         <item name="colorOnBackground">@color/on_background</item>
         
@@ -43,18 +43,18 @@
         <item name="colorOutline">@color/outline</item>
         <item name="colorOutlineVariant">@color/outline_variant</item>
 
-        <!-- Status bar (Transparent to let aurora shine through) -->
-        <item name="android:statusBarColor" tools:targetApi="21">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+        <!-- Status bar (Solid background) -->
+        <item name="android:statusBarColor" tools:targetApi="21">@color/background</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
         <!-- Navigation bar -->
-        <item name="android:navigationBarColor" tools:targetApi="21">@android:color/transparent</item>
+        <item name="android:navigationBarColor" tools:targetApi="21">@color/background</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
 
-        <!-- Remove default Material shadows for glass look -->
+        <!-- Remove default Material shadows for minimal look -->
         <item name="elevationOverlayEnabled">false</item>
         <item name="materialCardViewStyle">@style/Widget.CSEHub.CardView</item>
 
-        <!-- Shape system (Very Rounded for Glass) -->
+        <!-- Shape system (Slightly rounded, professional) -->
         <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.CSEHub.Small</item>
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.CSEHub.Medium</item>
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.CSEHub.Large</item>
@@ -74,7 +74,7 @@
          Splash Screen theme
          ===================================================================== -->
     <style name="Theme.CSEHub.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@drawable/bg_glass_aurora</item>
+        <item name="windowSplashScreenBackground">@color/background</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo</item>
         <item name="postSplashScreenTheme">@style/Theme.CSEHub</item>
     </style>
@@ -91,48 +91,46 @@
 
     <style name="ShapeAppearance.CSEHub.Small" parent="ShapeAppearance.Material3.SmallComponent">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">12dp</item>
+        <item name="cornerSize">4dp</item>
     </style>
 
     <style name="ShapeAppearance.CSEHub.Medium" parent="ShapeAppearance.Material3.MediumComponent">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">16dp</item>
+        <item name="cornerSize">8dp</item>
     </style>
 
     <style name="ShapeAppearance.CSEHub.Large" parent="ShapeAppearance.Material3.LargeComponent">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">24dp</item> <!-- Large radius for glass cards -->
+        <item name="cornerSize">12dp</item> <!-- Clean subtle radius -->
     </style>
 
     <!-- =====================================================================
          Component Styles (Glassmorphism)
          ===================================================================== -->
          
-    <!-- Frosted glass cards: Translucent, thin white border, soft blur shadow if possible -->
+    <!-- Minimal clean cards: White, thin grey border, zero shadow -->
     <style name="Widget.CSEHub.CardView" parent="Widget.Material3.CardView.Elevated">
-        <item name="cardElevation">8dp</item>
+        <item name="cardElevation">0dp</item>
         <item name="strokeWidth">1dp</item>
-        <item name="strokeColor">@color/outline</item>
+        <item name="strokeColor">@color/border</item>
         <item name="cardBackgroundColor">@color/surface</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.CSEHub.Large</item>
-        <!-- For glass, we want a very subtle ambient shadow -->
-        <item name="android:outlineSpotShadowColor" tools:targetApi="28">#80000000</item>
-        <item name="android:outlineAmbientShadowColor" tools:targetApi="28">#40000000</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.CSEHub.Medium</item>
+        <item name="android:outlineSpotShadowColor" tools:targetApi="28">@android:color/transparent</item>
+        <item name="android:outlineAmbientShadowColor" tools:targetApi="28">@android:color/transparent</item>
     </style>
 
     <!-- Button styles -->
     <style name="Widget.CSEHub.Button.Primary" parent="Widget.Material3.Button">
-        <item name="cornerRadius">24dp</item> <!-- Pill shape -->
+        <item name="cornerRadius">8dp</item> <!-- Clean slightly rounded corners -->
         <item name="android:paddingTop">14dp</item>
         <item name="android:paddingBottom">14dp</item>
-        <item name="android:textStyle">normal</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:letterSpacing">0.02</item>
-        <item name="strokeWidth">1dp</item>
-        <item name="strokeColor">@color/outline</item>
-        <!-- Let's make buttons a bright glowing color but somewhat translucent, or just bright -->
+        <item name="strokeWidth">0dp</item>
+        <!-- Solid bold color -->
         <item name="backgroundTint">@color/primary</item>
         <item name="android:textColor">@color/on_primary</item>
-        <item name="android:elevation">8dp</item>
+        <item name="android:elevation">0dp</item>
     </style>
 
     <!-- =====================================================================

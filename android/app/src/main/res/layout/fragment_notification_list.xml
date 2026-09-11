@@ -26,8 +26,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="12dp"
             app:cardCornerRadius="8dp"
-            app:cardElevation="2dp"
-            app:strokeWidth="0dp">
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp">
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/searchView"
@@ -76,3 +76,4 @@
         android:visibility="gone"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+

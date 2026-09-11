@@ -44,7 +44,7 @@
                 app:cardBackgroundColor="?attr/colorPrimaryContainer"
                 app:cardCornerRadius="4dp"
                 app:cardElevation="0dp"
-                app:strokeWidth="0dp">
+                app:strokeWidth="1dp">
                 <TextView
                     android:id="@+id/profileRole"
                     android:layout_width="wrap_content"
@@ -283,3 +283,4 @@
 
     </LinearLayout>
 </ScrollView>
+

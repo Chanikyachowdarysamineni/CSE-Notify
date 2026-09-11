@@ -1,71 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Light Mode Glassmorphism Palette (Ethereal Airy Look) -->
+    <!-- PRIMARY INTERFACE (CLEAN WHITE/BLACK) -->
+    <color name="background">#FFFFFF</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#F9F9F9</color>
     
-    <color name="aurora_start">#E0C3FC</color> <!-- Soft Lilac -->
-    <color name="aurora_center">#8EC5FC</color> <!-- Soft Blue -->
-    <color name="aurora_end">#E0C3FC</color>
+    <color name="text_primary">#000000</color>
+    <color name="text_secondary">#555555</color>
+    <color name="text_muted">#777777</color>
+    <color name="text_on_dark">#FFFFFF</color>
+    
+    <color name="border">#E5E5E5</color>
+    <color name="divider">#EEEEEE</color>
 
-    <!-- Primary: Deep Purple -->
-    <color name="primary">#6200EA</color>
+    <color name="primary">#000000</color>
     <color name="on_primary">#FFFFFF</color>
-    <color name="primary_container">#1A6200EA</color>
-    <color name="on_primary_container">#311B92</color>
+    
+    <color name="secondary">#FFFFFF</color>
+    <color name="on_secondary">#000000</color>
 
-    <!-- Secondary -->
-    <color name="secondary">#00B0FF</color>
-    <color name="on_secondary">#FFFFFF</color>
-    <color name="secondary_container">#1A00B0FF</color>
-    <color name="on_secondary_container">#01579B</color>
+    <!-- SEMANTIC COLORS (ACTION / SUCCESS / ERROR / WARNING) -->
+    <!-- BLUE: Info / Active / Action -->
+    <color name="semantic_blue">#2563EB</color>
+    <color name="semantic_blue_bg">#EFF6FF</color>
+    <color name="semantic_blue_border">#BFDBFE</color>
 
-    <!-- Accent -->
-    <color name="accent">#FF4081</color>
+    <!-- GREEN: Success / Approved / Completed -->
+    <color name="semantic_green">#16A34A</color>
+    <color name="semantic_green_bg">#F0FDF4</color>
+    <color name="semantic_green_border">#BBF7D0</color>
+
+    <!-- RED: Error / Failed / Critical -->
+    <color name="semantic_red">#DC2626</color>
+    <color name="semantic_red_bg">#FEF2F2</color>
+    <color name="semantic_red_border">#FECACA</color>
+
+    <!-- ORANGE: Warning / Pending -->
+    <color name="semantic_orange">#D97706</color>
+    <color name="semantic_orange_bg">#FFFBEB</color>
+    <color name="semantic_orange_border">#FDE68A</color>
+
+    <!-- ALIASES FOR COMPATIBILITY (Mapping old colors to new system) -->
+    <color name="aurora_start">#FFFFFF</color>
+    <color name="aurora_center">#FFFFFF</color>
+    <color name="aurora_end">#FFFFFF</color>
+    <color name="primary_container">#F9F9F9</color>
+    <color name="on_primary_container">#000000</color>
+    <color name="secondary_container">#F9F9F9</color>
+    <color name="on_secondary_container">#000000</color>
+    <color name="accent">#000000</color>
     <color name="on_accent">#FFFFFF</color>
-    <color name="warning_container">#1AFF4081</color>
-    <color name="on_warning_container">#C51162</color>
-
-    <!-- Errors -->
-    <color name="error">#D50000</color>
-    <color name="error_container">#1AD50000</color>
+    <color name="warning_container">@color/semantic_orange_bg</color>
+    <color name="on_warning_container">@color/semantic_orange</color>
+    <color name="error">@color/semantic_red</color>
     <color name="on_error">#FFFFFF</color>
-    <color name="on_error_container">#B71C1C</color>
+    <color name="error_container">@color/semantic_red_bg</color>
+    <color name="on_error_container">@color/semantic_red</color>
+    <color name="on_background">@color/text_primary</color>
+    <color name="on_surface">@color/text_primary</color>
+    <color name="on_surface_variant">@color/text_secondary</color>
+    <color name="outline">@color/border</color>
+    <color name="outline_variant">@color/divider</color>
 
-    <!-- Surface / Background -->
-    <color name="background">#F5F7FA</color>
-    <color name="on_background">#000000</color>
-    
-    <!-- Surface is the glass layer: 40% White -->
-    <color name="surface">#66FFFFFF</color>
-    <color name="surface_variant">#80FFFFFF</color>
-    <color name="on_surface">#000000</color>
-    <color name="on_surface_variant">#4A4A4A</color>
-    
-    <!-- Thin Glass Outline: 80% White -->
-    <color name="outline">#CCFFFFFF</color>
-    <color name="outline_variant">#80FFFFFF</color>
     <!-- Priority badges -->
-    <color name="priority_low">#A5D6A7</color>
-    <color name="priority_medium">#90CAF9</color>
-    <color name="priority_high">#FFCC80</color>
-    <color name="priority_urgent">#EF9A9A</color>
-    <color name="priority_low_bg">#1B3A1D</color>
-    <color name="priority_medium_bg">#0A2240</color>
-    <color name="priority_high_bg">#3E1F00</color>
-    <color name="priority_urgent_bg">#3B0909</color>
+    <color name="priority_low">@color/semantic_green</color>
+    <color name="priority_low_bg">@color/semantic_green_bg</color>
+    <color name="priority_medium">@color/semantic_blue</color>
+    <color name="priority_medium_bg">@color/semantic_blue_bg</color>
+    <color name="priority_high">@color/semantic_orange</color>
+    <color name="priority_high_bg">@color/semantic_orange_bg</color>
+    <color name="priority_urgent">@color/semantic_red</color>
+    <color name="priority_urgent_bg">@color/semantic_red_bg</color>
 
-    <!-- Category colors (dark mode) -->
-    <color name="cat_academic">#90CAF9</color>
-    <color name="cat_event">#CE93D8</color>
-    <color name="cat_exam">#EF9A9A</color>
-    <color name="cat_placement">#80DEEA</color>
-    <color name="cat_sports">#A5D6A7</color>
-    <color name="cat_general">#B0BEC5</color>
+    <!-- Category colors (Standardized to semantic blue for minimal look) -->
+    <color name="cat_academic">@color/semantic_blue</color>
+    <color name="cat_event">@color/semantic_blue</color>
+    <color name="cat_exam">@color/semantic_orange</color>
+    <color name="cat_placement">@color/semantic_green</color>
+    <color name="cat_sports">@color/semantic_blue</color>
+    <color name="cat_general">@color/text_secondary</color>
 
     <!-- Shimmer loading -->
-    <color name="shimmer_base">#2A2D35</color>
-    <color name="shimmer_highlight">#34383F</color>
+    <color name="shimmer_base">#F3F4F6</color>
+    <color name="shimmer_highlight">#E5E7EB</color>
 
     <!-- Unread indicator -->
-    <color name="unread_dot">#EF9A9A</color>
+    <color name="unread_dot">@color/semantic_blue</color>
 </resources>
-
