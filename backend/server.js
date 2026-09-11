@@ -117,6 +117,9 @@ app.get('/', (req, res) => {
 // Static files (uploads)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Ignore favicon requests to prevent 404 log clutter
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 // ============================================
 // API Routes
 // ============================================
