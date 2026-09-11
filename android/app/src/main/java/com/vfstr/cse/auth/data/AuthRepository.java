@@ -1,0 +1,189 @@
+package com.vfstr.cse.auth.data;
+
+import android.content.Context;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
+import com.vfstr.cse.auth.data.model.ChangePasswordRequest;
+import com.vfstr.cse.auth.data.model.ForgotPasswordRequest;
+import com.vfstr.cse.auth.data.model.LoginRequest;
+import com.vfstr.cse.auth.data.model.LoginResponse;
+import com.vfstr.cse.core.network.ApiClient;
+import com.vfstr.cse.core.network.models.ApiResponse;
+import com.vfstr.cse.core.security.TokenManager;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+/**
+ * Repository to bridge auth requests from ViewModels to the network API
+ */
+public class AuthRepository {
+
+    private final AuthApi authApi;
+    private final TokenManager tokenManager;
+    private final Context context;
+
+    public AuthRepository(Context context) {
+        this.context = context.getApplicationContext();
+        this.authApi = ApiClient.createService(AuthApi.class);
+        this.tokenManager = TokenManager.getInstance(context);
+    }
+
+    public LiveData<Resource<LoginResponse>> login(String email, String password, String fcmToken) {
+        MutableLiveData<Resource<LoginResponse>> data = new MutableLiveData<>();
+        data.setValue(Resource.loading());
+
+        String deviceId = android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+        String deviceModel = android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL;
+        String appVersion = "1.0.0";
+        try {
+            android.content.pm.PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            appVersion = pInfo.versionName;
+        } catch (Exception e) { /* ignored */ }
+
+        authApi.login(new LoginRequest(email, password, fcmToken, deviceId, deviceModel, appVersion)).enqueue(new Callback<ApiResponse<LoginResponse>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<LoginResponse>> call, Response<ApiResponse<LoginResponse>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    LoginResponse loginRes = response.body().getData();
+                    // Save user session securely
+                    tokenManager.saveUserSession(
+                            loginRes.getUser().getId(),
+                            loginRes.getUser().getLoginId(),
+                            loginRes.getUser().getEmail(),
+                            loginRes.getUser().getName(),
+                            loginRes.getUser().getRole(),
+                            loginRes.getToken(),
+                            loginRes.getRefreshToken()
+                    );
+                    data.setValue(Resource.success(loginRes));
+                } else {
+                    String msg = "Invalid login credentials. Please check your ID and password.";
+                    if (response.body() != null && response.body().getMessage() != null) {
+                        msg = response.body().getMessage();
+                    } else if (response.errorBody() != null) {
+                        try {
+                            String rawError = response.errorBody().string();
+                            // Parse the JSON error body to extract the "message" field
+                            JsonObject json = JsonParser.parseString(rawError).getAsJsonObject();
+                            if (json.has("message") && !json.get("message").isJsonNull()) {
+                                msg = json.get("message").getAsString();
+                            }
+                        } catch (Exception e) { /* ignored — use default message */ }
+                    }
+                    data.setValue(Resource.error(msg));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<LoginResponse>> call, Throwable t) {
+                data.setValue(Resource.error("Connection failed: " + t.getMessage()));
+            }
+        });
+
+        return data;
+    }
+
+    public LiveData<Resource<Void>> forgotPassword(String email) {
+        MutableLiveData<Resource<Void>> data = new MutableLiveData<>();
+        data.setValue(Resource.loading());
+
+        authApi.forgotPassword(new ForgotPasswordRequest(email)).enqueue(new Callback<ApiResponse<Void>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
+                if (response.isSuccessful()) {
+                    data.setValue(Resource.success(null));
+                } else {
+                    data.setValue(Resource.error("Failed to send reset link"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
+                data.setValue(Resource.error("Connection failed"));
+            }
+        });
+
+        return data;
+    }
+
+    public LiveData<Resource<Void>> changePassword(String currentPassword, String newPassword) {
+        MutableLiveData<Resource<Void>> data = new MutableLiveData<>();
+        data.setValue(Resource.loading());
+
+        authApi.changePassword(new ChangePasswordRequest(currentPassword, newPassword)).enqueue(new Callback<ApiResponse<LoginResponse>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<LoginResponse>> call, Response<ApiResponse<LoginResponse>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    // Update saved token
+                    tokenManager.saveToken(response.body().getData().getToken());
+                    data.setValue(Resource.success(null));
+                } else {
+                    String msg = "Failed to change password";
+                    if (response.body() != null) {
+                        msg = response.body().getMessage();
+                    }
+                    data.setValue(Resource.error(msg));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<LoginResponse>> call, Throwable t) {
+                data.setValue(Resource.error("Connection failed"));
+            }
+        });
+
+        return data;
+    }
+
+    public void logout(Runnable onComplete) {
+        String fcmToken = tokenManager.getFCMToken();
+        authApi.logout(new com.vfstr.cse.auth.data.model.LogoutRequest(fcmToken)).enqueue(new Callback<ApiResponse<Void>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
+                tokenManager.clearSession();
+                ApiClient.reset();
+                onComplete.run();
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
+                tokenManager.clearSession();
+                ApiClient.reset();
+                onComplete.run();
+            }
+        });
+    }
+
+    // Generic resource helper
+    public static class Resource<T> {
+        public enum Status { SUCCESS, ERROR, LOADING }
+        public final Status status;
+        public final T data;
+        public final String message;
+
+        private Resource(Status status, T data, String message) {
+            this.status = status;
+            this.data = data;
+            this.message = message;
+        }
+
+        public static <T> Resource<T> success(T data) {
+            return new Resource<>(Status.SUCCESS, data, null);
+        }
+
+        public static <T> Resource<T> error(String msg) {
+            return new Resource<>(Status.ERROR, null, msg);
+        }
+
+        public static <T> Resource<T> loading() {
+            return new Resource<>(Status.LOADING, null, null);
+        }
+    }
+}
+

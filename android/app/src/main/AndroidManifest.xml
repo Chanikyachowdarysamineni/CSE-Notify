@@ -85,7 +85,7 @@
             android:name=".core.fcm.NotificationActionReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.csehub.app.ACTION_MARK_READ" />
+                <action android:name="com.vfstr.cse.ACTION_MARK_READ" />
             </intent-filter>
         </receiver>
 
@@ -118,3 +118,4 @@
     </application>
 
 </manifest>
+

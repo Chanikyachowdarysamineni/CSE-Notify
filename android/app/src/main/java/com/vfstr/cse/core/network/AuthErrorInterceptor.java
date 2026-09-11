@@ -1,0 +1,52 @@
+package com.vfstr.cse.core.network;
+
+import android.content.Context;
+import android.content.Intent;
+
+import androidx.annotation.NonNull;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import java.io.IOException;
+
+import okhttp3.Interceptor;
+import okhttp3.Request;
+import okhttp3.Response;
+
+public class AuthErrorInterceptor implements Interceptor {
+
+    private final Context context;
+    public static final String ACTION_UNAUTHORIZED = "com.vfstr.cse.UNAUTHORIZED";
+    public static final String ACTION_SERVER_ERROR = "com.vfstr.cse.SERVER_ERROR";
+
+    public AuthErrorInterceptor(Context context) {
+        this.context = context;
+    }
+
+    @NonNull
+    @Override
+    public Response intercept(@NonNull Chain chain) throws IOException {
+        Request request = chain.request();
+        Response response = chain.proceed(request);
+
+        if (response.code() == 401) {
+            // Skip broadcast for login/auth endpoints — a 401 there means wrong credentials,
+            // not an expired session. Only broadcast for authenticated API calls.
+            String url = request.url().toString();
+            boolean isAuthEndpoint = url.contains("/auth/login")
+                    || url.contains("/auth/forgot-password")
+                    || url.contains("/auth/reset-password")
+                    || url.contains("/auth/refresh");
+            if (!isAuthEndpoint) {
+                Intent intent = new Intent(ACTION_UNAUTHORIZED);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+            }
+        } else if (response.code() >= 500) {
+            // Server error
+            Intent intent = new Intent(ACTION_SERVER_ERROR);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        }
+
+        return response;
+    }
+}
+

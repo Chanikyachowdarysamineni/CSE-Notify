@@ -9,7 +9,7 @@
 		<intent
 			android:action="android.intent.action.VIEW"
 			android:targetPackage="com.vfstr.cse"
-			android:targetClass="com.csehub.app.dashboard.ui.MainActivity">
+			android:targetClass="com.vfstr.cse.dashboard.ui.MainActivity">
 			<extra android:name="navigate_to" android:value="timetable" />
 		</intent>
 	</shortcut>
@@ -22,8 +22,9 @@
 		<intent
 			android:action="android.intent.action.VIEW"
 			android:targetPackage="com.vfstr.cse"
-			android:targetClass="com.csehub.app.dashboard.ui.MainActivity">
+			android:targetClass="com.vfstr.cse.dashboard.ui.MainActivity">
 			<extra android:name="navigate_to" android:value="notifications" />
 		</intent>
 	</shortcut>
 </shortcuts>
+
