@@ -21,6 +21,9 @@ public class LoginResponse {
         @SerializedName("id")
         private String id;
 
+        @SerializedName("loginId")
+        private String loginId;
+
         @SerializedName("email")
         private String email;
 
@@ -31,6 +34,7 @@ public class LoginResponse {
         private String role;
 
         public String getId() { return id; }
+        public String getLoginId() { return loginId; }
         public String getEmail() { return email; }
         public String getName() { return name; }
         public String getRole() { return role; }

@@ -27,6 +27,7 @@ public final class Constants {
     public static final String KEY_REFRESH_TOKEN = "refresh_token";
     public static final String KEY_DARK_MODE = "dark_mode";
     public static final String KEY_PROFILE_PHOTO = "profile_photo";
+    public static final String KEY_LOGIN_ID = "login_id";
 
     // Broadcast Actions
     public static final String ACTION_AUTH_ERROR = "com.csehub.app.ACTION_AUTH_ERROR";

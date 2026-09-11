@@ -53,7 +53,7 @@
         <!-- Main Activity (Dashboard + Navigation) -->
         <activity
             android:name=".dashboard.ui.MainActivity"
-            android:exported="true"
+            android:exported="false"
             android:windowSoftInputMode="adjustPan"
             android:launchMode="singleTop" />
 

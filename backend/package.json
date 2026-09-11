@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "start:prod": "pm2 start ecosystem.config.js --env production",
     "build": "echo 'No build step required for Node.js backend'",
     "dev": "nodemon server.js",
     "seed": "node src/seeds/seed.js",

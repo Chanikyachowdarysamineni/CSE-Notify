@@ -91,8 +91,9 @@ const login = async (req, res) => {
             return apiResponse(res, 401, false, 'Invalid login credentials');
         }
 
-        // Generate token
+        // Generate tokens
         const token = generateToken(user);
+        const refreshToken = await generateRefreshToken(user);
 
         // Update last login
         user.lastLogin = new Date();
@@ -139,6 +140,7 @@ const login = async (req, res) => {
 
         return apiResponse(res, 200, true, 'Login successful', {
             token,
+            refreshToken,
             user: {
                 id: user._id,
                 loginId: user.loginId,

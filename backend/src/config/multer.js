@@ -66,8 +66,11 @@ const createStorage = (subDir) => {
         },
         filename: (req, file, cb) => {
             const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
-            const ext = path.extname(file.originalname).toLowerCase();
-            cb(null, `${subDir}-${uniqueSuffix}${ext}`);
+            // Sanitize filename: Strip null bytes, extract basename, and keep valid chars
+            const safeOriginal = path.basename(file.originalname.replace(/\0/g, '')).replace(/[^a-zA-Z0-9.-]/g, '_');
+            const ext = path.extname(safeOriginal).toLowerCase();
+            const safeName = safeOriginal.substring(0, safeOriginal.length - ext.length);
+            cb(null, `${subDir}-${safeName}-${uniqueSuffix}${ext}`);
         }
     });
 };

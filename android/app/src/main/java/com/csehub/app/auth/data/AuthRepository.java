@@ -12,6 +12,8 @@ import com.csehub.app.auth.data.model.LoginResponse;
 import com.csehub.app.core.network.ApiClient;
 import com.csehub.app.core.network.models.ApiResponse;
 import com.csehub.app.core.security.TokenManager;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,6 +54,7 @@ public class AuthRepository {
                     // Save user session securely
                     tokenManager.saveUserSession(
                             loginRes.getUser().getId(),
+                            loginRes.getUser().getLoginId(),
                             loginRes.getUser().getEmail(),
                             loginRes.getUser().getName(),
                             loginRes.getUser().getRole(),
@@ -60,13 +63,18 @@ public class AuthRepository {
                     );
                     data.setValue(Resource.success(loginRes));
                 } else {
-                    String msg = "Login failed";
-                    if (response.body() != null) {
+                    String msg = "Invalid login credentials. Please check your ID and password.";
+                    if (response.body() != null && response.body().getMessage() != null) {
                         msg = response.body().getMessage();
                     } else if (response.errorBody() != null) {
                         try {
-                            msg = response.errorBody().string();
-                        } catch (Exception e) { /* ignored */ }
+                            String rawError = response.errorBody().string();
+                            // Parse the JSON error body to extract the "message" field
+                            JsonObject json = JsonParser.parseString(rawError).getAsJsonObject();
+                            if (json.has("message") && !json.get("message").isJsonNull()) {
+                                msg = json.get("message").getAsString();
+                            }
+                        } catch (Exception e) { /* ignored — use default message */ }
                     }
                     data.setValue(Resource.error(msg));
                 }

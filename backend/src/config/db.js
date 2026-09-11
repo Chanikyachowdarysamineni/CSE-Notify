@@ -13,7 +13,11 @@ const connectDB = async () => {
             serverSelectionTimeoutMS: process.env.MONGODB_CONNECT_TIMEOUT_MS ? parseInt(process.env.MONGODB_CONNECT_TIMEOUT_MS) : 10000,
             socketTimeoutMS: process.env.MONGODB_SOCKET_TIMEOUT_MS ? parseInt(process.env.MONGODB_SOCKET_TIMEOUT_MS) : 45000,
             waitQueueTimeoutMS: process.env.MONGODB_WAIT_QUEUE_TIMEOUT_MS ? parseInt(process.env.MONGODB_WAIT_QUEUE_TIMEOUT_MS) : 10000,
+            autoIndex: process.env.NODE_ENV !== 'production', // Disable autoIndex in production for performance
         };
+
+        // Suppress Mongoose 7/8 strictQuery warnings and ensure consistent behavior
+        mongoose.set('strictQuery', false);
 
         logger.info('Connecting to MongoDB with connection pooling options...');
         const conn = await mongoose.connect(process.env.MONGODB_URI, options);

@@ -29,9 +29,17 @@ public class AuthErrorInterceptor implements Interceptor {
         Response response = chain.proceed(request);
 
         if (response.code() == 401) {
-            // Token expired or unauthorized
-            Intent intent = new Intent(ACTION_UNAUTHORIZED);
-            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+            // Skip broadcast for login/auth endpoints — a 401 there means wrong credentials,
+            // not an expired session. Only broadcast for authenticated API calls.
+            String url = request.url().toString();
+            boolean isAuthEndpoint = url.contains("/auth/login")
+                    || url.contains("/auth/forgot-password")
+                    || url.contains("/auth/reset-password")
+                    || url.contains("/auth/refresh");
+            if (!isAuthEndpoint) {
+                Intent intent = new Intent(ACTION_UNAUTHORIZED);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+            }
         } else if (response.code() >= 500) {
             // Server error
             Intent intent = new Intent(ACTION_SERVER_ERROR);

@@ -45,6 +45,9 @@ const { initFirebase } = require('./src/config/firebase');
 const app = express();
 const server = http.createServer(app);
 
+// Trust the reverse proxy (like Nginx, localtunnel) to set the real IP for rate limiting
+app.set('trust proxy', 1);
+
 // Socket.IO setup
 const io = new Server(server, {
     cors: {

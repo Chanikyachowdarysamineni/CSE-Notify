@@ -68,20 +68,25 @@ public class TokenManager {
     // User Session
     // ============================================
 
-    public void saveUserSession(String userId, String email, String name, String role, String token, String refreshToken) {
+    public void saveUserSession(String userId, String loginId, String email, String name, String role, String token, String refreshToken) {
         prefs.edit()
                 .putString(Constants.KEY_USER_ID, userId)
+                .putString(Constants.KEY_LOGIN_ID, loginId != null ? loginId : "")
                 .putString(Constants.KEY_USER_EMAIL, email)
                 .putString(Constants.KEY_USER_NAME, name)
                 .putString(Constants.KEY_USER_ROLE, role)
                 .putString(Constants.KEY_TOKEN, token)
-                .putString(Constants.KEY_REFRESH_TOKEN, refreshToken)
+                .putString(Constants.KEY_REFRESH_TOKEN, refreshToken != null ? refreshToken : "")
                 .putBoolean(Constants.KEY_IS_LOGGED_IN, true)
                 .apply();
     }
 
     public String getUserId() {
         return prefs.getString(Constants.KEY_USER_ID, "");
+    }
+
+    public String getLoginId() {
+        return prefs.getString(Constants.KEY_LOGIN_ID, "");
     }
 
     public String getUserEmail() {
